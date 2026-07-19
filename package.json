@@ -21,7 +21,7 @@
   "type": "commonjs",
   "main": "index.ts",
   "scripts": {
-    "start": "tsx index.ts",
+    "start": "tsx src/index.ts",
     "test": "npm test"
   },
   "devDependencies": {
