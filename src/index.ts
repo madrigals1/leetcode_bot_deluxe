@@ -11,4 +11,7 @@ bot.on("message", (ctx) =>
   ctx.reply("I only understand /start for now.")
 );
 
-bot.start();
+bot.start({
+  onStart: (botInfo) =>
+    console.log(`Bot @${botInfo.username} is running.`),
+});
