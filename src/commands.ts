@@ -1,5 +1,5 @@
 import { Bot, Context } from "grammy";
-import { command, getCommands } from "./decorators";
+import { command, commandsRegisteredByDecorator  } from "./decorators";
 
 export default class Commands {
   @command({ name: "start" })
@@ -14,7 +14,7 @@ export default class Commands {
 }
 
 export function registerCommands(bot: Bot) {
-  for (const cmd of getCommands(Commands)) {
+  for (const cmd of commandsRegisteredByDecorator) {
     bot.command(cmd.name, async (ctx) => {
       const handler = Commands[cmd.methodName as keyof typeof Commands];
       const result = await (handler as (ctx: Context) => Promise<string> | string)(ctx);
