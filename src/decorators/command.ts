@@ -1,11 +1,8 @@
 import { Context, InlineKeyboard } from "grammy";
+import { InvalidArgumentAmountError } from "../errors";
 
 interface CommandArg {
-  key: string;
   name: string;
-  index: number;
-  isRequired?: boolean;
-  isMultiple?: boolean;
 }
 
 interface CommandResponse {
@@ -46,14 +43,15 @@ export function parseArgs(
   defs: CommandArg[],
 ): Record<string, string> {
   const parts = text.split(/\s+/).slice(1);
+
+  if (parts.length !== defs.length) {
+    throw new InvalidArgumentAmountError(defs.length, parts.length);
+  }
+
   const result: Record<string, string> = {};
 
-  for (const def of defs) {
-    if (def.isMultiple) {
-      result[def.key] = parts.slice(def.index).join(" ");
-    } else {
-      result[def.key] = parts[def.index] ?? "";
-    }
+  for (let i = 0; i < defs.length; i++) {
+    result[defs[i].name] = parts[i];
   }
 
   return result;

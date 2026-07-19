@@ -33,7 +33,7 @@ export default class Commands {
 
   @command({
     name: "ping",
-    args: [{ key: "message", name: "Message", index: 0, isRequired: true }],
+    args: [{ name: "message" }],
   })
   static ping(_ctx: Context, args: Record<string, string>) {
     return { text: args.message };
@@ -60,13 +60,23 @@ export function registerCommands(bot: Bot) {
         return;
       }
 
-      const args = cmd.args
-        ? parseArgs(ctx.message?.text ?? "", cmd.args)
-        : {};
-      const result = await cmd.handler(ctx, args);
-      await ctx.reply(result.text, {
-        reply_markup: result.reply_markup,
-      });
+      try {
+        const args = cmd.args
+          ? parseArgs(ctx.message?.text ?? "", cmd.args)
+          : {};
+
+        const result = await cmd.handler(ctx, args);
+        await ctx.reply(result.text, {
+          reply_markup: result.reply_markup,
+        });
+      } catch (error) {
+        if (error instanceof Error) {
+          await ctx.reply(error.message);
+          return;
+        }
+
+        await ctx.reply("An error occurred.");
+      }
     });
   }
 
