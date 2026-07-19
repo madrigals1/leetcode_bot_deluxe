@@ -22,15 +22,16 @@ export function command(options: CommandOptions) {
     propertyKey: string,
     _descriptor: PropertyDescriptor,
   ) {
-    const constructor = target.constructor as typeof target.constructor & {
-      _commands: CommandMetadata[];
-    };
+    const owner =
+      typeof target === "function" ? target : target.constructor;
 
-    if (!constructor._commands) {
-      constructor._commands = [];
+    const ctor = owner as typeof owner & { _commands: CommandMetadata[] };
+
+    if (!ctor._commands) {
+      ctor._commands = [];
     }
 
-    constructor._commands.push({ ...options, methodName: propertyKey });
+    ctor._commands.push({ ...options, methodName: propertyKey });
   };
 }
 
