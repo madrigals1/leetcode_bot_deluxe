@@ -7,6 +7,7 @@ import {
   parseArgs,
 } from "./decorators";
 import { isOwnerOrPrivate } from "./utils/chat";
+import { LeetCodeBotError } from "./errors";
 
 export default class Commands {
   @command({ name: "start" })
@@ -68,7 +69,7 @@ export function registerCommands(bot: Bot) {
           reply_markup: result.reply_markup,
         });
       } catch (error) {
-        if (error instanceof Error) {
+        if (error instanceof LeetCodeBotError) {
           await ctx.reply(error.message);
           return;
         }
