@@ -28,5 +28,8 @@
     "@types/node": "^26.1.1",
     "tsx": "^4.23.1",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "grammy": "^1.45.1"
   }
 }
