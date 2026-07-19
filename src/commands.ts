@@ -1,14 +1,14 @@
-import { Bot, Context } from "grammy";
-import { command, commandsRegisteredByDecorator  } from "./decorators";
+import { Bot } from "grammy";
+import { command, commandsRegisteredByDecorator } from "./decorators";
 
 export default class Commands {
   @command({ name: "start" })
-  static start(_ctx: Context): string {
+  static start(): string {
     return "Welcome! I am the LeetCode Bot Deluxe.";
   }
 
   @command({ name: "help" })
-  static help(_ctx: Context): string {
+  static help(): string {
     return "Available commands: /start, /help";
   }
 }
@@ -16,8 +16,7 @@ export default class Commands {
 export function registerCommands(bot: Bot) {
   for (const cmd of commandsRegisteredByDecorator) {
     bot.command(cmd.name, async (ctx) => {
-      const handler = Commands[cmd.methodName as keyof typeof Commands];
-      const result = await (handler as (ctx: Context) => Promise<string> | string)(ctx);
+      const result = await cmd.handler(ctx);
       if (result) {
         await ctx.reply(result);
       }

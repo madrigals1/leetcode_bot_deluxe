@@ -1,3 +1,5 @@
+import { Context } from "grammy";
+
 interface CommandArg {
   key: string;
   name: string;
@@ -13,7 +15,7 @@ interface CommandOptions {
 }
 
 interface CommandMetadata extends CommandOptions {
-  methodName: string;
+  handler: (ctx: Context) => Promise<string> | string;
 }
 
 export const commandsRegisteredByDecorator: CommandMetadata[] = [];
@@ -22,8 +24,11 @@ export function command(options: CommandOptions) {
   return function (
     _target: object,
     propertyKey: string,
-    _descriptor: PropertyDescriptor,
+    descriptor: PropertyDescriptor,
   ) {
-    commandsRegisteredByDecorator.push({ ...options, methodName: propertyKey });
+    commandsRegisteredByDecorator.push({
+      ...options,
+      handler: descriptor.value,
+    });
   };
 }
