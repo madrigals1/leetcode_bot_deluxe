@@ -20,7 +20,10 @@ interface CommandOptions {
 }
 
 interface CommandMetadata extends CommandOptions {
-  handler: (ctx: Context) => CommandResponse | Promise<CommandResponse>;
+  handler: (
+    ctx: Context,
+    args: Record<string, string>,
+  ) => CommandResponse | Promise<CommandResponse>;
 }
 
 export const commandsRegisteredByDecorator: CommandMetadata[] = [];
@@ -36,4 +39,22 @@ export function command(options: CommandOptions) {
       handler: descriptor.value,
     });
   };
+}
+
+export function parseArgs(
+  text: string,
+  defs: CommandArg[],
+): Record<string, string> {
+  const parts = text.split(/\s+/).slice(1);
+  const result: Record<string, string> = {};
+
+  for (const def of defs) {
+    if (def.isMultiple) {
+      result[def.key] = parts.slice(def.index).join(" ");
+    } else {
+      result[def.key] = parts[def.index] ?? "";
+    }
+  }
+
+  return result;
 }

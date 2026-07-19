@@ -4,6 +4,7 @@ import {
   callbacksRegisteredByDecorator,
   command,
   commandsRegisteredByDecorator,
+  parseArgs,
 } from "./decorators";
 import { isOwnerOrPrivate } from "./utils/chat";
 
@@ -15,7 +16,7 @@ export default class Commands {
 
   @command({ name: "help" })
   static help() {
-    return { text: "Available commands: /start, /help, /menu" };
+    return { text: "Available commands: /start, /help, /menu, /ping" };
   }
 
   @command({ name: "menu" })
@@ -28,6 +29,14 @@ export default class Commands {
         .row()
         .text("Help", "command:help"),
     };
+  }
+
+  @command({
+    name: "ping",
+    args: [{ key: "message", name: "Message", index: 0, isRequired: true }],
+  })
+  static ping(_ctx: Context, args: Record<string, string>) {
+    return { text: args.message };
   }
 
   @callback({ action: "btn:leetcode" })
@@ -51,7 +60,10 @@ export function registerCommands(bot: Bot) {
         return;
       }
 
-      const result = await cmd.handler(ctx);
+      const args = cmd.args
+        ? parseArgs(ctx.message?.text ?? "", cmd.args)
+        : {};
+      const result = await cmd.handler(ctx, args);
       await ctx.reply(result.text, {
         reply_markup: result.reply_markup,
       });
@@ -74,7 +86,7 @@ export function registerCommands(bot: Bot) {
     const name = match[1];
     const cmd = findCommand(name);
     if (cmd) {
-      const result = await cmd.handler(ctx);
+      const result = await cmd.handler(ctx, {});
       await ctx.editMessageText(result.text, {
         reply_markup: result.reply_markup,
       });
