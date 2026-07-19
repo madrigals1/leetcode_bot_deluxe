@@ -26,7 +26,7 @@ export default class Commands {
         .text("LeetCode", "btn:leetcode")
         .text("Profile", "btn:profile")
         .row()
-        .text("Help", "btn:help"),
+        .text("Help", "command:help"),
     };
   }
 
@@ -40,12 +40,6 @@ export default class Commands {
   static onProfile(ctx: Context) {
     ctx.answerCallbackQuery();
     ctx.editMessageText("Opening Profile...");
-  }
-
-  @callback({ action: "btn:help" })
-  static onHelp(ctx: Context) {
-    ctx.answerCallbackQuery();
-    ctx.editMessageText("Help: Use /menu to see options.");
   }
 }
 
@@ -66,7 +60,28 @@ export function registerCommands(bot: Bot) {
 
   for (const cb of callbacksRegisteredByDecorator) {
     bot.callbackQuery(cb.action, async (ctx: Context) => {
+      await ctx.answerCallbackQuery();
       await cb.handler(ctx);
     });
   }
+
+  bot.callbackQuery(/^command:(.+)$/, async (ctx: Context) => {
+    const match = ctx.match;
+    if (!match) {
+      return;
+    }
+
+    const name = match[1];
+    const cmd = findCommand(name);
+    if (cmd) {
+      const result = await cmd.handler(ctx);
+      await ctx.editMessageText(result.text, {
+        reply_markup: result.reply_markup,
+      });
+    }
+  });
+}
+
+function findCommand(name: string) {
+  return commandsRegisteredByDecorator.find((c) => c.name === name);
 }

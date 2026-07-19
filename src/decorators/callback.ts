@@ -13,7 +13,7 @@ export const callbacksRegisteredByDecorator: CallbackMetadata[] = [];
 export function callback(options: CallbackOptions) {
   return function (
     _target: object,
-    propertyKey: string,
+    _propertyKey: string,
     descriptor: PropertyDescriptor,
   ) {
     callbacksRegisteredByDecorator.push({
