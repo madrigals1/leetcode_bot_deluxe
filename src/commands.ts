@@ -1,5 +1,7 @@
 import { Bot, Context, InlineKeyboard } from "grammy";
 import {
+  callback,
+  callbacksRegisteredByDecorator,
   command,
   commandsRegisteredByDecorator,
 } from "./decorators";
@@ -17,11 +19,32 @@ export default class Commands {
 
   @command({ name: "menu" })
   static menu() {
-    return { text: "Choose an option:", reply_markup: new InlineKeyboard()
-      .text("LeetCode", "btn:leetcode")
-      .text("Profile", "btn:profile")
-      .row()
-      .text("Help", "btn:help") };
+    return {
+      text: "Choose an option:",
+      reply_markup: new InlineKeyboard()
+        .text("LeetCode", "btn:leetcode")
+        .text("Profile", "btn:profile")
+        .row()
+        .text("Help", "btn:help"),
+    };
+  }
+
+  @callback({ action: "btn:leetcode" })
+  static onLeetCode(ctx: Context) {
+    ctx.answerCallbackQuery();
+    ctx.editMessageText("Opening LeetCode...");
+  }
+
+  @callback({ action: "btn:profile" })
+  static onProfile(ctx: Context) {
+    ctx.answerCallbackQuery();
+    ctx.editMessageText("Opening Profile...");
+  }
+
+  @callback({ action: "btn:help" })
+  static onHelp(ctx: Context) {
+    ctx.answerCallbackQuery();
+    ctx.editMessageText("Help: Use /menu to see options.");
   }
 }
 
@@ -35,18 +58,9 @@ export function registerCommands(bot: Bot) {
     });
   }
 
-  bot.callbackQuery("btn:leetcode", async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await ctx.editMessageText("Opening LeetCode...");
-  });
-
-  bot.callbackQuery("btn:profile", async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await ctx.editMessageText("Opening Profile...");
-  });
-
-  bot.callbackQuery("btn:help", async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await ctx.editMessageText("Help: Use /menu to see options.");
-  });
+  for (const cb of callbacksRegisteredByDecorator) {
+    bot.callbackQuery(cb.action, async (ctx: Context) => {
+      await cb.handler(ctx);
+    });
+  }
 }
