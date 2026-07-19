@@ -1,4 +1,4 @@
-import { Context } from "grammy";
+import { Context, InlineKeyboard } from "grammy";
 
 interface CommandArg {
   key: string;
@@ -8,6 +8,11 @@ interface CommandArg {
   isMultiple?: boolean;
 }
 
+interface CommandResponse {
+  text: string;
+  reply_markup?: InlineKeyboard;
+}
+
 interface CommandOptions {
   name: string;
   args?: CommandArg[];
@@ -15,7 +20,7 @@ interface CommandOptions {
 }
 
 interface CommandMetadata extends CommandOptions {
-  handler: (ctx: Context) => Promise<string> | string;
+  handler: (ctx: Context) => CommandResponse | Promise<CommandResponse>;
 }
 
 export const commandsRegisteredByDecorator: CommandMetadata[] = [];
