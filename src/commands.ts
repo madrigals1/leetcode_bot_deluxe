@@ -6,6 +6,7 @@ import {
   commandsRegisteredByDecorator,
   parseArgs,
 } from "./decorators";
+import type { ParsedArgs } from "./decorators";
 import { isOwnerOrPrivate } from "./utils/chat";
 import { LeetCodeBotError } from "./errors";
 
@@ -36,8 +37,8 @@ export default class Commands {
     name: "ping",
     args: [{ name: "message" }],
   })
-  static ping(_ctx: Context, args: Record<string, string>) {
-    return { text: args.message };
+  static ping(_ctx: Context, parsedArgs: ParsedArgs) {
+    return { text: parsedArgs.message };
   }
 
   @callback({ action: "btn:leetcode" })

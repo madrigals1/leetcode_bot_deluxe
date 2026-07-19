@@ -1,6 +1,8 @@
 import { Context, InlineKeyboard } from "grammy";
 import { InvalidArgumentAmountError } from "../errors";
 
+export type ParsedArgs = Record<string, string>;
+
 interface CommandArg {
   name: string;
 }
@@ -19,7 +21,7 @@ interface CommandOptions {
 interface CommandMetadata extends CommandOptions {
   handler: (
     ctx: Context,
-    args: Record<string, string>,
+    args: ParsedArgs,
   ) => CommandResponse | Promise<CommandResponse>;
 }
 
@@ -28,7 +30,7 @@ export const commandsRegisteredByDecorator: CommandMetadata[] = [];
 export function command(options: CommandOptions) {
   return function (
     _target: object,
-    propertyKey: string,
+    _propertyKey: string,
     descriptor: PropertyDescriptor,
   ) {
     commandsRegisteredByDecorator.push({
@@ -44,7 +46,7 @@ export function parseArgs({
 }: {
   text?: string;
   defs?: CommandArg[];
-} = {}): Record<string, string> {
+} = {}): ParsedArgs {
   if (!text || defs.length === 0) {
     return {};
   }
@@ -55,7 +57,7 @@ export function parseArgs({
     throw new InvalidArgumentAmountError(defs.length, parts.length);
   }
 
-  const result: Record<string, string> = {};
+  const result: ParsedArgs = {};
 
   for (let i = 0; i < defs.length; i++) {
     result[defs[i].name] = parts[i];
