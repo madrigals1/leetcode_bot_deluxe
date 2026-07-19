@@ -18,7 +18,9 @@ export function registerCommands(bot: Bot) {
     bot.command(cmd.name, async (ctx) => {
       const handler = Commands[cmd.methodName as keyof typeof Commands];
       const result = await (handler as (ctx: Context) => Promise<string> | string)(ctx);
-      if (result) await ctx.reply(result);
+      if (result) {
+        await ctx.reply(result);
+      }
     });
   }
 }

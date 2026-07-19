@@ -23,6 +23,7 @@ export default tseslint.config(
       "@stylistic/brace-style": "error",
       "@stylistic/object-curly-spacing": ["error", "always"],
       "@stylistic/arrow-spacing": "error",
+      "curly": ["error", "all"],
     },
   },
   {
