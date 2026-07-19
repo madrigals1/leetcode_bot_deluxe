@@ -5,6 +5,7 @@ import {
   command,
   commandsRegisteredByDecorator,
 } from "./decorators";
+import { isOwnerOrPrivate } from "./utils/chat";
 
 export default class Commands {
   @command({ name: "start" })
@@ -51,6 +52,11 @@ export default class Commands {
 export function registerCommands(bot: Bot) {
   for (const cmd of commandsRegisteredByDecorator) {
     bot.command(cmd.name, async (ctx: Context) => {
+      if (cmd.isAdmin && !(await isOwnerOrPrivate(ctx))) {
+        await ctx.reply("You don't have permission to use this command.");
+        return;
+      }
+
       const result = await cmd.handler(ctx);
       await ctx.reply(result.text, {
         reply_markup: result.reply_markup,
