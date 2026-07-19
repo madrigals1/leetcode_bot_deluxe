@@ -1,0 +1,32 @@
+{
+  "name": "leetcode_bot_deluxe",
+  "version": "0.1.0",
+  "description": "LeetCode BOT done with AI",
+  "keywords": [
+    "leetcode",
+    "bot",
+    "ai",
+    "typescript"
+  ],
+  "homepage": "https://github.com/madrigals1/leetcode_bot_deluxe#readme",
+  "bugs": {
+    "url": "https://github.com/madrigals1/leetcode_bot_deluxe/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madrigals1/leetcode_bot_deluxe.git"
+  },
+  "license": "ISC",
+  "author": "Adi Sabyrbayev",
+  "type": "commonjs",
+  "main": "index.ts",
+  "scripts": {
+    "start": "tsx index.ts",
+    "test": "npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  }
+}
