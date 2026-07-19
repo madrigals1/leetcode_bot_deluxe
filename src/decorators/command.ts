@@ -38,10 +38,17 @@ export function command(options: CommandOptions) {
   };
 }
 
-export function parseArgs(
-  text: string,
-  defs: CommandArg[],
-): Record<string, string> {
+export function parseArgs({
+  text = "",
+  defs = [],
+}: {
+  text?: string;
+  defs?: CommandArg[];
+} = {}): Record<string, string> {
+  if (!text || defs.length === 0) {
+    return {};
+  }
+
   const parts = text.split(/\s+/).slice(1);
 
   if (parts.length !== defs.length) {

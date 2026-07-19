@@ -61,9 +61,7 @@ export function registerCommands(bot: Bot) {
       }
 
       try {
-        const args = cmd.args
-          ? parseArgs(ctx.message?.text ?? "", cmd.args)
-          : {};
+        const args = parseArgs({ text: ctx.message?.text, defs: cmd.args });
 
         const result = await cmd.handler(ctx, args);
         await ctx.reply(result.text, {
