@@ -45,27 +45,25 @@ export default class Commands {
     name: "add",
     args: [{ name: "username" }],
   })
-  static add(ctx: LbContext, parsedArgs: ParsedArgs) {
-    return Service.users
-      .addToChannel(parsedArgs.username, ctx.chatId)
-      .then(() => ({
-        text: `User ${parsedArgs.username} was successfully added.`,
-      }))
-      .catch(() => ({
-        text: `Failed to add user ${parsedArgs.username}.`,
-      }));
+  static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
+    try {
+      await Service.users.addToChannel(parsedArgs.username, ctx.chatId);
+      return { text: `User ${parsedArgs.username} was successfully added.` };
+    } catch {
+      return { text: `Failed to add user ${parsedArgs.username}.` };
+    }
   }
 
   @callback({ action: "btn:leetcode" })
-  static onLeetCode(ctx: LbContext) {
-    ctx.answerCallbackQuery();
-    ctx.editMessageText("Opening LeetCode...");
+  static async onLeetCode(ctx: LbContext) {
+    await ctx.answerCallbackQuery();
+    await ctx.editMessageText("Opening LeetCode...");
   }
 
   @callback({ action: "btn:profile" })
-  static onProfile(ctx: LbContext) {
-    ctx.answerCallbackQuery();
-    ctx.editMessageText("Opening Profile...");
+  static async onProfile(ctx: LbContext) {
+    await ctx.answerCallbackQuery();
+    await ctx.editMessageText("Opening Profile...");
   }
 }
 
