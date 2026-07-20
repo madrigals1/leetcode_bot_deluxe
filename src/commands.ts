@@ -18,7 +18,9 @@ export default class Commands {
 
   @command({ name: "help" })
   static help() {
-    return { text: "Available commands: /start, /help, /menu, /ping, /add" };
+    return {
+      text: "Available commands: /start, /help, /menu, /ping, /add, /remove",
+    };
   }
 
   @command({ name: "menu" })
@@ -51,6 +53,19 @@ export default class Commands {
       return { text: `User ${parsedArgs.username} was successfully added.` };
     } catch {
       return { text: `Failed to add user ${parsedArgs.username}.` };
+    }
+  }
+
+  @command({
+    name: "remove",
+    args: [{ name: "username" }],
+  })
+  static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
+    try {
+      await Service.users.removeFromChannel(parsedArgs.username, ctx.chatId);
+      return { text: `User ${parsedArgs.username} was successfully removed.` };
+    } catch {
+      return { text: `Failed to remove user ${parsedArgs.username}.` };
     }
   }
 
