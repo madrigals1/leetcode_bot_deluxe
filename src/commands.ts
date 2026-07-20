@@ -49,7 +49,7 @@ export default class Commands {
     return Service.users
       .addToChannel(parsedArgs.username, ctx.chatId)
       .then(() => ({
-        text: `User ${parsedArgs.username} successfully added to the channel.`,
+        text: `User ${parsedArgs.username} was successfully added.`,
       }))
       .catch(() => ({
         text: `Failed to add user ${parsedArgs.username}.`,
