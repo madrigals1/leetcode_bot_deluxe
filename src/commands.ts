@@ -56,13 +56,11 @@ export default class Commands {
 
   @callback({ action: "btn:leetcode" })
   static async onLeetCode(ctx: LbContext) {
-    await ctx.answerCallbackQuery();
     await ctx.editMessageText("Opening LeetCode...");
   }
 
   @callback({ action: "btn:profile" })
   static async onProfile(ctx: LbContext) {
-    await ctx.answerCallbackQuery();
     await ctx.editMessageText("Opening Profile...");
   }
 }
@@ -88,7 +86,6 @@ export function registerCommands(bot: Bot) {
 
   for (const cb of callbacksRegisteredByDecorator) {
     bot.callbackQuery(cb.action, async (ctx: Context) => {
-      await ctx.answerCallbackQuery();
       await cb.handler(ctx);
     });
   }

@@ -19,7 +19,11 @@ export function callback(options: CallbackOptions) {
   ) {
     callbacksRegisteredByDecorator.push({
       ...options,
-      handler: (ctx: Context) => descriptor.value(new LbContext(ctx)),
+      handler: async (ctx: Context) => {
+        const lbCtx = new LbContext(ctx);
+        await lbCtx.answerCallbackQuery();
+        return descriptor.value(lbCtx);
+      },
     });
   };
 }
