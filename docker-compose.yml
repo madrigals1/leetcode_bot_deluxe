@@ -1,0 +1,19 @@
+services:
+  leetcode_bot_deluxe:
+    container_name: leetcode_bot_deluxe
+    restart: always
+    build:
+      context: .
+      dockerfile: ./deployment/Dockerfile
+    image: leetcode_bot_deluxe
+    env_file:
+      - .env
+    environment:
+      - BACKEND_URL=http://leetcode-bot-backend:8000
+    networks:
+      - leetcode_bot_network
+
+networks:
+  leetcode_bot_network:
+    name: ${LEETCODE_BOT_NETWORK}
+    external: true
