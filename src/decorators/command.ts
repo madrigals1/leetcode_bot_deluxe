@@ -1,5 +1,6 @@
 import { Context, InlineKeyboard } from "grammy";
 import { InvalidArgumentAmountError, UnauthorizedError } from "../errors";
+import { LbContext } from "../types/context";
 import { isOwnerOrPrivate } from "../utils/chat";
 
 export type ParsedArgs = Record<string, string>;
@@ -52,6 +53,8 @@ export function command(options: CommandOptions) {
     commandsRegisteredByDecorator.push({
       ...options,
       handler: async (ctx: Context) => {
+        const lbCtx = new LbContext(ctx);
+
         if (options.isAdmin && !(await isOwnerOrPrivate(ctx))) {
           throw new UnauthorizedError();
         }
@@ -60,7 +63,7 @@ export function command(options: CommandOptions) {
           ? parseArgs(ctx.message?.text ?? "", options.args)
           : {};
 
-        return originalHandler(ctx, args);
+        return originalHandler(lbCtx, args);
       },
     });
   };

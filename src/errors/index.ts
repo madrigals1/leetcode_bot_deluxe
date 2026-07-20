@@ -18,3 +18,10 @@ export class UnauthorizedError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.UnauthorizedError`;
   }
 }
+
+export class ChatIdNotFoundError extends LeetCodeBotError {
+  constructor() {
+    super("Could not determine chat ID.");
+    this.name = `${LeetCodeBotError.name}.ChatIdNotFoundError`;
+  }
+}

@@ -8,6 +8,7 @@ import {
 import type { ParsedArgs } from "./decorators";
 import { LeetCodeBotError } from "./errors";
 import { Service } from "./services";
+import { LbContext } from "./types/context";
 
 export default class Commands {
   @command({ name: "start" })
@@ -36,7 +37,7 @@ export default class Commands {
     name: "ping",
     args: [{ name: "message" }],
   })
-  static ping(_ctx: Context, parsedArgs: ParsedArgs) {
+  static ping(_ctx: LbContext, parsedArgs: ParsedArgs) {
     return { text: parsedArgs.message };
   }
 
@@ -44,15 +45,9 @@ export default class Commands {
     name: "add",
     args: [{ name: "username" }],
   })
-  static add(ctx: Context, parsedArgs: ParsedArgs) {
-    const chatId = ctx.chat?.id;
-
-    if (!chatId) {
-      return { text: "Could not determine chat ID." };
-    }
-
+  static add(ctx: LbContext, parsedArgs: ParsedArgs) {
     return Service.users
-      .addToChannel(parsedArgs.username, chatId)
+      .addToChannel(parsedArgs.username, ctx.chatId)
       .then(() => ({
         text: `User ${parsedArgs.username} successfully added to the channel.`,
       }))
@@ -62,13 +57,13 @@ export default class Commands {
   }
 
   @callback({ action: "btn:leetcode" })
-  static onLeetCode(ctx: Context) {
+  static onLeetCode(ctx: LbContext) {
     ctx.answerCallbackQuery();
     ctx.editMessageText("Opening LeetCode...");
   }
 
   @callback({ action: "btn:profile" })
-  static onProfile(ctx: Context) {
+  static onProfile(ctx: LbContext) {
     ctx.answerCallbackQuery();
     ctx.editMessageText("Opening Profile...");
   }

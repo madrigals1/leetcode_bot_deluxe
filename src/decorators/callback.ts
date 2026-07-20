@@ -1,4 +1,5 @@
 import { Context } from "grammy";
+import { LbContext } from "../types/context";
 
 interface CallbackOptions {
   action: string;
@@ -18,7 +19,7 @@ export function callback(options: CallbackOptions) {
   ) {
     callbacksRegisteredByDecorator.push({
       ...options,
-      handler: descriptor.value,
+      handler: (ctx: Context) => descriptor.value(new LbContext(ctx)),
     });
   };
 }
