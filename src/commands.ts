@@ -9,6 +9,7 @@ import {
 import type { ParsedArgs } from "./decorators";
 import { isOwnerOrPrivate } from "./utils/chat";
 import { LeetCodeBotError } from "./errors";
+import { Service } from "./services";
 
 export default class Commands {
   @command({ name: "start" })
@@ -18,7 +19,7 @@ export default class Commands {
 
   @command({ name: "help" })
   static help() {
-    return { text: "Available commands: /start, /help, /menu, /ping" };
+    return { text: "Available commands: /start, /help, /menu, /ping, /add" };
   }
 
   @command({ name: "menu" })
@@ -39,6 +40,27 @@ export default class Commands {
   })
   static ping(_ctx: Context, parsedArgs: ParsedArgs) {
     return { text: parsedArgs.message };
+  }
+
+  @command({
+    name: "add",
+    args: [{ name: "username" }],
+  })
+  static add(ctx: Context, parsedArgs: ParsedArgs) {
+    const chatId = ctx.chat?.id;
+
+    if (!chatId) {
+      return { text: "Could not determine chat ID." };
+    }
+
+    return Service.users
+      .addToChannel(parsedArgs.username, chatId)
+      .then(() => ({
+        text: `User ${parsedArgs.username} successfully added to the channel.`,
+      }))
+      .catch(() => ({
+        text: `Failed to add user ${parsedArgs.username}.`,
+      }));
   }
 
   @callback({ action: "btn:leetcode" })
