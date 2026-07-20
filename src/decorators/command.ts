@@ -17,7 +17,7 @@ interface CommandResponse {
 interface CommandOptions {
   name: string;
   args?: CommandArg[];
-  isAdmin?: boolean;
+  requiresAdmin?: boolean;
 }
 
 interface CommandMetadata extends CommandOptions {
@@ -55,7 +55,7 @@ export function command(options: CommandOptions) {
       handler: async (ctx: Context) => {
         const lbCtx = new LbContext(ctx);
 
-        if (options.isAdmin && !(await isOwnerOrPrivate(ctx))) {
+        if (options.requiresAdmin && !(await isOwnerOrPrivate(ctx))) {
           throw new UnauthorizedError();
         }
 

@@ -59,7 +59,7 @@ export default class Commands {
   @command({
     name: "remove",
     args: [{ name: "username" }],
-    isAdmin: true,
+    requiresAdmin: true,
   })
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
     try {
