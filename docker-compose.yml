@@ -8,8 +8,6 @@ services:
     image: leetcode_bot_deluxe
     env_file:
       - .env
-    environment:
-      - BACKEND_URL=http://leetcode-bot-backend:8000
     networks:
       - leetcode_bot_network
 
