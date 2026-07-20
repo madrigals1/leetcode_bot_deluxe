@@ -1,5 +1,6 @@
 import { Context, InlineKeyboard } from "grammy";
-import { InvalidArgumentAmountError } from "../errors";
+import { InvalidArgumentAmountError, UnauthorizedError } from "../errors";
+import { isOwnerOrPrivate } from "../utils/chat";
 
 export type ParsedArgs = Record<string, string>;
 
@@ -19,38 +20,12 @@ interface CommandOptions {
 }
 
 interface CommandMetadata extends CommandOptions {
-  handler: (
-    ctx: Context,
-    args: ParsedArgs,
-  ) => CommandResponse | Promise<CommandResponse>;
+  handler: (ctx: Context) => CommandResponse | Promise<CommandResponse>;
 }
 
 export const commandsRegisteredByDecorator: CommandMetadata[] = [];
 
-export function command(options: CommandOptions) {
-  return function (
-    _target: object,
-    _propertyKey: string,
-    descriptor: PropertyDescriptor,
-  ) {
-    commandsRegisteredByDecorator.push({
-      ...options,
-      handler: descriptor.value,
-    });
-  };
-}
-
-export function parseArgs({
-  text = "",
-  defs = [],
-}: {
-  text?: string;
-  defs?: CommandArg[];
-} = {}): ParsedArgs {
-  if (!text || defs.length === 0) {
-    return {};
-  }
-
+function parseArgs(text: string, defs: CommandArg[]): ParsedArgs {
   const parts = text.split(/\s+/).slice(1);
 
   if (parts.length !== defs.length) {
@@ -64,4 +39,29 @@ export function parseArgs({
   }
 
   return result;
+}
+
+export function command(options: CommandOptions) {
+  return function (
+    _target: object,
+    _propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) {
+    const originalHandler = descriptor.value;
+
+    commandsRegisteredByDecorator.push({
+      ...options,
+      handler: async (ctx: Context) => {
+        if (options.isAdmin && !(await isOwnerOrPrivate(ctx))) {
+          throw new UnauthorizedError();
+        }
+
+        const args = options.args
+          ? parseArgs(ctx.message?.text ?? "", options.args)
+          : {};
+
+        return originalHandler(ctx, args);
+      },
+    });
+  };
 }

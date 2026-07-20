@@ -4,10 +4,8 @@ import {
   callbacksRegisteredByDecorator,
   command,
   commandsRegisteredByDecorator,
-  parseArgs,
 } from "./decorators";
 import type { ParsedArgs } from "./decorators";
-import { isOwnerOrPrivate } from "./utils/chat";
 import { LeetCodeBotError } from "./errors";
 import { Service } from "./services";
 
@@ -79,15 +77,8 @@ export default class Commands {
 export function registerCommands(bot: Bot) {
   for (const cmd of commandsRegisteredByDecorator) {
     bot.command(cmd.name, async (ctx: Context) => {
-      if (cmd.isAdmin && !(await isOwnerOrPrivate(ctx))) {
-        await ctx.reply("You don't have permission to use this command.");
-        return;
-      }
-
       try {
-        const args = parseArgs({ text: ctx.message?.text, defs: cmd.args });
-
-        const result = await cmd.handler(ctx, args);
+        const result = await cmd.handler(ctx);
         await ctx.reply(result.text, {
           reply_markup: result.reply_markup,
         });
@@ -118,7 +109,7 @@ export function registerCommands(bot: Bot) {
     const name = match[1];
     const cmd = findCommand(name);
     if (cmd) {
-      const result = await cmd.handler(ctx, {});
+      const result = await cmd.handler(ctx);
       await ctx.editMessageText(result.text, {
         reply_markup: result.reply_markup,
       });

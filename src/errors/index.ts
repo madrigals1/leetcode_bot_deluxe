@@ -11,3 +11,10 @@ export class InvalidArgumentAmountError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.InvalidArgumentAmountError`;
   }
 }
+
+export class UnauthorizedError extends LeetCodeBotError {
+  constructor() {
+    super("You don't have permission to use this command.");
+    this.name = `${LeetCodeBotError.name}.UnauthorizedError`;
+  }
+}
