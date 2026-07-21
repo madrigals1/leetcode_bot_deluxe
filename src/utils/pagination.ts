@@ -18,7 +18,7 @@ type FetchPage<T> = (
 
 interface PaginationOptions<T> {
   name: string;
-  title: string;
+  header: string;
   fetchPage: FetchPage<T>;
   formatItem: (item: T, index: number) => string;
   errorMessage?: string;
@@ -54,7 +54,7 @@ async function fetchPage<T>(
   );
 
   return {
-    text: `${options.title}\n\n${lines.join("\n")}`,
+    text: `${options.header}\n\n${lines.join("\n")}`,
     reply_markup: buildKeyboard(page, !!data.next, options.name),
   };
 }

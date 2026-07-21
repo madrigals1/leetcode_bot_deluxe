@@ -73,7 +73,7 @@ export default class Commands {
 
   @pagination({
     name: "rating",
-    title: "LeetCode Rating:",
+    header: "LeetCode Rating:",
     fetchPage: (page, ctx) =>
       Service.users.list({
         channel_chat_id: ctx.chatId,
