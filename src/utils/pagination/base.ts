@@ -59,11 +59,11 @@ export function buildNavRow(page: number, hasNext: boolean, name: string) {
   const row: InlineKeyboardButton[] = [];
 
   if (page > 1) {
-    row.push({ text: "⬅️ Previous", callback_data: `${name}:${page - 1}` });
+    row.push({ text: "⬅️ Previous", callback_data: `${name}_page:${page - 1}` });
   }
 
   if (hasNext) {
-    row.push({ text: "Next ➡️", callback_data: `${name}:${page + 1}` });
+    row.push({ text: "Next ➡️", callback_data: `${name}_page:${page + 1}` });
   }
 
   return row;
@@ -94,7 +94,7 @@ export function basePagination<T>(options: BasePaginationOptions<T>) {
     });
 
     callbacksRegisteredByDecorator.push({
-      action: new RegExp(`^${options.name}:(\\d+)$`),
+      action: new RegExp(`^${options.name}_page:(\\d+)$`),
       handler: async (ctx: Context) => {
         const lbCtx = new LbContext(ctx);
 
