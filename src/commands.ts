@@ -30,18 +30,6 @@ export default class Commands {
     };
   }
 
-  @command({ name: "menu" })
-  static menu() {
-    return {
-      text: "Choose an option:",
-      reply_markup: new InlineKeyboard()
-        .text("LeetCode", "btn:leetcode")
-        .text("Profile", "btn:profile")
-        .row()
-        .text("Help", "command:help"),
-    };
-  }
-
   @command({
     name: "add",
     args: [{ name: "username" }],
@@ -196,16 +184,6 @@ export default class Commands {
         reply_markup: result.reply_markup,
       });
     }
-  }
-
-  @callback({ action: "btn:leetcode" })
-  static async onLeetCode(ctx: LbContext) {
-    await ctx.editMessageText("Opening LeetCode...");
-  }
-
-  @callback({ action: "btn:profile" })
-  static async onProfile(ctx: LbContext) {
-    await ctx.editMessageText("Opening Profile...");
   }
 }
 
