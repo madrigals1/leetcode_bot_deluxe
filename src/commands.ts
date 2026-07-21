@@ -125,24 +125,17 @@ export default class Commands {
     const userId = Number(lbctx.match[1]);
     const user = await Service.users.getById(userId);
     const name = user.data?.profile?.realName ?? user.username;
-    const ac = user.data?.submitStats?.acSubmissionNum ?? [];
+    const solved = user.data?.submitStats?.acSubmissionNum ?? [];
     const total = user.data?.submitStats?.totalSubmissionNum ?? [];
-
-    const easy = getDifficultyCount(ac, "Easy");
-    const medium = getDifficultyCount(ac, "Medium");
-    const hard = getDifficultyCount(ac, "Hard");
-    const allSolved = getDifficultyCount(ac, "All");
-    const allTotal = getDifficultyCount(total, "All");
-    const cumulative = user.solved_cml;
 
     const text =
       `<b>${escapeHtml(name)}</b> - https://leetcode.com/${user.username}\n\n` +
       "<b>Solved Problems:</b>\n" +
-      `🟢 Easy - ${easy}\n` +
-      `🟡 Medium - ${medium}\n` +
-      `🔴 Hard - ${hard}\n` +
-      `🔵 All - ${allSolved} / ${allTotal}\n` +
-      `🔷 Cumulative - ${cumulative}`;
+      `🟢 Easy - ${getDifficultyCount(solved, "Easy")}\n` +
+      `🟡 Medium - ${getDifficultyCount(solved, "Medium")}\n` +
+      `🔴 Hard - ${getDifficultyCount(solved, "Hard")}\n` +
+      `🔵 All - ${getDifficultyCount(solved, "All")} / ${getDifficultyCount(total, "All")}\n` +
+      `🔷 Cumulative - ${user.solved_cml}`;
 
     await lbctx.editMessageText(text);
   }
