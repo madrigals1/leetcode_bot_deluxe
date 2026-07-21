@@ -77,13 +77,11 @@ export default class Commands {
         channel_chat_id: ctx.chatId,
       });
 
-      const sorted = [...results].sort((a, b) => b.solved - a.solved);
-
-      if (sorted.length === 0) {
+      if (results.length === 0) {
         return { text: "No users found in this channel." };
       }
 
-      const lines = sorted.map(
+      const lines = results.map(
         (user, i) => `${i + 1}. ${user.username}: ${user.solved}`,
       );
 
