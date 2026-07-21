@@ -1,4 +1,4 @@
-import { ApiService } from "./api";
+import { ApiService, type PaginatedResponse } from "./api";
 
 export interface User {
   id: number;
@@ -8,13 +8,6 @@ export interface User {
   solved_cml: number;
   created_at: string;
   updated_at: string;
-}
-
-export interface PaginatedResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
 }
 
 class UsersService extends ApiService {

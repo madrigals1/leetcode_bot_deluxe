@@ -15,6 +15,7 @@ export class Service {
 }
 
 export type { LoginResponse } from "./auth";
+export type { PaginatedResponse } from "./api";
 export type { User } from "./users";
 export type { Channel } from "./channels";
 export type { Subscription } from "./subscriptions";

@@ -4,6 +4,13 @@ import {
   TOKEN_MAX_AGE_MS,
 } from "../constants";
 
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
 export class ApiService {
   private static cachedAccessToken?: string;
   private static lastRefreshedAt = 0;
