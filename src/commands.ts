@@ -10,8 +10,8 @@ import { LeetCodeBotError } from "./errors";
 import { Service } from "./services";
 import { LbContext } from "./types/context";
 import { pagination, buttonsPagination } from "./utils/pagination";
-import { CUMULATIVE_RATING_HEADER } from "./messages";
 import { getDifficultyCount } from "./utils/leetcode";
+import { CML_EASY_POINTS, CML_MEDIUM_POINTS, CML_HARD_POINTS } from "./constants";
 
 function escapeHtml(text: string) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -90,7 +90,11 @@ export default class Commands {
 
   @pagination({
     name: "rating_cml",
-    header: CUMULATIVE_RATING_HEADER,
+    header:
+      "Cumulative Rating  🔥\n" +
+      `🟢 Easy - ${CML_EASY_POINTS} points\n` +
+      `🟡 Medium - ${CML_MEDIUM_POINTS} points\n` +
+      `🔴 Hard - ${CML_HARD_POINTS} points`,
     fetchPage: (page, ctx) =>
       Service.channels.getUsers(ctx.chatId, page, "-user__solved_cml"),
     formatItem: (item, i) =>
