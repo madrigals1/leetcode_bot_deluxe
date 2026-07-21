@@ -84,6 +84,22 @@ export default class Commands {
   })
   static rating() {}
 
+  @callback({ action: /^command:(.+)$/ })
+  static async onCommandRedirect(ctx: LbContext) {
+    if (!ctx.match) {
+      return;
+    }
+
+    const name = ctx.match[1];
+    const cmd = findCommand(name);
+    if (cmd) {
+      const result = await cmd.handler(ctx.ctx);
+      await ctx.editMessageText(result.text, {
+        reply_markup: result.reply_markup,
+      });
+    }
+  }
+
   @callback({ action: "btn:leetcode" })
   static async onLeetCode(ctx: LbContext) {
     await ctx.editMessageText("Opening LeetCode...");
@@ -130,22 +146,6 @@ export function registerCommands(bot: Bot) {
       await cb.handler(ctx);
     });
   }
-
-  bot.callbackQuery(/^command:(.+)$/, async (ctx: Context) => {
-    const match = ctx.match;
-    if (!match) {
-      return;
-    }
-
-    const name = match[1];
-    const cmd = findCommand(name);
-    if (cmd) {
-      const result = await cmd.handler(ctx);
-      await ctx.editMessageText(result.text, {
-        reply_markup: result.reply_markup,
-      });
-    }
-  });
 }
 
 function findCommand(name: string) {
