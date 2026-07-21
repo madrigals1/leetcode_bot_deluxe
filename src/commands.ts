@@ -9,7 +9,7 @@ import type { ParsedArgs } from "./decorators";
 import { LeetCodeBotError } from "./errors";
 import { Service } from "./services";
 import { LbContext } from "./types/context";
-import { pagination } from "./utils/pagination";
+import { pagination, buttonsPagination } from "./utils/pagination";
 import { CUMULATIVE_RATING_HEADER } from "./messages";
 
 export default class Commands {
@@ -93,6 +93,19 @@ export default class Commands {
     reply_markup: new InlineKeyboard().text("🏆 Regular rating", "command:rating"),
   })
   static ratingCml() {}
+
+  @buttonsPagination({
+    name: "profile",
+    header: "Select a user to see the profile:",
+    fetchPage: (page, ctx) =>
+      Service.channels.getUsers(ctx.chatId, page),
+    buttonsPerRow: 2,
+    itemToButton: (item) => ({
+      text: item.user.username,
+      callback_data: `profile:${item.user.id}`,
+    }),
+  })
+  static profile() {}
 
   @callback({ action: /^command:(.+)$/ })
   static async onCommandRedirect(lbctx: LbContext) {
