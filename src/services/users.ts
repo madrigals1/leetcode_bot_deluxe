@@ -15,6 +15,10 @@ export interface User {
       acSubmissionNum: Array<{ difficulty: string; count: number }>;
       totalSubmissionNum: Array<{ difficulty: string; count: number }>;
     };
+    languageStats?: Array<{
+      languageName: string;
+      problemsSolved: number;
+    }>;
   };
   created_at: string;
   updated_at: string;

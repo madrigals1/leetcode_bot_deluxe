@@ -121,6 +121,19 @@ export default class Commands {
   })
   static avatar() {}
 
+  @buttonsPagination({
+    name: "langstats",
+    header: "Select a user to see the language stats:",
+    fetchPage: (page, ctx) =>
+      Service.channels.getUsers(ctx.chatId, page),
+    buttonsPerRow: 2,
+    itemToButton: (item) => ({
+      text: item.user.username,
+      callback_data: `langstats:${item.user.id}`,
+    }),
+  })
+  static langstats() {}
+
   @callback({ action: /^profile:(\d+)$/ })
   static async onProfileUser(lbctx: LbContext) {
     const userId = Number(lbctx.match[1]);
@@ -155,6 +168,22 @@ export default class Commands {
     } else {
       await lbctx.editMessageText("No avatar found.");
     }
+  }
+
+  @callback({ action: /^langstats:(\d+)$/ })
+  static async onLangStatsUser(lbctx: LbContext) {
+    const userId = Number(lbctx.match[1]);
+    const user = await Service.users.getById(userId);
+    const stats = user.data?.languageStats ?? [];
+
+    const text =
+      `👨‍💻 Problems solved by <b>${escapeHtml(user.username)}</b> in:\n\n` +
+      stats
+        .sort((a, b) => b.problemsSolved - a.problemsSolved)
+        .map((s) => `- <b>${s.languageName}</b> ${s.problemsSolved}`)
+        .join("\n");
+
+    await lbctx.editMessageText(text);
   }
 
   @callback({ action: /^command:(.+)$/ })
