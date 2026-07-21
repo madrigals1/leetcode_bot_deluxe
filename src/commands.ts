@@ -73,13 +73,14 @@ export default class Commands {
 
   @pagination({
     name: "rating",
-    title: "LeetCode Rating: ",
+    title: "LeetCode Rating:",
     fetchPage: (page, ctx) =>
       Service.users.list({
         channel_chat_id: ctx.chatId,
         page,
       }),
-    formatItem: (user, i) => `${i + 1}. ${user.username} *${user.solved}*`,
+    formatItem: (user, i) =>
+      `${i + 1}. <b>${user.username}</b> ${user.solved}`,
   })
   static rating() {}
 
@@ -95,6 +96,17 @@ export default class Commands {
 }
 
 export function registerCommands(bot: Bot) {
+  bot.api.config.use((prev, method, payload) => {
+    if (
+      typeof payload === "object" &&
+      payload !== null &&
+      "parse_mode" in payload === false
+    ) {
+      (payload as Record<string, unknown>).parse_mode = "HTML";
+    }
+    return prev(method, payload);
+  });
+
   for (const cmd of commandsRegisteredByDecorator) {
     bot.command(cmd.name, async (ctx: Context) => {
       try {
