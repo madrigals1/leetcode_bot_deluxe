@@ -10,7 +10,7 @@ import { LeetCodeBotError } from "./errors";
 import { Service } from "./services";
 import { LbContext } from "./types/context";
 import { pagination } from "./utils/pagination";
-import { CML_EASY_POINTS, CML_MEDIUM_POINTS, CML_HARD_POINTS } from "./constants";
+import { CUMULATIVE_RATING_HEADER } from "./messages";
 
 export default class Commands {
   @command({ name: "start" })
@@ -85,10 +85,7 @@ export default class Commands {
 
   @pagination({
     name: "rating_cml",
-    header: `Cumulative Rating  🔥
-🟢 Easy - ${CML_EASY_POINTS} points
-🟡 Medium - ${CML_MEDIUM_POINTS} points
-🔴 Hard - ${CML_HARD_POINTS} points`,
+    header: CUMULATIVE_RATING_HEADER,
     fetchPage: (page, ctx) =>
       Service.channels.getUsers(ctx.chatId, page, "-user__solved_cml"),
     formatItem: (item, i) =>
