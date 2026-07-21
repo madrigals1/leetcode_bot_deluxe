@@ -29,8 +29,15 @@ class ChannelsService extends ApiService {
     return this.fetch<Channel>(`/api/v1/channels/${pk}/`);
   }
 
-  getUsers(chatId: number, page?: number) {
-    const query = page ? `?page=${page}` : "";
+  getUsers(chatId: number, page?: number, ordering?: string) {
+    const params = new URLSearchParams();
+    if (page) {
+      params.set("page", String(page));
+    }
+    if (ordering) {
+      params.set("ordering", ordering);
+    }
+    const query = params.toString() ? `?${params.toString()}` : "";
     return this.fetch<PaginatedResponse<ChannelUser>>(
       `/api/v1/channels/${chatId}/users/${query}`,
     );

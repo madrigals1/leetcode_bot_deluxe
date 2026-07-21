@@ -22,12 +22,17 @@ interface PaginationOptions<T> {
   fetchPage: FetchPage<T>;
   formatItem: (item: T, index: number) => string;
   pageSize?: number;
+  reply_markup?: InlineKeyboard;
   footer?: string;
   errorMessage?: string;
 }
 
-function buildKeyboard(page: number, hasNext: boolean, prefix: string) {
-  const keyboard = new InlineKeyboard();
+function buildKeyboard(page: number, hasNext: boolean, prefix: string, extraKeyboard?: InlineKeyboard) {
+  const keyboard = extraKeyboard?.clone() ?? new InlineKeyboard();
+
+  if (extraKeyboard) {
+    keyboard.row();
+  }
 
   if (page > 1) {
     keyboard.text("⬅️ Previous", `${prefix}:${page - 1}`);
@@ -60,7 +65,7 @@ async function fetchPage<T>(
 
   return {
     text: `${options.header}\n\n${lines.join("\n")}\n\n${footer}`,
-    reply_markup: buildKeyboard(page, !!data.next, options.name),
+    reply_markup: buildKeyboard(page, !!data.next, options.name, options.reply_markup),
   };
 }
 
