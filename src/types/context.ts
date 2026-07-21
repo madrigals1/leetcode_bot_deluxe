@@ -1,5 +1,5 @@
 import { Context, InlineKeyboard } from "grammy";
-import { ChatIdNotFoundError } from "../errors";
+import { ChatIdNotFoundError, MatchNotFoundError } from "../errors";
 
 export class LbContext {
   public readonly chatId: number;
@@ -12,8 +12,12 @@ export class LbContext {
     this.chatId = ctx.chat.id;
   }
 
-  get match(): RegExpMatchArray | undefined {
-    return this.ctx.match as RegExpMatchArray | undefined;
+  get match(): RegExpMatchArray {
+    if (!this.ctx.match) {
+      throw new MatchNotFoundError();
+    }
+
+    return this.ctx.match as RegExpMatchArray;
   }
 
   reply(text: string, options?: { reply_markup?: InlineKeyboard }) {

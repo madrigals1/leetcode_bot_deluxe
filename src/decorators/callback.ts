@@ -1,5 +1,6 @@
 import { Context } from "grammy";
 import { LbContext } from "../types/context";
+import { LeetCodeBotError } from "../errors";
 
 interface CallbackOptions {
   action: string | RegExp;
@@ -20,9 +21,18 @@ export function callback(options: CallbackOptions) {
     callbacksRegisteredByDecorator.push({
       ...options,
       handler: async (ctx: Context) => {
-        const lbCtx = new LbContext(ctx);
-        await lbCtx.answerCallbackQuery();
-        return descriptor.value(lbCtx);
+        try {
+          const lbCtx = new LbContext(ctx);
+          await lbCtx.answerCallbackQuery();
+          return descriptor.value(lbCtx);
+        } catch (error) {
+          if (error instanceof LeetCodeBotError) {
+            await ctx.answerCallbackQuery(error.message);
+            return;
+          }
+
+          await ctx.answerCallbackQuery("An error occurred.");
+        }
       },
     });
   };

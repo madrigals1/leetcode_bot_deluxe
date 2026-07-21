@@ -25,3 +25,10 @@ export class ChatIdNotFoundError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.ChatIdNotFoundError`;
   }
 }
+
+export class MatchNotFoundError extends LeetCodeBotError {
+  constructor() {
+    super("Internal error: match result not found.");
+    this.name = `${LeetCodeBotError.name}.MatchNotFoundError`;
+  }
+}

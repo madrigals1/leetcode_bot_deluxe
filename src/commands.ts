@@ -131,10 +131,6 @@ export default class Commands {
 
   @callback({ action: /^profile:(\d+)$/ })
   static async onProfileUser(lbctx: LbContext) {
-    if (!lbctx.match) {
-      return;
-    }
-
     const userId = Number(lbctx.match[1]);
     const user = await Service.users.getById(userId);
     const name = user.data?.profile?.realName ?? user.username;
@@ -155,10 +151,6 @@ export default class Commands {
 
   @callback({ action: /^avatar:(\d+)$/ })
   static async onAvatarUser(lbctx: LbContext) {
-    if (!lbctx.match) {
-      return;
-    }
-
     const userId = Number(lbctx.match[1]);
     const user = await Service.users.getById(userId);
     const avatarUrl = user.data?.profile?.userAvatar;
@@ -175,10 +167,6 @@ export default class Commands {
 
   @callback({ action: /^command:(.+)$/ })
   static async onCommandRedirect(lbctx: LbContext) {
-    if (!lbctx.match) {
-      return;
-    }
-
     const name = lbctx.match[1];
     const cmd = findCommand(name);
     if (cmd) {

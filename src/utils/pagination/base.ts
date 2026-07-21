@@ -6,6 +6,7 @@ import {
   commandsRegisteredByDecorator,
 } from "../../decorators";
 import { LbContext } from "../../types/context";
+import { LeetCodeBotError } from "../../errors";
 
 export interface PageResult {
   text: string;
@@ -98,13 +99,8 @@ export function basePagination<T>(options: BasePaginationOptions<T>) {
       handler: async (ctx: Context) => {
         const lbCtx = new LbContext(ctx);
 
-        if (!lbCtx.match) {
-          return;
-        }
-
-        const page = Number(lbCtx.match[1]);
-
         try {
+          const page = Number(lbCtx.match[1]);
           const data = await options.fetchPage(page, lbCtx);
 
           if (data.results.length === 0) {
@@ -116,7 +112,12 @@ export function basePagination<T>(options: BasePaginationOptions<T>) {
           await lbCtx.editMessageText(result.text, {
             reply_markup: result.reply_markup,
           });
-        } catch {
+        } catch (error) {
+          if (error instanceof LeetCodeBotError) {
+            await ctx.answerCallbackQuery(error.message);
+            return;
+          }
+
           await lbCtx.editMessageText(
             options.errorMessage ?? "Failed to fetch data.",
           );
