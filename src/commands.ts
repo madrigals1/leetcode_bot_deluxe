@@ -85,16 +85,16 @@ export default class Commands {
   static rating() {}
 
   @callback({ action: /^command:(.+)$/ })
-  static async onCommandRedirect(ctx: LbContext) {
-    if (!ctx.match) {
+  static async onCommandRedirect(lbctx: LbContext) {
+    if (!lbctx.match) {
       return;
     }
 
-    const name = ctx.match[1];
+    const name = lbctx.match[1];
     const cmd = findCommand(name);
     if (cmd) {
-      const result = await cmd.handler(ctx.ctx);
-      await ctx.editMessageText(result.text, {
+      const result = await cmd.handler(lbctx.ctx);
+      await lbctx.editMessageText(result.text, {
         reply_markup: result.reply_markup,
       });
     }
