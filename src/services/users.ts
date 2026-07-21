@@ -18,10 +18,20 @@ export interface PaginatedResponse<T> {
 }
 
 class UsersService extends ApiService {
-  list(params?: { channel_chat_id?: number }) {
-    const query = params?.channel_chat_id
-      ? `?channel_users__channel__chat_id=${params.channel_chat_id}`
-      : "";
+  list(params?: { channel_chat_id?: number; page?: number }) {
+    const queryParts: string[] = [];
+
+    if (params?.channel_chat_id) {
+      queryParts.push(
+        `channel_users__channel__chat_id=${params.channel_chat_id}`,
+      );
+    }
+
+    if (params?.page) {
+      queryParts.push(`page=${params.page}`);
+    }
+
+    const query = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
     return this.fetch<PaginatedResponse<User>>(`/api/v1/users/${query}`);
   }
 
