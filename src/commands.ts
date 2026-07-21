@@ -116,6 +116,19 @@ export default class Commands {
   })
   static profile() {}
 
+  @buttonsPagination({
+    name: "avatar",
+    header: "Select a user to see the avatar:",
+    fetchPage: (page, ctx) =>
+      Service.channels.getUsers(ctx.chatId, page),
+    buttonsPerRow: 2,
+    itemToButton: (item) => ({
+      text: item.user.username,
+      callback_data: `avatar:${item.user.id}`,
+    }),
+  })
+  static avatar() {}
+
   @callback({ action: /^profile:(\d+)$/ })
   static async onProfileUser(lbctx: LbContext) {
     if (!lbctx.match) {
@@ -138,6 +151,26 @@ export default class Commands {
       `🔷 Cumulative - ${user.solved_cml}`;
 
     await lbctx.editMessageText(text);
+  }
+
+  @callback({ action: /^avatar:(\d+)$/ })
+  static async onAvatarUser(lbctx: LbContext) {
+    if (!lbctx.match) {
+      return;
+    }
+
+    const userId = Number(lbctx.match[1]);
+    const user = await Service.users.getById(userId);
+    const avatarUrl = user.data?.profile?.userAvatar;
+
+    if (avatarUrl) {
+      await lbctx.ctx.editMessageMedia({
+        type: "photo",
+        media: avatarUrl,
+      });
+    } else {
+      await lbctx.editMessageText("No avatar found.");
+    }
   }
 
   @callback({ action: /^command:(.+)$/ })
