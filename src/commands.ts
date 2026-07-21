@@ -43,14 +43,6 @@ export default class Commands {
   }
 
   @command({
-    name: "ping",
-    args: [{ name: "message" }],
-  })
-  static ping(_ctx: LbContext, parsedArgs: ParsedArgs) {
-    return { text: parsedArgs.message };
-  }
-
-  @command({
     name: "add",
     args: [{ name: "username" }],
   })
