@@ -79,7 +79,7 @@ export default class Commands {
       Service.channels.getUsers(ctx.chatId, page),
     formatItem: (item, i) =>
       `${i + 1}. <b>${item.user.username}</b> ${item.user.solved}`,
-    reply_markup: new InlineKeyboard().text("🔥  Cumulative rating", "command:rating_cml"),
+    reply_markup: new InlineKeyboard().text("🔥 Cumulative rating", "command:rating_cml"),
   })
   static rating() {}
 
@@ -90,7 +90,7 @@ export default class Commands {
       Service.channels.getUsers(ctx.chatId, page, "-user__solved_cml"),
     formatItem: (item, i) =>
       `${i + 1}. <b>${item.user.username}</b> ${item.user.solved_cml}`,
-    reply_markup: new InlineKeyboard().text("🏆  Regular rating", "command:rating"),
+    reply_markup: new InlineKeyboard().text("🏆 Regular rating", "command:rating"),
   })
   static ratingCml() {}
 
