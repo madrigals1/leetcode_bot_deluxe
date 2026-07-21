@@ -75,12 +75,9 @@ export default class Commands {
     name: "rating",
     header: "LeetCode Rating:",
     fetchPage: (page, ctx) =>
-      Service.users.list({
-        channel_chat_id: ctx.chatId,
-        page,
-      }),
-    formatItem: (user, i) =>
-      `${i + 1}. <b>${user.username}</b> ${user.solved}`,
+      Service.channels.getUsers(ctx.chatId, page),
+    formatItem: (item, i) =>
+      `${i + 1}. <b>${item.user.username}</b> ${item.user.solved}`,
   })
   static rating() {}
 

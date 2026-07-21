@@ -1,10 +1,22 @@
-import { ApiService } from "./api";
+import { ApiService, type PaginatedResponse } from "./api";
 
 export interface Channel {
   id: number;
   chat_id: number;
   title: string;
   subscriptions: Array<{ id: number; type: string }>;
+}
+
+export interface ChannelUser {
+  id: number;
+  user: {
+    id: number;
+    username: string;
+    solved: number;
+    solved_cml: number;
+  };
+  created_at: string;
+  updated_at: string;
 }
 
 class ChannelsService extends ApiService {
@@ -15,6 +27,13 @@ class ChannelsService extends ApiService {
 
   get(pk: number) {
     return this.fetch<Channel>(`/api/v1/channels/${pk}/`);
+  }
+
+  getUsers(chatId: number, page?: number) {
+    const query = page ? `?page=${page}` : "";
+    return this.fetch<PaginatedResponse<ChannelUser>>(
+      `/api/v1/channels/${chatId}/users/${query}`,
+    );
   }
 
   create(chatId: number, title: string) {
