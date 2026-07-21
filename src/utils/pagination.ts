@@ -21,6 +21,8 @@ interface PaginationOptions<T> {
   header: string;
   fetchPage: FetchPage<T>;
   formatItem: (item: T, index: number) => string;
+  pageSize?: number;
+  footer?: string;
   errorMessage?: string;
 }
 
@@ -53,8 +55,11 @@ async function fetchPage<T>(
     options.formatItem(item, i),
   );
 
+  const totalPages = Math.ceil(data.count / (options.pageSize ?? 10));
+  const footer = options.footer ?? `Page ${page} of ${totalPages}`;
+
   return {
-    text: `${options.header}\n\n${lines.join("\n")}`,
+    text: `${options.header}\n\n${lines.join("\n")}\n\n${footer}`,
     reply_markup: buildKeyboard(page, !!data.next, options.name),
   };
 }
