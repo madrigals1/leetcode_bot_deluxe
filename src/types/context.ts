@@ -12,6 +12,10 @@ export class LbContext {
     this.chatId = ctx.chat.id;
   }
 
+  get match(): RegExpMatchArray | undefined {
+    return this.ctx.match as RegExpMatchArray | undefined;
+  }
+
   reply(text: string, options?: { reply_markup?: InlineKeyboard }) {
     return this.ctx.reply(text, options);
   }

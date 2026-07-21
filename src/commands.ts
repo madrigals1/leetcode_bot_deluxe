@@ -9,6 +9,7 @@ import type { ParsedArgs } from "./decorators";
 import { LeetCodeBotError } from "./errors";
 import { Service } from "./services";
 import { LbContext } from "./types/context";
+import { pagination } from "./utils/pagination";
 
 export default class Commands {
   @command({ name: "start" })
@@ -19,7 +20,7 @@ export default class Commands {
   @command({ name: "help" })
   static help() {
     return {
-      text: "Available commands: /start, /help, /menu, /ping, /add, /remove",
+      text: "Available commands: /start, /help, /menu, /ping, /add, /remove, /rating",
     };
   }
 
@@ -70,26 +71,17 @@ export default class Commands {
     }
   }
 
-  @command({ name: "rating" })
-  static async rating(ctx: LbContext) {
-    try {
-      const { results } = await Service.users.list({
+  @pagination({
+    name: "rating",
+    title: "LeetCode Rating: ",
+    fetchPage: (page, ctx) =>
+      Service.users.list({
         channel_chat_id: ctx.chatId,
-      });
-
-      if (results.length === 0) {
-        return { text: "No users found in this channel." };
-      }
-
-      const lines = results.map(
-        (user, i) => `${i + 1}. ${user.username}: ${user.solved}`,
-      );
-
-      return { text: lines.join("\n") };
-    } catch {
-      return { text: "Failed to fetch rating." };
-    }
-  }
+        page,
+      }),
+    formatItem: (user, i) => `${i + 1}. ${user.username} *${user.solved}*`,
+  })
+  static rating() {}
 
   @callback({ action: "btn:leetcode" })
   static async onLeetCode(ctx: LbContext) {
