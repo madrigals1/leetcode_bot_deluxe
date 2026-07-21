@@ -2,7 +2,7 @@ import { Context } from "grammy";
 import { LbContext } from "../types/context";
 
 interface CallbackOptions {
-  action: string;
+  action: string | RegExp;
 }
 
 interface CallbackMetadata extends CallbackOptions {
