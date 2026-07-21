@@ -11,6 +11,11 @@ import { Service } from "./services";
 import { LbContext } from "./types/context";
 import { pagination, buttonsPagination } from "./utils/pagination";
 import { CUMULATIVE_RATING_HEADER } from "./messages";
+import { getDifficultyCount } from "./utils/leetcode";
+
+function escapeHtml(text: string) {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 
 export default class Commands {
   @command({ name: "start" })
@@ -106,6 +111,37 @@ export default class Commands {
     }),
   })
   static profile() {}
+
+  @callback({ action: /^profile:(\d+)$/ })
+  static async onProfileUser(lbctx: LbContext) {
+    if (!lbctx.match) {
+      return;
+    }
+
+    const userId = Number(lbctx.match[1]);
+    const user = await Service.users.getById(userId);
+    const name = user.data?.profile?.realName ?? user.username;
+    const ac = user.data?.submitStats?.acSubmissionNum ?? [];
+    const total = user.data?.submitStats?.totalSubmissionNum ?? [];
+
+    const easy = getDifficultyCount(ac, "Easy");
+    const medium = getDifficultyCount(ac, "Medium");
+    const hard = getDifficultyCount(ac, "Hard");
+    const allSolved = getDifficultyCount(ac, "All");
+    const allTotal = getDifficultyCount(total, "All");
+    const cumulative = user.solved_cml;
+
+    const text =
+      `<b>${escapeHtml(name)}</b> - https://leetcode.com/${user.username}\n\n` +
+      "<b>Solved Problems:</b>\n" +
+      `🟢 Easy - ${easy}\n` +
+      `🟡 Medium - ${medium}\n` +
+      `🔴 Hard - ${hard}\n` +
+      `🔵 All - ${allSolved} / ${allTotal}\n` +
+      `🔷 Cumulative - ${cumulative}`;
+
+    await lbctx.editMessageText(text);
+  }
 
   @callback({ action: /^command:(.+)$/ })
   static async onCommandRedirect(lbctx: LbContext) {

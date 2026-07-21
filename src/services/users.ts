@@ -6,6 +6,16 @@ export interface User {
   username: string;
   solved: number;
   solved_cml: number;
+  data: {
+    profile?: {
+      realName?: string;
+      userAvatar?: string;
+    };
+    submitStats?: {
+      acSubmissionNum: Array<{ difficulty: string; count: number }>;
+      totalSubmissionNum: Array<{ difficulty: string; count: number }>;
+    };
+  };
   created_at: string;
   updated_at: string;
 }
