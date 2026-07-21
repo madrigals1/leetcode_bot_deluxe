@@ -10,19 +10,19 @@ export interface User {
   updated_at: string;
 }
 
-export interface UserRating {
-  id: number;
-  username: string;
-  solved: number;
-  solved_cml: number;
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
 }
 
 class UsersService extends ApiService {
-  list(params?: { channel_id?: number }) {
-    const query = params?.channel_id
-      ? `?channel_users__channel_id=${params.channel_id}`
+  list(params?: { channel_chat_id?: number }) {
+    const query = params?.channel_chat_id
+      ? `?channel_users__channel__chat_id=${params.channel_chat_id}`
       : "";
-    return this.fetch<User[]>(`/api/v1/users/${query}`);
+    return this.fetch<PaginatedResponse<User>>(`/api/v1/users/${query}`);
   }
 
   getByUsername(username: string) {

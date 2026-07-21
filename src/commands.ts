@@ -70,6 +70,29 @@ export default class Commands {
     }
   }
 
+  @command({ name: "rating" })
+  static async rating(ctx: LbContext) {
+    try {
+      const { results } = await Service.users.list({
+        channel_chat_id: ctx.chatId,
+      });
+
+      const sorted = [...results].sort((a, b) => b.solved - a.solved);
+
+      if (sorted.length === 0) {
+        return { text: "No users found in this channel." };
+      }
+
+      const lines = sorted.map(
+        (user, i) => `${i + 1}. ${user.username}: ${user.solved}`,
+      );
+
+      return { text: lines.join("\n") };
+    } catch {
+      return { text: "Failed to fetch rating." };
+    }
+  }
+
   @callback({ action: "btn:leetcode" })
   static async onLeetCode(ctx: LbContext) {
     await ctx.editMessageText("Opening LeetCode...");

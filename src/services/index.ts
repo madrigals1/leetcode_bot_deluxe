@@ -15,7 +15,7 @@ export class Service {
 }
 
 export type { LoginResponse } from "./auth";
-export type { User, UserRating } from "./users";
+export type { User } from "./users";
 export type { Channel } from "./channels";
 export type { Subscription } from "./subscriptions";
 export type { Contest } from "./contests";
