@@ -177,7 +177,7 @@ export default class Commands {
   @callback({ action: /^command:(.+)$/ })
   static async onCommandRedirect(lbctx: LbContext) {
     const name = lbctx.match[1];
-    const cmd = findCommand(name);
+    const cmd = commandsRegisteredByDecorator.find((c) => c.name === name);
     if (cmd) {
       const result = await cmd.handler(lbctx.ctx);
       await lbctx.editMessageText(result.text, {
@@ -222,8 +222,4 @@ export function registerCommands(bot: Bot) {
       await cb.handler(ctx);
     });
   }
-}
-
-function findCommand(name: string) {
-  return commandsRegisteredByDecorator.find((c) => c.name === name);
 }
