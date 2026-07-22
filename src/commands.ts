@@ -192,7 +192,7 @@ export function registerCommands(bot: Bot) {
     if (
       typeof payload === "object" &&
       payload !== null &&
-      "parse_mode" in payload === false
+      !("parse_mode" in payload)
     ) {
       (payload as Record<string, unknown>).parse_mode = "HTML";
     }
