@@ -24,6 +24,13 @@ export class LbContext {
     return this.ctx.reply(text, options);
   }
 
+  replyWithPhoto(photo: string, options?: {
+    caption?: string;
+    reply_markup?: InlineKeyboard;
+  }) {
+    return this.ctx.replyWithPhoto(photo, options);
+  }
+
   answerCallbackQuery(text?: string) {
     return this.ctx.answerCallbackQuery(text);
   }
