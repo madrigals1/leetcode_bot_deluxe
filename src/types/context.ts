@@ -24,8 +24,8 @@ export class LbContext {
     return this.ctx.reply(text, options);
   }
 
-  answerCallbackQuery() {
-    return this.ctx.answerCallbackQuery();
+  answerCallbackQuery(text?: string) {
+    return this.ctx.answerCallbackQuery(text);
   }
 
   editMessageText(text: string, options?: { reply_markup?: InlineKeyboard }) {
