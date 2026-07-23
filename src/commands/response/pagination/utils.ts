@@ -57,7 +57,9 @@ export function registerPaginationCallback<T>({
 }: RegisterPaginationCallbackOptions<T>) {
   const regex = new RegExp(`^${name}_page:(\\d+)$`);
 
-  const existing = callbacksRegisteredByDecorator.find((c) => c.action instanceof RegExp && c.action.source === regex.source);
+  const existing = callbacksRegisteredByDecorator.find(
+    (c) => c.action instanceof RegExp && c.action.source === regex.source,
+  );
   if (existing) {
     return;
   }

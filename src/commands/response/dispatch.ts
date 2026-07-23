@@ -43,7 +43,10 @@ function handlePaginatedTextResponse<T>(lbCtx: LbContext, response: PaginatedTex
   return renderFirstPage({ lbCtx, response, pageSize });
 }
 
-function handlePaginatedButtonsResponse<T>(lbCtx: LbContext, response: PaginatedButtonsResponse<T>) {
+function handlePaginatedButtonsResponse<T>(
+  lbCtx: LbContext,
+  response: PaginatedButtonsResponse<T>,
+) {
   const pageSize = response.itemsPerPage ?? 10;
   const buttonsPerRow = response.buttonsPerRow ?? 2;
   return renderFirstButtonsPage({ lbCtx, response, pageSize, buttonsPerRow });

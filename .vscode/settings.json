@@ -1,5 +1,5 @@
 {
-  "editor.rulers": [88],
+  "editor.rulers": [100],
   "editor.wordWrap": "off",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"

@@ -94,7 +94,10 @@ export default class Commands {
     return paginatedButtons({
       name: "profile",
       fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page),
-      itemToButton: (item) => ({ text: item.user.username, callback_data: `profile:${item.user.id}` }),
+      itemToButton: (item) => ({
+        text: item.user.username,
+        callback_data: `profile:${item.user.id}`,
+      }),
       buttonsPerRow: 2,
     });
   }
@@ -104,7 +107,10 @@ export default class Commands {
     return paginatedButtons({
       name: "avatar",
       fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page),
-      itemToButton: (item) => ({ text: item.user.username, callback_data: `avatar:${item.user.id}` }),
+      itemToButton: (item) => ({
+        text: item.user.username,
+        callback_data: `avatar:${item.user.id}`,
+      }),
       buttonsPerRow: 2,
     });
   }
@@ -114,7 +120,10 @@ export default class Commands {
     return paginatedButtons({
       name: "langstats",
       fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page),
-      itemToButton: (item) => ({ text: item.user.username, callback_data: `langstats:${item.user.id}` }),
+      itemToButton: (item) => ({
+        text: item.user.username,
+        callback_data: `langstats:${item.user.id}`,
+      }),
       buttonsPerRow: 2,
     });
   }

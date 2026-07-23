@@ -9,7 +9,8 @@ export interface RenderFirstPageOptions<T, R extends PaginationBaseResponse<T>> 
   buttonsPerRow?: number;
 }
 
-export interface RenderPageOptions<T, R extends PaginationBaseResponse<T>> extends RenderFirstPageOptions<T, R> {
+export interface RenderPageOptions<T, R extends PaginationBaseResponse<T>>
+  extends RenderFirstPageOptions<T, R> {
   data: PaginatedResponse<T>;
   page: number;
 }
