@@ -1,6 +1,6 @@
 import type { InlineKeyboard } from "grammy";
 
-type CallbackResponseType = "editText" | "editPhoto";
+type CallbackResponseType = "editText" | "editPhoto" | "commandRedirect";
 
 interface BaseCallbackResponse {
   type: CallbackResponseType;
@@ -18,4 +18,12 @@ export interface EditPhotoResponse extends BaseCallbackResponse {
   caption?: string;
 }
 
-export type CallbackResponse = EditTextResponse | EditPhotoResponse;
+export interface CommandRedirectResponse extends BaseCallbackResponse {
+  type: "commandRedirect";
+  command: string;
+}
+
+export type CallbackResponse =
+  | EditTextResponse
+  | EditPhotoResponse
+  | CommandRedirectResponse;

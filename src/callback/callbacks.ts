@@ -1,11 +1,10 @@
 import { Bot } from "grammy";
 import { callback } from "@/callback";
 import { CALLBACKS_TO_REGISTER } from "@/callback/registry";
-import { COMMANDS_TO_REGISTER } from "@/command/registry";
 import { Service } from "@/services";
 import { LbContext } from "@/utils/context";
 import { getDifficultyCount } from "@/utils/leetcode";
-import { editText, editPhoto } from "@/callback/response/shortcuts";
+import { editText, editPhoto, commandRedirect } from "@/callback/response/shortcuts";
 
 function escapeHtml(text: string) {
   return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
@@ -62,12 +61,8 @@ export class Callbacks {
   }
 
   @callback({ action: /^command:(.+)$/ })
-  static async onCommandRedirect(lbctx: LbContext) {
-    const name = lbctx.match[1];
-    const cmd = COMMANDS_TO_REGISTER.find((c) => c.name === name);
-    if (cmd) {
-      await cmd.handler(lbctx.ctx);
-    }
+  static onCommandRedirect(lbctx: LbContext) {
+    return commandRedirect(lbctx.match[1]);
   }
 }
 

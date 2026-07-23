@@ -1,6 +1,7 @@
 import type {
   EditTextResponse,
   EditPhotoResponse,
+  CommandRedirectResponse,
 } from "./types";
 
 export function editText(text: string): EditTextResponse {
@@ -13,4 +14,8 @@ export function editComplexText(options: Omit<EditTextResponse, "type">): EditTe
 
 export function editPhoto(options: Omit<EditPhotoResponse, "type">): EditPhotoResponse {
   return { ...options, type: "editPhoto" };
+}
+
+export function commandRedirect(command: string): CommandRedirectResponse {
+  return { type: "commandRedirect", command };
 }

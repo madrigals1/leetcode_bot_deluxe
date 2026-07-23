@@ -7,6 +7,7 @@ export interface CommandMetadata {
   args?: { name: string }[];
   requiresAdmin?: boolean;
   handler: (ctx: Context) => CommandResponse | Promise<CommandResponse>;
+  originalFn: (...args: unknown[]) => CommandResponse | Promise<CommandResponse>;
 }
 
 export const COMMANDS_TO_REGISTER: CommandMetadata[] = [];

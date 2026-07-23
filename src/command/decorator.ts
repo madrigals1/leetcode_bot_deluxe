@@ -44,6 +44,7 @@ export function command(options: CommandOptions) {
 
     COMMANDS_TO_REGISTER.push({
       ...options,
+      originalFn: originalHandler,
       handler: async (ctx: Context) => {
         const lbCtx = new LbContext(ctx);
 
