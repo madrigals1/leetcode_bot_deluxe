@@ -21,13 +21,13 @@ import {
 export default class Commands {
   @command({ name: "start", description: "🚀 Start the bot" })
   static start() {
-    return text("Welcome to the LeetCode BOT.\n\nUse /help to see available commands.");
+    return text("Welcome to the LeetCode BOT.\n\nUse /commands to see available commands.");
   }
 
-  @command({ name: "help", description: "❓ Show this help message" })
-  static help() {
+  @command({ name: "commands", description: "❓ Show this help message" })
+  static commands() {
     const commands = COMMANDS_TO_REGISTER
-      .filter((cmd) => cmd.name !== "help")
+      .filter((cmd) => cmd.name !== "commands")
       .map((cmd) => `${cmd.description} - <b>/${cmd.name}</b>`)
       .join("\n");
     return text(`Available commands:\n\n${commands}`);
