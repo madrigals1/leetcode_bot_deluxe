@@ -1,7 +1,7 @@
 import { Context, InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
 import { LbContext } from "@/types/context";
-import { callbacksRegisteredByDecorator } from "@/callback";
+import { CALLBACKS_TO_REGISTER } from "@/callback/registry";
 import { LeetCodeBotError, DataNotFoundError } from "@/errors";
 import type { RegisterPaginationCallbackOptions } from "./types";
 
@@ -57,14 +57,14 @@ export function registerPaginationCallback<T>({
 }: RegisterPaginationCallbackOptions<T>) {
   const regex = new RegExp(`^${name}_page:(\\d+)$`);
 
-  const existing = callbacksRegisteredByDecorator.find(
+  const existing = CALLBACKS_TO_REGISTER.find(
     (c) => c.action instanceof RegExp && c.action.source === regex.source,
   );
   if (existing) {
     return;
   }
 
-  callbacksRegisteredByDecorator.push({
+  CALLBACKS_TO_REGISTER.push({
     action: regex,
     handler: async (ctx: Context) => {
       try {

@@ -1,9 +1,7 @@
 import { Bot } from "grammy";
-import {
-  callback,
-  callbacksRegisteredByDecorator,
-} from "@/callback";
-import { commandsRegisteredByDecorator } from "@/command/decorator";
+import { callback } from "@/callback";
+import { CALLBACKS_TO_REGISTER } from "@/callback/registry";
+import { COMMANDS_TO_REGISTER } from "@/command/registry";
 import { Service } from "@/services";
 import { LbContext } from "@/types/context";
 import { getDifficultyCount } from "@/utils/leetcode";
@@ -68,7 +66,7 @@ export class Callbacks {
   @callback({ action: /^command:(.+)$/ })
   static async onCommandRedirect(lbctx: LbContext) {
     const name = lbctx.match[1];
-    const cmd = commandsRegisteredByDecorator.find((c) => c.name === name);
+    const cmd = COMMANDS_TO_REGISTER.find((c) => c.name === name);
     if (cmd) {
       await cmd.handler(lbctx.ctx);
     }
@@ -76,7 +74,7 @@ export class Callbacks {
 }
 
 export function registerCallbacks(bot: Bot) {
-  for (const cb of callbacksRegisteredByDecorator) {
+  for (const cb of CALLBACKS_TO_REGISTER) {
     bot.callbackQuery(cb.action, async (ctx) => {
       await cb.handler(ctx);
     });

@@ -2,8 +2,8 @@ import { Context } from "grammy";
 import { InvalidArgumentAmountError, UnauthorizedError } from "@/errors";
 import { LbContext } from "@/types/context";
 import { isOwnerOrPrivate } from "@/utils/chat";
-import type { CommandResponse } from "@/command/response/types";
 import { dispatchResponse } from "@/command/response/dispatch";
+import { COMMANDS_TO_REGISTER } from "./registry";
 
 export type ParsedArgs = Record<string, string>;
 
@@ -16,12 +16,6 @@ interface CommandOptions {
   args?: CommandArg[];
   requiresAdmin?: boolean;
 }
-
-interface CommandMetadata extends CommandOptions {
-  handler: (ctx: Context) => CommandResponse | Promise<CommandResponse>;
-}
-
-export const commandsRegisteredByDecorator: CommandMetadata[] = [];
 
 function parseArgs(text: string, defs: CommandArg[]): ParsedArgs {
   const parts = text.split(/\s+/).slice(1);
@@ -47,7 +41,7 @@ export function command(options: CommandOptions) {
   ) {
     const originalHandler = descriptor.value;
 
-    commandsRegisteredByDecorator.push({
+    COMMANDS_TO_REGISTER.push({
       ...options,
       handler: async (ctx: Context) => {
         const lbCtx = new LbContext(ctx);

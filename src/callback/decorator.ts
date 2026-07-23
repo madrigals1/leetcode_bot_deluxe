@@ -1,16 +1,11 @@
 import { Context } from "grammy";
 import { LbContext } from "@/types/context";
 import { LeetCodeBotError } from "@/errors";
+import { CALLBACKS_TO_REGISTER } from "./registry";
 
 interface CallbackOptions {
   action: string | RegExp;
 }
-
-interface CallbackMetadata extends CallbackOptions {
-  handler: (ctx: Context) => void | Promise<void>;
-}
-
-export const callbacksRegisteredByDecorator: CallbackMetadata[] = [];
 
 export function callback(options: CallbackOptions) {
   return function (
@@ -18,7 +13,7 @@ export function callback(options: CallbackOptions) {
     _propertyKey: string,
     descriptor: PropertyDescriptor,
   ) {
-    callbacksRegisteredByDecorator.push({
+    CALLBACKS_TO_REGISTER.push({
       ...options,
       handler: async (ctx: Context) => {
         try {

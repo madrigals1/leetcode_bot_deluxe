@@ -1,9 +1,9 @@
 import { Bot, Context, InlineKeyboard } from "grammy";
 import {
   command,
-  commandsRegisteredByDecorator,
 } from "@/command/decorator";
 import type { ParsedArgs } from "@/command/decorator";
+import { COMMANDS_TO_REGISTER } from "@/command/registry";
 import { LeetCodeBotError } from "@/errors";
 import { Service } from "@/services";
 import { LbContext } from "@/types/context";
@@ -134,7 +134,7 @@ export function registerCommands(bot: Bot) {
     return prev(method, payload);
   });
 
-  for (const cmd of commandsRegisteredByDecorator) {
+  for (const cmd of COMMANDS_TO_REGISTER) {
     bot.command(cmd.name, async (ctx: Context) => {
       try {
         await cmd.handler(ctx);
