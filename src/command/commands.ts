@@ -4,9 +4,6 @@ import {
   commandsRegisteredByDecorator,
 } from "@/command/decorator";
 import type { ParsedArgs } from "@/command/decorator";
-import {
-  callbacksRegisteredByDecorator,
-} from "@/callback";
 import { LeetCodeBotError } from "@/errors";
 import { Service } from "@/services";
 import { LbContext } from "@/types/context";
@@ -149,12 +146,6 @@ export function registerCommands(bot: Bot) {
 
         await ctx.reply("An error occurred.");
       }
-    });
-  }
-
-  for (const cb of callbacksRegisteredByDecorator) {
-    bot.callbackQuery(cb.action, async (ctx: Context) => {
-      await cb.handler(ctx);
     });
   }
 }

@@ -1,5 +1,7 @@
+import { Bot } from "grammy";
 import {
   callback,
+  callbacksRegisteredByDecorator,
 } from "@/callback";
 import { commandsRegisteredByDecorator } from "@/command/decorator";
 import { Service } from "@/services";
@@ -70,5 +72,13 @@ export class Callbacks {
     if (cmd) {
       await cmd.handler(lbctx.ctx);
     }
+  }
+}
+
+export function registerCallbacks(bot: Bot) {
+  for (const cb of callbacksRegisteredByDecorator) {
+    bot.callbackQuery(cb.action, async (ctx) => {
+      await cb.handler(ctx);
+    });
   }
 }
