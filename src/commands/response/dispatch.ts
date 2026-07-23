@@ -27,14 +27,14 @@ export async function dispatchResponse(
 
 function handleTextResponse(lbCtx: LbContext, response: TextResponse) {
   return lbCtx.reply(response.text, {
-    reply_markup: response.reply_markup,
+    reply_markup: response.buttons,
   });
 }
 
 function handlePhotoResponse(lbCtx: LbContext, response: PhotoResponse) {
   return lbCtx.replyWithPhoto(response.photo, {
     caption: response.caption,
-    reply_markup: response.reply_markup,
+    reply_markup: response.buttons,
   });
 }
 

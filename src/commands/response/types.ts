@@ -7,7 +7,7 @@ type ResponseType = "text" | "photo" | "paginatedText" | "paginatedButtons";
 
 export interface BaseResponse {
   type?: ResponseType;
-  reply_markup?: InlineKeyboard;
+  buttons?: InlineKeyboard;
 }
 
 export interface TextResponse extends BaseResponse {

@@ -70,7 +70,7 @@ export default class Commands {
       header: "Rating  🏆",
       fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page),
       formatItem: (item, i) => `${i + 1}. <b>${item.user.username}</b> ${item.user.solved}`,
-      reply_markup: new InlineKeyboard().text("🔥 Cumulative rating", "command:rating_cml"),
+      buttons: new InlineKeyboard().text("🔥 Cumulative rating", "command:rating_cml"),
     });
   }
 
@@ -85,7 +85,7 @@ export default class Commands {
         `🔴 Hard - ${CML_HARD_POINTS} points`,
       fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page, "-user__solved_cml"),
       formatItem: (item, i) => `${i + 1}. <b>${item.user.username}</b> ${item.user.solved_cml}`,
-      reply_markup: new InlineKeyboard().text("🏆 Regular rating", "command:rating"),
+      buttons: new InlineKeyboard().text("🏆 Regular rating", "command:rating"),
     });
   }
 

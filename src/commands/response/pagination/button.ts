@@ -23,7 +23,7 @@ export async function renderFirstButtonsPage<T>(
     pageSize: number,
   ) => renderButtonsPage(lbCtx, response, data, page, pageSize, buttonsPerRow);
 
-  registerPaginationCallback(response.name, response.fetchPage, response.reply_markup, renderButtonsPageWithResponse, pageSize, buttonsPerRow);
+  registerPaginationCallback(response.name, response.fetchPage, response.buttons, renderButtonsPageWithResponse, pageSize, buttonsPerRow);
 
   return renderButtonsPageWithResponse(lbCtx, data, 1, pageSize);
 }
@@ -49,7 +49,7 @@ function renderButtonsPage<T>(
   const navRow = buildNavRow(page, hasNext, response.name);
   const keyboard = buildKeyboard(
     [...rows, navRow],
-    response.reply_markup,
+    response.buttons,
   );
 
   return lbCtx.reply("Select an item:", {

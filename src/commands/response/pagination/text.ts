@@ -22,7 +22,7 @@ export async function renderFirstPage<T>(
     pageSize: number,
   ) => renderPage(lbCtx, response, data, page, pageSize);
 
-  registerPaginationCallback(response.name, response.fetchPage, response.reply_markup, renderPageWithResponse, pageSize);
+  registerPaginationCallback(response.name, response.fetchPage, response.buttons, renderPageWithResponse, pageSize);
 
   return renderPageWithResponse(lbCtx, data, 1, pageSize);
 }
@@ -46,7 +46,7 @@ function renderPage<T>(
   const navRow = buildNavRow(page, hasNext, response.name);
   const keyboard = buildKeyboard(
     [navRow],
-    response.reply_markup,
+    response.buttons,
   );
 
   return lbCtx.reply(text, {
