@@ -1,9 +1,9 @@
 import { Context, InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
-import type { PaginatedResponse } from "../../../services/api";
-import { LbContext } from "../../../types/context";
-import { callbacksRegisteredByDecorator } from "../../../decorators/callback";
-import { LeetCodeBotError, DataNotFoundError } from "../../../errors";
+import type { PaginatedResponse } from "@/services/api";
+import { LbContext } from "@/types/context";
+import { callbacksRegisteredByDecorator } from "@/decorators/callback";
+import { LeetCodeBotError, DataNotFoundError } from "@/errors";
 
 export function buildKeyboard(
   itemRows?: InlineKeyboardButton[][],

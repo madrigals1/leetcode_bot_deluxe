@@ -2,7 +2,7 @@ import {
   BACKEND_URL,
   BACKEND_JWT_REFRESH_TOKEN,
   TOKEN_MAX_AGE_MS,
-} from "../constants";
+} from "@/constants";
 
 export interface PaginatedResponse<T> {
   count: number;

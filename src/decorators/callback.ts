@@ -1,6 +1,6 @@
 import { Context } from "grammy";
-import { LbContext } from "../types/context";
-import { LeetCodeBotError } from "../errors";
+import { LbContext } from "@/types/context";
+import { LeetCodeBotError } from "@/errors";
 
 interface CallbackOptions {
   action: string | RegExp;

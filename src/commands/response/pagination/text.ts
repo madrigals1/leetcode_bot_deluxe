@@ -1,6 +1,6 @@
-import type { PaginatedResponse } from "../../../services/api";
-import { LbContext } from "../../../types/context";
-import { DataNotFoundError } from "../../../errors";
+import type { PaginatedResponse } from "@/services/api";
+import { LbContext } from "@/types/context";
+import { DataNotFoundError } from "@/errors";
 import type { PaginatedTextResponse } from "../types";
 import { buildKeyboard, buildNavRow, totalPages, defaultFooter, registerPaginationCallback } from "./utils";
 

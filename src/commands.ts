@@ -4,22 +4,22 @@ import {
   callbacksRegisteredByDecorator,
   command,
   commandsRegisteredByDecorator,
-} from "./decorators";
-import type { ParsedArgs } from "./decorators";
-import { LeetCodeBotError } from "./errors";
-import { Service } from "./services";
-import { LbContext } from "./types/context";
-import { getDifficultyCount } from "./utils/leetcode";
+} from "@/decorators";
+import type { ParsedArgs } from "@/decorators";
+import { LeetCodeBotError } from "@/errors";
+import { Service } from "@/services";
+import { LbContext } from "@/types/context";
+import { getDifficultyCount } from "@/utils/leetcode";
 import {
   CML_EASY_POINTS,
   CML_MEDIUM_POINTS,
   CML_HARD_POINTS,
-} from "./constants";
+} from "@/constants";
 import {
   text,
   paginatedText,
   paginatedButtons,
-} from "./commands/response/shortcuts";
+} from "@/commands/response/shortcuts";
 
 function escapeHtml(text: string) {
   return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");

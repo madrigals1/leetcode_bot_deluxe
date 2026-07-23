@@ -1,5 +1,5 @@
 import { Context, InlineKeyboard } from "grammy";
-import { ChatIdNotFoundError, MatchNotFoundError } from "../errors";
+import { ChatIdNotFoundError, MatchNotFoundError } from "@/errors";
 
 export class LbContext {
   public readonly chatId: number;
