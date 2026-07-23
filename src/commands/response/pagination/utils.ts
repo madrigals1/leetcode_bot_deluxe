@@ -51,7 +51,6 @@ export function buildNavRow(page: number, hasNext: boolean, name: string) {
 export function registerPaginationCallback<T>(
   name: string,
   fetchPage: (page: number, ctx: LbContext) => Promise<PaginatedResponse<T>>,
-  extraKeyboard: InlineKeyboard | undefined,
   renderPage: (
     lbCtx: LbContext,
     data: PaginatedResponse<T>,
