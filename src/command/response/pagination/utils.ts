@@ -1,7 +1,7 @@
 import { Context, InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
 import { LbContext } from "@/types/context";
-import { callbacksRegisteredByDecorator } from "@/decorators/callback";
+import { callbacksRegisteredByDecorator } from "@/callback";
 import { LeetCodeBotError, DataNotFoundError } from "@/errors";
 import type { RegisterPaginationCallbackOptions } from "./types";
 

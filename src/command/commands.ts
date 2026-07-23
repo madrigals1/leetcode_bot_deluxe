@@ -1,11 +1,13 @@
 import { Bot, Context, InlineKeyboard } from "grammy";
 import {
-  callback,
-  callbacksRegisteredByDecorator,
   command,
   commandsRegisteredByDecorator,
-} from "@/decorators";
-import type { ParsedArgs } from "@/decorators";
+} from "@/command/decorator";
+import type { ParsedArgs } from "@/command/decorator";
+import {
+  callback,
+  callbacksRegisteredByDecorator,
+} from "@/callback";
 import { LeetCodeBotError } from "@/errors";
 import { Service } from "@/services";
 import { LbContext } from "@/types/context";
