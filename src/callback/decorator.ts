@@ -1,5 +1,5 @@
 import { Context } from "grammy";
-import { LbContext } from "@/types/context";
+import { LbContext } from "@/utils/context";
 import { LeetCodeBotError } from "@/errors";
 import { CALLBACKS_TO_REGISTER } from "./registry";
 import { dispatchCallbackResponse } from "./response/dispatch";

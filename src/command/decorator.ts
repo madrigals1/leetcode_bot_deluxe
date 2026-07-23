@@ -1,6 +1,6 @@
 import { Context } from "grammy";
 import { InvalidArgumentAmountError, UnauthorizedError } from "@/errors";
-import { LbContext } from "@/types/context";
+import { LbContext } from "@/utils/context";
 import { isOwnerOrPrivate } from "@/utils/chat";
 import { dispatchResponse } from "@/command/response/dispatch";
 import { COMMANDS_TO_REGISTER } from "./registry";

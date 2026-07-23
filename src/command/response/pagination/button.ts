@@ -1,5 +1,5 @@
 import type { PaginatedResponse } from "@/services/api";
-import { LbContext } from "@/types/context";
+import { LbContext } from "@/utils/context";
 import { DataNotFoundError } from "@/errors";
 import { buildKeyboard, buildNavRow, totalPages, registerPaginationCallback } from "./utils";
 import type { RenderFirstPageOptions, RenderPageOptions } from "./types";

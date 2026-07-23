@@ -1,5 +1,5 @@
 import type { PaginatedResponse } from "@/services/api";
-import { LbContext } from "@/types/context";
+import { LbContext } from "@/utils/context";
 import type { PaginationBaseResponse } from "../types";
 
 export interface RenderFirstPageOptions<T, R extends PaginationBaseResponse<T>> {

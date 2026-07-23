@@ -1,4 +1,4 @@
-import { LbContext } from "@/types/context";
+import { LbContext } from "@/utils/context";
 import type {
   TextResponse,
   PhotoResponse,

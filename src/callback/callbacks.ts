@@ -3,7 +3,7 @@ import { callback } from "@/callback";
 import { CALLBACKS_TO_REGISTER } from "@/callback/registry";
 import { COMMANDS_TO_REGISTER } from "@/command/registry";
 import { Service } from "@/services";
-import { LbContext } from "@/types/context";
+import { LbContext } from "@/utils/context";
 import { getDifficultyCount } from "@/utils/leetcode";
 import { editText, editPhoto } from "@/callback/response/shortcuts";
 

@@ -6,7 +6,7 @@ import type { ParsedArgs } from "@/command/decorator";
 import { COMMANDS_TO_REGISTER } from "@/command/registry";
 import { LeetCodeBotError } from "@/errors";
 import { Service } from "@/services";
-import { LbContext } from "@/types/context";
+import { LbContext } from "@/utils/context";
 import {
   CML_EASY_POINTS,
   CML_MEDIUM_POINTS,
