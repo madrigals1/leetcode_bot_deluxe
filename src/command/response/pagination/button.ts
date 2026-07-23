@@ -10,6 +10,7 @@ export async function renderFirstButtonsPage<T>({
   response,
   pageSize,
   buttonsPerRow = 2,
+  reply,
 }: RenderFirstPageOptions<T, PaginatedButtonsResponse<T>>) {
   const data = await response.fetchPage(1, lbCtx);
 
@@ -22,7 +23,7 @@ export async function renderFirstButtonsPage<T>({
     data: PaginatedResponse<T>,
     page: number,
     pageSize: number,
-  ) => renderButtonsPage({ lbCtx, response, data, page, pageSize, buttonsPerRow });
+  ) => renderButtonsPage({ lbCtx, response, data, page, pageSize, buttonsPerRow, reply });
 
   registerPaginationCallback({
     name: response.name,
@@ -30,18 +31,20 @@ export async function renderFirstButtonsPage<T>({
     renderPage: renderButtonsPageWithResponse,
     defaultPageSize: pageSize,
     defaultButtonsPerRow: buttonsPerRow,
+    reply,
   });
 
   return renderButtonsPageWithResponse(lbCtx, data, 1, pageSize);
 }
 
 function renderButtonsPage<T>({
-  lbCtx,
+  lbCtx: _lbCtx,
   response,
   data,
   page,
   pageSize,
   buttonsPerRow = 2,
+  reply,
 }: RenderPageOptions<T, PaginatedButtonsResponse<T>>) {
   const total = totalPages(data.count, pageSize);
   const hasNext = page < total;
@@ -59,7 +62,7 @@ function renderButtonsPage<T>({
     response.buttons,
   );
 
-  return lbCtx.reply("Select an item:", {
+  return reply("Select an item:", {
     reply_markup: keyboard,
   });
 }

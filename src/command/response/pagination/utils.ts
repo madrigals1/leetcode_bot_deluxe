@@ -54,6 +54,7 @@ export function registerPaginationCallback<T>({
   renderPage,
   defaultPageSize,
   defaultButtonsPerRow,
+  reply,
 }: RegisterPaginationCallbackOptions<T>) {
   const regex = new RegExp(`^${name}_page:(\\d+)$`);
 
@@ -76,7 +77,7 @@ export function registerPaginationCallback<T>({
           throw new DataNotFoundError();
         }
 
-        await renderPage(lbCtx, data, page, defaultPageSize, defaultButtonsPerRow);
+        await renderPage(lbCtx, data, page, defaultPageSize, reply, defaultButtonsPerRow);
       } catch (error) {
         if (error instanceof LeetCodeBotError) {
           await ctx.answerCallbackQuery(error.message);

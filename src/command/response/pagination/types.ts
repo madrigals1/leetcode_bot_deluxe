@@ -2,11 +2,14 @@ import type { PaginatedResponse } from "@/services/api";
 import { LbContext } from "@/utils/context";
 import type { PaginationBaseResponse } from "../types";
 
+export type ReplyMethod = (text: string, options?: object) => Promise<unknown>;
+
 export interface RenderFirstPageOptions<T, R extends PaginationBaseResponse<T>> {
   lbCtx: LbContext;
   response: R;
   pageSize: number;
   buttonsPerRow?: number;
+  reply: ReplyMethod;
 }
 
 export interface RenderPageOptions<T, R extends PaginationBaseResponse<T>>
@@ -23,8 +26,10 @@ export interface RegisterPaginationCallbackOptions<T> {
     data: PaginatedResponse<T>,
     page: number,
     pageSize: number,
+    reply: ReplyMethod,
     buttonsPerRow?: number,
   ) => Promise<unknown>;
   defaultPageSize: number;
   defaultButtonsPerRow?: number;
+  reply: ReplyMethod;
 }

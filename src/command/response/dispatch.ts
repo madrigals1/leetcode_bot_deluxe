@@ -6,27 +6,33 @@ import type {
   PaginatedButtonsResponse,
   CommandResponse,
 } from "./types";
+import type { ReplyMethod } from "./pagination/types";
 import { renderFirstPage } from "./pagination/text";
 import { renderFirstButtonsPage } from "./pagination/button";
 
 export async function dispatchResponse(
   lbCtx: LbContext,
   response: CommandResponse,
+  reply: ReplyMethod,
 ) {
   switch (response.type) {
     case "text":
-      return handleTextResponse(lbCtx, response);
+      return handleTextResponse(lbCtx, response, reply);
     case "photo":
       return handlePhotoResponse(lbCtx, response);
     case "paginatedText":
-      return handlePaginatedTextResponse(lbCtx, response);
+      return handlePaginatedTextResponse(lbCtx, response, reply);
     case "paginatedButtons":
-      return handlePaginatedButtonsResponse(lbCtx, response);
+      return handlePaginatedButtonsResponse(lbCtx, response, reply);
   }
 }
 
-function handleTextResponse(lbCtx: LbContext, response: TextResponse) {
-  return lbCtx.reply(response.text, {
+function handleTextResponse(
+  _lbCtx: LbContext,
+  response: TextResponse,
+  reply: ReplyMethod,
+) {
+  return reply(response.text, {
     reply_markup: response.buttons,
   });
 }
@@ -38,16 +44,21 @@ function handlePhotoResponse(lbCtx: LbContext, response: PhotoResponse) {
   });
 }
 
-function handlePaginatedTextResponse<T>(lbCtx: LbContext, response: PaginatedTextResponse<T>) {
+function handlePaginatedTextResponse<T>(
+  lbCtx: LbContext,
+  response: PaginatedTextResponse<T>,
+  reply: ReplyMethod,
+) {
   const pageSize = response.itemsPerPage ?? 10;
-  return renderFirstPage({ lbCtx, response, pageSize });
+  return renderFirstPage({ lbCtx, response, pageSize, reply });
 }
 
 function handlePaginatedButtonsResponse<T>(
   lbCtx: LbContext,
   response: PaginatedButtonsResponse<T>,
+  reply: ReplyMethod,
 ) {
   const pageSize = response.itemsPerPage ?? 10;
   const buttonsPerRow = response.buttonsPerRow ?? 2;
-  return renderFirstButtonsPage({ lbCtx, response, pageSize, buttonsPerRow });
+  return renderFirstButtonsPage({ lbCtx, response, pageSize, buttonsPerRow, reply });
 }

@@ -1,97 +1,41 @@
 import { LbContext } from "@/utils/context";
-import type {
-  EditTextResponse,
-  EditPhotoResponse,
-  CommandRedirectResponse,
-  CallbackResponse,
-} from "./types";
-import type { CommandResponse } from "@/command/response/types";
+import type { CallbackResponse } from "./types";
+import type { TextResponse, PhotoResponse } from "@/command/response/types";
 import { COMMANDS_TO_REGISTER } from "@/command/registry";
-import {
-  renderFirstPageEdit,
-  renderFirstButtonsPageEdit,
-} from "./pagination";
+import { dispatchResponse } from "@/command/response/dispatch";
 
 export async function dispatchCallbackResponse(
   lbCtx: LbContext,
   response: CallbackResponse,
 ) {
+  const editReply = (text: string, options?: object) =>
+    lbCtx.editMessageText(text, options);
+
   switch (response.type) {
-    case "editText":
-      return handleEditTextResponse(lbCtx, response);
-    case "editPhoto":
-      return handleEditPhotoResponse(lbCtx, response);
-    case "commandRedirect":
-      return handleCommandRedirectResponse(lbCtx, response);
-  }
-}
-
-function handleEditTextResponse(
-  lbCtx: LbContext,
-  response: EditTextResponse,
-) {
-  return lbCtx.editMessageText(response.text, {
-    reply_markup: response.buttons,
-  });
-}
-
-function handleEditPhotoResponse(
-  lbCtx: LbContext,
-  response: EditPhotoResponse,
-) {
-  return lbCtx.ctx.editMessageMedia(
-    {
-      type: "photo",
-      media: response.photo,
-      caption: response.caption,
-    },
-    {
-      reply_markup: response.buttons,
-    },
-  );
-}
-
-async function handleCommandRedirectResponse(
-  lbCtx: LbContext,
-  response: CommandRedirectResponse,
-) {
-  const cmd = COMMANDS_TO_REGISTER.find((c) => c.name === response.command);
-  if (!cmd) {
-    return;
-  }
-
-  const result = await cmd.originalFn(lbCtx);
-  await dispatchAsEdit(lbCtx, result);
-}
-
-async function dispatchAsEdit(
-  lbCtx: LbContext,
-  response: CommandResponse,
-) {
-  switch (response.type) {
-    case "text":
-      return lbCtx.editMessageText(response.text, {
-        reply_markup: response.buttons,
-      });
-    case "photo":
-      return lbCtx.ctx.editMessageMedia(
-        {
-          type: "photo",
-          media: response.photo,
-          caption: response.caption,
-        },
-        {
-          reply_markup: response.buttons,
-        },
-      );
-    case "paginatedText": {
-      const pageSize = response.itemsPerPage ?? 10;
-      return renderFirstPageEdit(lbCtx, response, pageSize);
+    case "editText": {
+      const cmdResponse: TextResponse = {
+        type: "text",
+        text: response.text,
+        buttons: response.buttons,
+      };
+      return dispatchResponse(lbCtx, cmdResponse, editReply);
     }
-    case "paginatedButtons": {
-      const pageSize = response.itemsPerPage ?? 10;
-      const buttonsPerRow = response.buttonsPerRow ?? 2;
-      return renderFirstButtonsPageEdit(lbCtx, response, pageSize, buttonsPerRow);
+    case "editPhoto": {
+      const cmdResponse: PhotoResponse = {
+        type: "photo",
+        photo: response.photo,
+        caption: response.caption,
+        buttons: response.buttons,
+      };
+      return dispatchResponse(lbCtx, cmdResponse, editReply);
+    }
+    case "commandRedirect": {
+      const cmd = COMMANDS_TO_REGISTER.find((c) => c.name === response.command);
+      if (!cmd) {
+        return;
+      }
+      const result = await cmd.originalFn(lbCtx);
+      return dispatchResponse(lbCtx, result, editReply);
     }
   }
 }
