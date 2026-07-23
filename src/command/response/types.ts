@@ -6,17 +6,17 @@ import type { PaginatedResponse } from "@/services/api";
 type ResponseType = "text" | "photo" | "paginatedText" | "paginatedButtons";
 
 export interface BaseResponse {
-  type?: ResponseType;
+  type: ResponseType;
   buttons?: InlineKeyboard;
 }
 
 export interface TextResponse extends BaseResponse {
-  type?: "text";
+  type: "text";
   text: string;
 }
 
 export interface PhotoResponse extends BaseResponse {
-  type?: "photo";
+  type: "photo";
   photo: string;
   caption?: string;
 }
@@ -31,13 +31,13 @@ export interface PaginationBaseResponse<T = unknown> extends BaseResponse {
 }
 
 export interface PaginatedTextResponse<T = unknown> extends PaginationBaseResponse<T> {
-  type?: "paginatedText";
+  type: "paginatedText";
   header: string;
   formatItem: (item: T, index: number) => string;
 }
 
 export interface PaginatedButtonsResponse<T = unknown> extends PaginationBaseResponse<T> {
-  type?: "paginatedButtons";
+  type: "paginatedButtons";
   itemToButton: (item: T) => InlineKeyboardButton;
   buttonsPerRow?: number;
 }
