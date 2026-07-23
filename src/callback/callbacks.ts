@@ -5,6 +5,7 @@ import { COMMANDS_TO_REGISTER } from "@/command/registry";
 import { Service } from "@/services";
 import { LbContext } from "@/types/context";
 import { getDifficultyCount } from "@/utils/leetcode";
+import { editText, editPhoto } from "@/callback/response/shortcuts";
 
 function escapeHtml(text: string) {
   return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
@@ -27,8 +28,7 @@ export class Callbacks {
       `🔴 Hard - ${getDifficultyCount(solved, "Hard")}\n` +
       `🔵 All - ${getDifficultyCount(solved, "All")} / ${getDifficultyCount(total, "All")}\n` +
       `🔷 Cumulative - ${user.solved_cml}`;
-
-    await lbctx.editMessageText(text);
+    return editText({ text });
   }
 
   @callback({ action: /^avatar:(\d+)$/ })
@@ -38,13 +38,9 @@ export class Callbacks {
     const avatarUrl = user.data?.profile?.userAvatar;
 
     if (avatarUrl) {
-      await lbctx.ctx.editMessageMedia({
-        type: "photo",
-        media: avatarUrl,
-      });
-    } else {
-      await lbctx.editMessageText("No avatar found.");
+      return editPhoto({ photo: avatarUrl });
     }
+    return editText({ text: "No avatar found." });
   }
 
   @callback({ action: /^langstats:(\d+)$/ })
@@ -60,7 +56,7 @@ export class Callbacks {
         .map((s) => `- <b>${s.languageName}</b> ${s.problemsSolved}`)
         .join("\n");
 
-    await lbctx.editMessageText(text);
+    return editText({ text });
   }
 
   @callback({ action: /^command:(.+)$/ })
