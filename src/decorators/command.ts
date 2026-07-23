@@ -1,17 +1,14 @@
-import { Context, InlineKeyboard } from "grammy";
+import { Context } from "grammy";
 import { InvalidArgumentAmountError, UnauthorizedError } from "../errors";
 import { LbContext } from "../types/context";
 import { isOwnerOrPrivate } from "../utils/chat";
+import type { CommandResponse } from "../commands/commandResponseTypes";
+import { dispatchResponse } from "../commands/commandResponse";
 
 export type ParsedArgs = Record<string, string>;
 
 interface CommandArg {
   name: string;
-}
-
-interface CommandResponse {
-  text: string;
-  reply_markup?: InlineKeyboard;
 }
 
 interface CommandOptions {
@@ -63,7 +60,9 @@ export function command(options: CommandOptions) {
           ? parseArgs(ctx.message?.text ?? "", options.args)
           : {};
 
-        return originalHandler(lbCtx, args);
+        const response = await originalHandler(lbCtx, args);
+        await dispatchResponse(lbCtx, response);
+        return response;
       },
     });
   };
