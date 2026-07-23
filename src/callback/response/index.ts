@@ -1,7 +1,3 @@
-export type {
-  CallbackResponse,
-  EditTextResponse,
-  EditPhotoResponse,
-} from "./types";
-export { dispatchCallbackResponse } from "./dispatch";
-export { editText, editPhoto } from "./shortcuts";
+export * from "./types";
+export * from "./shortcuts";
+export * from "./dispatch";
