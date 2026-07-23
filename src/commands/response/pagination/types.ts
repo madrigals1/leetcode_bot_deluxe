@@ -1,0 +1,15 @@
+import type { PaginatedResponse } from "@/services/api";
+import { LbContext } from "@/types/context";
+import type { PaginationBaseResponse } from "../types";
+
+export interface RenderFirstPageOptions<T, R extends PaginationBaseResponse<T>> {
+  lbCtx: LbContext;
+  response: R;
+  pageSize: number;
+  buttonsPerRow?: number;
+}
+
+export interface RenderPageOptions<T, R extends PaginationBaseResponse<T>> extends RenderFirstPageOptions<T, R> {
+  data: PaginatedResponse<T>;
+  page: number;
+}

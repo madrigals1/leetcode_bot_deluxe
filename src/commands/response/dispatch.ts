@@ -40,11 +40,11 @@ function handlePhotoResponse(lbCtx: LbContext, response: PhotoResponse) {
 
 function handlePaginatedTextResponse<T>(lbCtx: LbContext, response: PaginatedTextResponse<T>) {
   const pageSize = response.itemsPerPage ?? 10;
-  return renderFirstPage(lbCtx, response, pageSize);
+  return renderFirstPage({ lbCtx, response, pageSize });
 }
 
 function handlePaginatedButtonsResponse<T>(lbCtx: LbContext, response: PaginatedButtonsResponse<T>) {
   const pageSize = response.itemsPerPage ?? 10;
   const buttonsPerRow = response.buttonsPerRow ?? 2;
-  return renderFirstButtonsPage(lbCtx, response, pageSize, buttonsPerRow);
+  return renderFirstButtonsPage({ lbCtx, response, pageSize, buttonsPerRow });
 }

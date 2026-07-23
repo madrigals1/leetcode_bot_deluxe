@@ -1,15 +1,16 @@
 import type { PaginatedResponse } from "@/services/api";
 import { LbContext } from "@/types/context";
 import { DataNotFoundError } from "@/errors";
-import type { PaginatedButtonsResponse } from "../types";
 import { buildKeyboard, buildNavRow, totalPages, registerPaginationCallback } from "./utils";
+import type { RenderFirstPageOptions, RenderPageOptions } from "./types";
+import type { PaginatedButtonsResponse } from "../types";
 
-export async function renderFirstButtonsPage<T>(
-  lbCtx: LbContext,
-  response: PaginatedButtonsResponse<T>,
-  pageSize: number,
-  buttonsPerRow: number,
-) {
+export async function renderFirstButtonsPage<T>({
+  lbCtx,
+  response,
+  pageSize,
+  buttonsPerRow = 2,
+}: RenderFirstPageOptions<T, PaginatedButtonsResponse<T>>) {
   const data = await response.fetchPage(1, lbCtx);
 
   if (data.results.length === 0) {
@@ -21,21 +22,21 @@ export async function renderFirstButtonsPage<T>(
     data: PaginatedResponse<T>,
     page: number,
     pageSize: number,
-  ) => renderButtonsPage(lbCtx, response, data, page, pageSize, buttonsPerRow);
+  ) => renderButtonsPage({ lbCtx, response, data, page, pageSize, buttonsPerRow });
 
   registerPaginationCallback(response.name, response.fetchPage, response.buttons, renderButtonsPageWithResponse, pageSize, buttonsPerRow);
 
   return renderButtonsPageWithResponse(lbCtx, data, 1, pageSize);
 }
 
-function renderButtonsPage<T>(
-  lbCtx: LbContext,
-  response: PaginatedButtonsResponse<T>,
-  data: PaginatedResponse<T>,
-  page: number,
-  pageSize: number,
-  buttonsPerRow: number,
-) {
+function renderButtonsPage<T>({
+  lbCtx,
+  response,
+  data,
+  page,
+  pageSize,
+  buttonsPerRow = 2,
+}: RenderPageOptions<T, PaginatedButtonsResponse<T>>) {
   const total = totalPages(data.count, pageSize);
   const hasNext = page < total;
 
