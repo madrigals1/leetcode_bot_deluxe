@@ -1,7 +1,5 @@
 import { LbContext } from "@/utils/context";
 import type {
-  TextResponse,
-  PhotoResponse,
   PaginatedTextResponse,
   PaginatedButtonsResponse,
   CommandResponse,
@@ -17,31 +15,19 @@ export async function dispatchResponse(
 ) {
   switch (response.type) {
     case "text":
-      return handleTextResponse(lbCtx, response, reply);
+      return reply(response.text, {
+        reply_markup: response.buttons,
+      });
     case "photo":
-      return handlePhotoResponse(lbCtx, response);
+      return lbCtx.replyWithPhoto(response.photo, {
+        caption: response.caption,
+        reply_markup: response.buttons,
+      });
     case "paginatedText":
       return handlePaginatedTextResponse(lbCtx, response, reply);
     case "paginatedButtons":
       return handlePaginatedButtonsResponse(lbCtx, response, reply);
   }
-}
-
-function handleTextResponse(
-  _lbCtx: LbContext,
-  response: TextResponse,
-  reply: ReplyMethod,
-) {
-  return reply(response.text, {
-    reply_markup: response.buttons,
-  });
-}
-
-function handlePhotoResponse(lbCtx: LbContext, response: PhotoResponse) {
-  return lbCtx.replyWithPhoto(response.photo, {
-    caption: response.caption,
-    reply_markup: response.buttons,
-  });
 }
 
 function handlePaginatedTextResponse<T>(
