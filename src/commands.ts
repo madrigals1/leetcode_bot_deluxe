@@ -19,7 +19,7 @@ import {
   text,
   paginatedText,
   paginatedButtons,
-} from "./commands/commandResponse";
+} from "./commands/responseShortcuts";
 
 function escapeHtml(text: string) {
   return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
