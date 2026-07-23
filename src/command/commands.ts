@@ -19,18 +19,23 @@ import {
 } from "@/command/response/shortcuts";
 
 export default class Commands {
-  @command({ name: "start" })
+  @command({ name: "start", description: "🚀 Start the bot" })
   static start() {
-    return text("Welcome! I am the LeetCode Bot Deluxe.");
+    return text("Welcome to the LeetCode BOT.\n\nUse /help to see available commands.");
   }
 
-  @command({ name: "help" })
+  @command({ name: "help", description: "❓ Show this help message" })
   static help() {
-    return text("Available commands: /start, /help, /menu, /ping, /add, /remove, /rating");
+    const commands = COMMANDS_TO_REGISTER
+      .filter((cmd) => cmd.name !== "help")
+      .map((cmd) => `${cmd.description} - <b>/${cmd.name}</b>`)
+      .join("\n");
+    return text(`Available commands:\n\n${commands}`);
   }
 
   @command({
     name: "add",
+    description: "➕ Add a user to the channel",
     args: [{ name: "username" }],
   })
   static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
@@ -44,6 +49,7 @@ export default class Commands {
 
   @command({
     name: "remove",
+    description: "➖ Remove a user from the channel",
     args: [{ name: "username" }],
     requiresAdmin: true,
   })
@@ -56,7 +62,7 @@ export default class Commands {
     }
   }
 
-  @command({ name: "rating" })
+  @command({ name: "rating", description: "🏆 Show rating leaderboard" })
   static rating() {
     return paginatedText({
       name: "rating",
@@ -67,7 +73,7 @@ export default class Commands {
     });
   }
 
-  @command({ name: "rating_cml" })
+  @command({ name: "rating_cml", description: "🔥 Show cumulative rating" })
   static ratingCml() {
     return paginatedText({
       name: "rating_cml",
@@ -82,7 +88,7 @@ export default class Commands {
     });
   }
 
-  @command({ name: "profile" })
+  @command({ name: "profile", description: "👤 View user profiles" })
   static profile() {
     return paginatedButtons({
       name: "profile",
@@ -95,7 +101,7 @@ export default class Commands {
     });
   }
 
-  @command({ name: "avatar" })
+  @command({ name: "avatar", description: "🖼️ View user avatars" })
   static avatar() {
     return paginatedButtons({
       name: "avatar",
@@ -108,7 +114,7 @@ export default class Commands {
     });
   }
 
-  @command({ name: "langstats" })
+  @command({ name: "langstats", description: "📊 View language statistics" })
   static langstats() {
     return paginatedButtons({
       name: "langstats",

@@ -13,6 +13,7 @@ interface CommandArg {
 
 interface CommandOptions {
   name: string;
+  description: string;
   args?: CommandArg[];
   requiresAdmin?: boolean;
 }

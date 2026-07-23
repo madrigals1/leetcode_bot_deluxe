@@ -3,6 +3,7 @@ import type { CommandResponse } from "@/command/response/types";
 
 export interface CommandMetadata {
   name: string;
+  description: string;
   args?: { name: string }[];
   requiresAdmin?: boolean;
   handler: (ctx: Context) => CommandResponse | Promise<CommandResponse>;
