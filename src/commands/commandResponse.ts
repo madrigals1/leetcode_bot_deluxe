@@ -9,7 +9,7 @@ import type {
   PaginatedTextResponse,
   PaginatedButtonsResponse,
   CommandResponse,
-} from "./commandResponseTypes";
+} from "./types";
 
 export async function dispatchResponse(
   lbCtx: LbContext,

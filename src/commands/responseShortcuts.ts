@@ -7,7 +7,7 @@ import type {
   PhotoResponse,
   PaginatedTextResponse,
   PaginatedButtonsResponse,
-} from "./commandResponseTypes";
+} from "./types";
 
 export function text(text: string): TextResponse {
   return { text, type: "text" };
