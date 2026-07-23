@@ -1,7 +1,3 @@
-import { InlineKeyboard } from "grammy";
-import type { InlineKeyboardButton } from "grammy/types";
-import type { PaginatedResponse } from "../services/api";
-import { LbContext } from "../types/context";
 import type {
   TextResponse,
   PhotoResponse,
@@ -13,38 +9,18 @@ export function text(text: string): TextResponse {
   return { text, type: "text" };
 }
 
-export function complexText(options: { text: string; reply_markup?: InlineKeyboard }): TextResponse {
+export function complexText(options: Omit<TextResponse, "type">): TextResponse {
   return { ...options, type: "text" };
 }
 
-export function photo(options: { photo: string; caption?: string; reply_markup?: InlineKeyboard }): PhotoResponse {
+export function photo(options: Omit<PhotoResponse, "type">): PhotoResponse {
   return { ...options, type: "photo" };
 }
 
-export function paginatedText<T>(options: {
-  name: string;
-  header: string;
-  fetchPage: (page: number, ctx: LbContext) => Promise<PaginatedResponse<T>>;
-  formatItem: (item: T, index: number) => string;
-  reply_markup?: InlineKeyboard;
-  itemsPerPage?: number;
-  pageButtonsPerRow?: number;
-  showPageNumbers?: boolean;
-  showFirstLastButtons?: boolean;
-}): PaginatedTextResponse<T> {
+export function paginatedText<T>(options: Omit<PaginatedTextResponse<T>, "type">): PaginatedTextResponse<T> {
   return { ...options, type: "paginatedText" };
 }
 
-export function paginatedButtons<T>(options: {
-  name: string;
-  fetchPage: (page: number, ctx: LbContext) => Promise<PaginatedResponse<T>>;
-  itemToButton: (item: T) => InlineKeyboardButton;
-  buttonsPerRow?: number;
-  reply_markup?: InlineKeyboard;
-  itemsPerPage?: number;
-  pageButtonsPerRow?: number;
-  showPageNumbers?: boolean;
-  showFirstLastButtons?: boolean;
-}): PaginatedButtonsResponse<T> {
+export function paginatedButtons<T>(options: Omit<PaginatedButtonsResponse<T>, "type">): PaginatedButtonsResponse<T> {
   return { ...options, type: "paginatedButtons" };
 }
