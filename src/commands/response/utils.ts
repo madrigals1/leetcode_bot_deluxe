@@ -10,7 +10,7 @@ import type {
   PaginatedTextResponse,
   PaginatedButtonsResponse,
   CommandResponse,
-} from "../types";
+} from "./types";
 
 export async function dispatchResponse(
   lbCtx: LbContext,
