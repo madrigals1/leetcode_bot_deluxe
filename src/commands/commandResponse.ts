@@ -3,7 +3,7 @@ import type { InlineKeyboardButton } from "grammy/types";
 import type { PaginatedResponse } from "../services/api";
 import { LbContext } from "../types/context";
 import { callbacksRegisteredByDecorator } from "../decorators/callback";
-import { DataNotFoundError } from "../errors";
+import { LeetCodeBotError, DataNotFoundError } from "../errors";
 import type {
   TextResponse,
   PhotoResponse,
@@ -233,7 +233,7 @@ function registerPaginationCallback<T>(
 
         await renderPage(lbCtx, data, page, defaultPageSize, defaultButtonsPerRow);
       } catch (error) {
-        if (error instanceof Error) {
+        if (error instanceof LeetCodeBotError) {
           await ctx.answerCallbackQuery(error.message);
           return;
         }
