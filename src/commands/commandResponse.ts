@@ -3,6 +3,7 @@ import type { InlineKeyboardButton } from "grammy/types";
 import type { PaginatedResponse } from "../services/api";
 import { LbContext } from "../types/context";
 import { callbacksRegisteredByDecorator } from "../decorators/callback";
+import { DataNotFoundError } from "../errors";
 import type {
   TextResponse,
   PhotoResponse,
@@ -102,7 +103,7 @@ async function renderFirstPage<T>(
   const data = await response.fetchPage(1, lbCtx);
 
   if (data.results.length === 0) {
-    return lbCtx.reply("No data found.");
+    throw new DataNotFoundError();
   }
 
   const renderPageWithResponse = (
@@ -153,7 +154,7 @@ async function renderFirstButtonsPage<T>(
   const data = await response.fetchPage(1, lbCtx);
 
   if (data.results.length === 0) {
-    return lbCtx.reply("No data found.");
+    throw new DataNotFoundError();
   }
 
   const renderButtonsPageWithResponse = (
@@ -227,8 +228,7 @@ function registerPaginationCallback<T>(
         const data = await fetchPage(page, lbCtx);
 
         if (data.results.length === 0) {
-          await lbCtx.editMessageText("No data found.");
-          return;
+          throw new DataNotFoundError();
         }
 
         await renderPage(lbCtx, data, page, defaultPageSize, defaultButtonsPerRow);

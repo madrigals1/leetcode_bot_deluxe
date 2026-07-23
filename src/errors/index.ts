@@ -32,3 +32,10 @@ export class MatchNotFoundError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.MatchNotFoundError`;
   }
 }
+
+export class DataNotFoundError extends LeetCodeBotError {
+  constructor() {
+    super("No data found.");
+    this.name = `${LeetCodeBotError.name}.DataNotFoundError`;
+  }
+}
