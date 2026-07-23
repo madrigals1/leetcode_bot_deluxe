@@ -1,9 +1,8 @@
 import type { PaginatedResponse } from "../../../services/api";
 import { LbContext } from "../../../types/context";
-import { callbacksRegisteredByDecorator } from "../../../decorators/callback";
-import { LeetCodeBotError, DataNotFoundError } from "../../../errors";
+import { DataNotFoundError } from "../../../errors";
 import type { PaginatedButtonsResponse } from "../types";
-import { buildKeyboard, buildNavRow, totalPages } from "./utils";
+import { buildKeyboard, buildNavRow, totalPages, registerPaginationCallback } from "./utils";
 
 export async function renderFirstButtonsPage<T>(
   lbCtx: LbContext,
@@ -55,51 +54,5 @@ function renderButtonsPage<T>(
 
   return lbCtx.reply("Select an item:", {
     reply_markup: keyboard,
-  });
-}
-
-function registerPaginationCallback<T>(
-  name: string,
-  fetchPage: (page: number, ctx: LbContext) => Promise<PaginatedResponse<T>>,
-  extraKeyboard: import("grammy").InlineKeyboard | undefined,
-  renderPage: (
-    lbCtx: LbContext,
-    data: PaginatedResponse<T>,
-    page: number,
-    pageSize: number,
-    buttonsPerRow?: number,
-  ) => Promise<unknown>,
-  defaultPageSize: number,
-  defaultButtonsPerRow?: number,
-) {
-  const regex = new RegExp(`^${name}_page:(\\d+)$`);
-
-  const existing = callbacksRegisteredByDecorator.find((c) => c.action instanceof RegExp && c.action.source === regex.source);
-  if (existing) {
-    return;
-  }
-
-  callbacksRegisteredByDecorator.push({
-    action: regex,
-    handler: async (ctx) => {
-      try {
-        const lbCtx = new LbContext(ctx);
-        const page = Number(lbCtx.match[1]);
-        const data = await fetchPage(page, lbCtx);
-
-        if (data.results.length === 0) {
-          throw new DataNotFoundError();
-        }
-
-        await renderPage(lbCtx, data, page, defaultPageSize, defaultButtonsPerRow);
-      } catch (error) {
-        if (error instanceof LeetCodeBotError) {
-          await ctx.answerCallbackQuery(error.message);
-          return;
-        }
-
-        await ctx.editMessageText("Failed to fetch data.");
-      }
-    },
   });
 }
