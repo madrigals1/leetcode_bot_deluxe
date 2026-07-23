@@ -1,16 +1,16 @@
 import { Context, InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
-import type { PaginatedResponse } from "../services/api";
-import { LbContext } from "../types/context";
-import { callbacksRegisteredByDecorator } from "../decorators/callback";
-import { LeetCodeBotError, DataNotFoundError } from "../errors";
+import type { PaginatedResponse } from "../../services/api";
+import { LbContext } from "../../types/context";
+import { callbacksRegisteredByDecorator } from "../../decorators/callback";
+import { LeetCodeBotError, DataNotFoundError } from "../../errors";
 import type {
   TextResponse,
   PhotoResponse,
   PaginatedTextResponse,
   PaginatedButtonsResponse,
   CommandResponse,
-} from "./types";
+} from "../types";
 
 export async function dispatchResponse(
   lbCtx: LbContext,

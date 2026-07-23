@@ -3,7 +3,7 @@ import type {
   PhotoResponse,
   PaginatedTextResponse,
   PaginatedButtonsResponse,
-} from "./types";
+} from "../types";
 
 export function text(text: string): TextResponse {
   return { text, type: "text" };

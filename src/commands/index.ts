@@ -1,3 +1,3 @@
-export * from "./commandResponse";
+export * from "./response/utils";
 export * from "./types";
-export * from "./responseShortcuts";
+export * from "./response/shortcuts";

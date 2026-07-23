@@ -3,7 +3,7 @@ import { InvalidArgumentAmountError, UnauthorizedError } from "../errors";
 import { LbContext } from "../types/context";
 import { isOwnerOrPrivate } from "../utils/chat";
 import type { CommandResponse } from "./types";
-import { dispatchResponse } from "./commandResponse";
+import { dispatchResponse } from "./response/utils";
 
 export type ParsedArgs = Record<string, string>;
 
