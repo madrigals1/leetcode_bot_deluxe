@@ -57,7 +57,8 @@ export function command(options: CommandOptions) {
           : {};
 
         const response = await originalHandler(lbCtx, args);
-        await dispatchResponse(lbCtx, response, lbCtx.reply);
+        const reply = (text: string, options?: object) => lbCtx.reply(text, options);
+        await dispatchResponse(lbCtx, response, reply);
         return response;
       },
     });
