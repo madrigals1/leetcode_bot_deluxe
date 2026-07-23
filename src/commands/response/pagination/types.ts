@@ -13,3 +13,17 @@ export interface RenderPageOptions<T, R extends PaginationBaseResponse<T>> exten
   data: PaginatedResponse<T>;
   page: number;
 }
+
+export interface RegisterPaginationCallbackOptions<T> {
+  name: string;
+  fetchPage: (page: number, ctx: LbContext) => Promise<PaginatedResponse<T>>;
+  renderPage: (
+    lbCtx: LbContext,
+    data: PaginatedResponse<T>,
+    page: number,
+    pageSize: number,
+    buttonsPerRow?: number,
+  ) => Promise<unknown>;
+  defaultPageSize: number;
+  defaultButtonsPerRow?: number;
+}

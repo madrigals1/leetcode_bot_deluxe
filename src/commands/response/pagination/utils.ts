@@ -1,9 +1,9 @@
 import { Context, InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
-import type { PaginatedResponse } from "@/services/api";
 import { LbContext } from "@/types/context";
 import { callbacksRegisteredByDecorator } from "@/decorators/callback";
 import { LeetCodeBotError, DataNotFoundError } from "@/errors";
+import type { RegisterPaginationCallbackOptions } from "./types";
 
 export function buildKeyboard(
   itemRows?: InlineKeyboardButton[][],
@@ -48,19 +48,13 @@ export function buildNavRow(page: number, hasNext: boolean, name: string) {
   return row;
 }
 
-export function registerPaginationCallback<T>(
-  name: string,
-  fetchPage: (page: number, ctx: LbContext) => Promise<PaginatedResponse<T>>,
-  renderPage: (
-    lbCtx: LbContext,
-    data: PaginatedResponse<T>,
-    page: number,
-    pageSize: number,
-    buttonsPerRow?: number,
-  ) => Promise<unknown>,
-  defaultPageSize: number,
-  defaultButtonsPerRow?: number,
-) {
+export function registerPaginationCallback<T>({
+  name,
+  fetchPage,
+  renderPage,
+  defaultPageSize,
+  defaultButtonsPerRow,
+}: RegisterPaginationCallbackOptions<T>) {
   const regex = new RegExp(`^${name}_page:(\\d+)$`);
 
   const existing = callbacksRegisteredByDecorator.find((c) => c.action instanceof RegExp && c.action.source === regex.source);

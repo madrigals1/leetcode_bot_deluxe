@@ -23,7 +23,7 @@ export async function renderFirstPage<T>({
     pageSize: number,
   ) => renderPage({ lbCtx, response, data, page, pageSize });
 
-  registerPaginationCallback(response.name, response.fetchPage, renderPageWithResponse, pageSize);
+  registerPaginationCallback({ name: response.name, fetchPage: response.fetchPage, renderPage: renderPageWithResponse, defaultPageSize: pageSize });
 
   return renderPageWithResponse(lbCtx, data, 1, pageSize);
 }
