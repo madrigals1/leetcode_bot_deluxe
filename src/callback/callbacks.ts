@@ -28,6 +28,7 @@ export class Callbacks {
       `🔴 Hard - ${getDifficultyCount(solved, "Hard")}\n` +
       `🔵 All - ${getDifficultyCount(solved, "All")} / ${getDifficultyCount(total, "All")}\n` +
       `🔷 Cumulative - ${user.solved_cml}`;
+
     return editText({ text });
   }
 
@@ -40,6 +41,7 @@ export class Callbacks {
     if (avatarUrl) {
       return editPhoto({ photo: avatarUrl });
     }
+
     return editText({ text: "No avatar found." });
   }
 
