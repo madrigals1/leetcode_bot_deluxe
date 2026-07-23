@@ -3,7 +3,11 @@ import type {
   EditPhotoResponse,
 } from "./types";
 
-export function editText(options: Omit<EditTextResponse, "type">): EditTextResponse {
+export function editText(text: string): EditTextResponse {
+  return { text, type: "editText" };
+}
+
+export function editComplexText(options: Omit<EditTextResponse, "type">): EditTextResponse {
   return { ...options, type: "editText" };
 }
 

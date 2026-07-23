@@ -29,7 +29,7 @@ export class Callbacks {
       `🔵 All - ${getDifficultyCount(solved, "All")} / ${getDifficultyCount(total, "All")}\n` +
       `🔷 Cumulative - ${user.solved_cml}`;
 
-    return editText({ text });
+    return editText(text);
   }
 
   @callback({ action: /^avatar:(\d+)$/ })
@@ -42,7 +42,7 @@ export class Callbacks {
       return editPhoto({ photo: avatarUrl });
     }
 
-    return editText({ text: "No avatar found." });
+    return editText("No avatar found.");
   }
 
   @callback({ action: /^langstats:(\d+)$/ })
@@ -58,7 +58,7 @@ export class Callbacks {
         .map((s) => `- <b>${s.languageName}</b> ${s.problemsSolved}`)
         .join("\n");
 
-    return editText({ text });
+    return editText(text);
   }
 
   @callback({ action: /^command:(.+)$/ })
