@@ -2,8 +2,8 @@ import { Context } from "grammy";
 import { InvalidArgumentAmountError, UnauthorizedError } from "../errors";
 import { LbContext } from "../types/context";
 import { isOwnerOrPrivate } from "../utils/chat";
-import type { CommandResponse } from "../commands/commandResponseTypes";
-import { dispatchResponse } from "../commands/commandResponse";
+import type { CommandResponse } from "./commandResponseTypes";
+import { dispatchResponse } from "./commandResponse";
 
 export type ParsedArgs = Record<string, string>;
 
