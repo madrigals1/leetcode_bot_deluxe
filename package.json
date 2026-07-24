@@ -22,6 +22,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "tsx src/index.ts",
+    "debug": "tsx --inspect-brk src/index.ts",
     "lint": "eslint src/",
     "test": "npm test"
   },
