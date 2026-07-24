@@ -39,3 +39,10 @@ export class DataNotFoundError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.DataNotFoundError`;
   }
 }
+
+export class BackendNotAvailableError extends LeetCodeBotError {
+  constructor() {
+    super("Backend is not available.");
+    this.name = `${LeetCodeBotError.name}.BackendNotAvailableError`;
+  }
+}

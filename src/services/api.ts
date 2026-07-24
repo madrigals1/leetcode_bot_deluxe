@@ -3,6 +3,7 @@ import {
   BACKEND_JWT_REFRESH_TOKEN,
   TOKEN_MAX_AGE_MS,
 } from "@/constants";
+import { BackendNotAvailableError } from "@/errors";
 
 export interface PaginatedResponse<T> {
   count: number;
@@ -16,11 +17,16 @@ export class ApiService {
   private static lastRefreshedAt = 0;
 
   private static async refreshAccessToken(): Promise<string> {
-    const response = await fetch(`${BACKEND_URL}/api/token/refresh/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh: BACKEND_JWT_REFRESH_TOKEN }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${BACKEND_URL}/api/token/refresh/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh: BACKEND_JWT_REFRESH_TOKEN }),
+      });
+    } catch {
+      throw new BackendNotAvailableError();
+    }
 
     if (!response.ok) {
       throw new Error("Failed to refresh access token.");
@@ -49,14 +55,19 @@ export class ApiService {
   ): Promise<T> {
     const token = await ApiService.getAccessToken();
 
-    const response = await fetch(`${BACKEND_URL}${path}`, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        ...options.headers,
-      },
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${BACKEND_URL}${path}`, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          ...options.headers,
+        },
+      });
+    } catch {
+      throw new BackendNotAvailableError();
+    }
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
