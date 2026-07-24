@@ -27,7 +27,6 @@ export default class Commands {
   @command({ name: "commands", description: "❓ Show this help message" })
   static commands() {
     const commands = COMMANDS_TO_REGISTER
-      .filter((cmd) => cmd.name !== "commands")
       .map((cmd) => `${cmd.description} - <b>/${cmd.name}</b>`)
       .join("\n");
     return text(`Available commands:\n\n${commands}`);
