@@ -4,7 +4,7 @@ import type {
   PaginatedButtonsResponse,
   CommandResponse,
 } from "./types";
-import type { ReplyMethod } from "./pagination/types";
+import type { ReplyMethod, ReplyPhotoMethod } from "./pagination/types";
 import { renderFirstPage } from "./pagination/text";
 import { renderFirstButtonsPage } from "./pagination/button";
 
@@ -12,6 +12,7 @@ export async function dispatchResponse(
   lbCtx: LbContext,
   response: CommandResponse,
   reply: ReplyMethod,
+  replyPhoto: ReplyPhotoMethod,
 ) {
   switch (response.type) {
     case "text":
@@ -19,7 +20,7 @@ export async function dispatchResponse(
         reply_markup: response.buttons,
       });
     case "photo":
-      return lbCtx.replyWithPhoto(response.photo, {
+      return replyPhoto(response.photo, {
         caption: response.caption,
         reply_markup: response.buttons,
       });

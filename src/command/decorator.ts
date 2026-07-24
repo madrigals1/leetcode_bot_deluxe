@@ -58,7 +58,9 @@ export function command(options: CommandOptions) {
 
         const response = await originalHandler(lbCtx, args);
         const reply = (text: string, options?: object) => lbCtx.reply(text, options);
-        await dispatchResponse(lbCtx, response, reply);
+        const replyPhoto = (photo: string, options?: object) =>
+          lbCtx.replyWithPhoto(photo, options);
+        await dispatchResponse(lbCtx, response, reply, replyPhoto);
         return response;
       },
     });

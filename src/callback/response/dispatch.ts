@@ -10,6 +10,8 @@ export async function dispatchCallbackResponse(
 ) {
   const editReply = (text: string, options?: object) =>
     lbCtx.editMessageText(text, options);
+  const editPhoto = (photo: string, options?: object) =>
+    lbCtx.editPhoto(photo, options);
 
   switch (response.type) {
     case "editText": {
@@ -18,7 +20,7 @@ export async function dispatchCallbackResponse(
         text: response.text,
         buttons: response.buttons,
       };
-      return dispatchResponse(lbCtx, cmdResponse, editReply);
+      return dispatchResponse(lbCtx, cmdResponse, editReply, editPhoto);
     }
     case "editPhoto": {
       const cmdResponse: PhotoResponse = {
@@ -27,7 +29,7 @@ export async function dispatchCallbackResponse(
         caption: response.caption,
         buttons: response.buttons,
       };
-      return dispatchResponse(lbCtx, cmdResponse, editReply);
+      return dispatchResponse(lbCtx, cmdResponse, editReply, editPhoto);
     }
     case "commandRedirect": {
       const cmd = COMMANDS_TO_REGISTER.find((c) => c.name === response.command);
@@ -35,7 +37,7 @@ export async function dispatchCallbackResponse(
         return;
       }
       const result = await cmd.originalFn(lbCtx);
-      return dispatchResponse(lbCtx, result, editReply);
+      return dispatchResponse(lbCtx, result, editReply, editPhoto);
     }
   }
 }

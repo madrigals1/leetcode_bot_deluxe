@@ -3,6 +3,7 @@ import { LbContext } from "@/utils/context";
 import type { PaginationBaseResponse } from "../types";
 
 export type ReplyMethod = (text: string, options?: object) => Promise<unknown>;
+export type ReplyPhotoMethod = (photo: string, options?: object) => Promise<unknown>;
 
 export interface RenderFirstPageOptions<T, R extends PaginationBaseResponse<T>> {
   lbCtx: LbContext;

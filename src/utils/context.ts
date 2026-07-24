@@ -38,4 +38,14 @@ export class LbContext {
   editMessageText(text: string, options?: { reply_markup?: InlineKeyboard }) {
     return this.ctx.editMessageText(text, options);
   }
+
+  editPhoto(photo: string, options?: {
+    caption?: string;
+    reply_markup?: InlineKeyboard;
+  }) {
+    return this.ctx.editMessageMedia(
+      { type: "photo", media: photo, caption: options?.caption },
+      { reply_markup: options?.reply_markup },
+    );
+  }
 }
