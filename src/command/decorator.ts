@@ -3,7 +3,7 @@ import { InvalidArgumentAmountError, UnauthorizedError } from "@/errors";
 import { LbContext } from "@/utils/context";
 import { isOwnerOrPrivate } from "@/utils/chat";
 import { dispatchResponse } from "@/command/response/dispatch";
-import { COMMANDS_TO_REGISTER } from "./registry";
+import { CommandRegistry } from "./registry";
 
 export type ParsedArgs = Record<string, string>;
 
@@ -42,7 +42,7 @@ export function command(options: CommandOptions) {
   ) {
     const originalHandler = descriptor.value;
 
-    COMMANDS_TO_REGISTER.push({
+    CommandRegistry.addCommand({
       ...options,
       originalFn: originalHandler,
       handler: async (ctx: Context) => {

@@ -1,10 +1,9 @@
-import { Bot, Context, InlineKeyboard } from "grammy";
+import { InlineKeyboard } from "grammy";
 import {
   command,
 } from "@/command/decorator";
 import type { ParsedArgs } from "@/command/decorator";
-import { COMMANDS_TO_REGISTER } from "@/command/registry";
-import { LeetCodeBotError } from "@/errors";
+import { CommandRegistry } from "@/command/registry";
 import { Service } from "@/services";
 import { LbContext } from "@/utils/context";
 import {
@@ -26,7 +25,7 @@ export default class Commands {
 
   @command({ name: "commands", description: "❓ Show this help message" })
   static commands() {
-    const commands = COMMANDS_TO_REGISTER
+    const commands = CommandRegistry.getAll()
       .map((cmd) => `${cmd.description} - <b>/${cmd.name}</b>`)
       .join("\n");
     return text(`Available commands:\n\n${commands}`);
@@ -123,34 +122,6 @@ export default class Commands {
         callback_data: `langstats:${item.user.id}`,
       }),
       buttonsPerRow: 2,
-    });
-  }
-}
-
-export function registerCommands(bot: Bot) {
-  bot.api.config.use((prev, method, payload) => {
-    if (
-      typeof payload === "object" &&
-      payload !== null &&
-      !("parse_mode" in payload)
-    ) {
-      (payload as Record<string, unknown>).parse_mode = "HTML";
-    }
-    return prev(method, payload);
-  });
-
-  for (const cmd of COMMANDS_TO_REGISTER) {
-    bot.command(cmd.name, async (ctx: Context) => {
-      try {
-        await cmd.handler(ctx);
-      } catch (error) {
-        if (error instanceof LeetCodeBotError) {
-          await ctx.reply(error.message);
-          return;
-        }
-
-        await ctx.reply("An error occurred.");
-      }
     });
   }
 }

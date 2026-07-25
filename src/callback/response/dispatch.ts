@@ -1,7 +1,7 @@
 import { LbContext } from "@/utils/context";
 import type { CallbackResponse } from "./types";
 import type { TextResponse, PhotoResponse } from "@/command/response/types";
-import { COMMANDS_TO_REGISTER } from "@/command/registry";
+import { CommandRegistry } from "@/command/registry";
 import { dispatchResponse } from "@/command/response/dispatch";
 
 export async function dispatchCallbackResponse(
@@ -32,7 +32,7 @@ export async function dispatchCallbackResponse(
       return dispatchResponse(lbCtx, cmdResponse, editReply, editPhoto);
     }
     case "commandRedirect": {
-      const cmd = COMMANDS_TO_REGISTER.find((c) => c.name === response.command);
+      const cmd = CommandRegistry.findByName(response.command);
       if (!cmd) {
         return;
       }
