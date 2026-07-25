@@ -8,7 +8,7 @@ export function editText(text: string): EditTextResponse {
   return { text, type: "editText" };
 }
 
-export function editComplexText(options: Omit<EditTextResponse, "type">): EditTextResponse {
+export function editButtons(options: Omit<EditTextResponse, "type">): EditTextResponse {
   return { ...options, type: "editText" };
 }
 
