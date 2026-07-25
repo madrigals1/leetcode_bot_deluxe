@@ -2,6 +2,7 @@ import { Bot } from "grammy";
 import { TELEGRAM_BOT_TOKEN } from "./constants";
 import { CommandRegistry } from "./command";
 import { CallbackRegistry } from "./callback";
+import { PaginationRegistry } from "@/command/response/pagination/registry";
 
 // Side-effect: ensures @callback decorators execute and register handlers
 import "./callback/callbacks";
@@ -24,6 +25,7 @@ CommandRegistry.setBot(bot);
 CommandRegistry.registerAllCommands();
 CallbackRegistry.setBot(bot);
 CallbackRegistry.registerAllCallbacks();
+PaginationRegistry.setBot(bot);
 
 bot.start({
   onStart: (botInfo) =>

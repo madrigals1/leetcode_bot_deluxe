@@ -1,8 +1,7 @@
-import { Context, InlineKeyboard } from "grammy";
+import { InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
-import { LbContext } from "@/utils/context";
-import { CallbackRegistry } from "@/callback/registry";
-import { LeetCodeBotError, DataNotFoundError } from "@/errors";
+import { PaginationRegistry } from "./registry";
+import type { PaginationHandlerData } from "./registry";
 import type { RegisterPaginationCallbackOptions } from "./types";
 
 export function buildKeyboard(
@@ -56,34 +55,14 @@ export function registerPaginationCallback<T>({
   defaultButtonsPerRow,
   reply,
 }: RegisterPaginationCallbackOptions<T>) {
-  const regex = new RegExp(`^${name}_page:(\\d+)$`);
-
-  const existing = CallbackRegistry.findByAction(regex);
-  if (existing) {
-    return;
-  }
-
-  CallbackRegistry.registerCallback({
-    action: regex,
-    handler: async (ctx: Context) => {
-      try {
-        const lbCtx = new LbContext(ctx);
-        const page = Number(lbCtx.match[1]);
-        const data = await fetchPage(page, lbCtx);
-
-        if (data.results.length === 0) {
-          throw new DataNotFoundError();
-        }
-
-        await renderPage(lbCtx, data, page, defaultPageSize, reply, defaultButtonsPerRow);
-      } catch (error) {
-        if (error instanceof LeetCodeBotError) {
-          await ctx.answerCallbackQuery(error.message);
-          return;
-        }
-
-        await ctx.editMessageText("Failed to fetch data.");
-      }
-    },
-  });
+  PaginationRegistry.registerHandler(
+    name,
+    {
+      fetchPage,
+      renderPage,
+      defaultPageSize,
+      defaultButtonsPerRow,
+      reply,
+    } as PaginationHandlerData,
+  );
 }
