@@ -65,7 +65,7 @@ export default class Commands {
     return paginatedText({
       name: "rating",
       header: "Rating  🏆",
-      fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page),
+      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
       formatItem: (item, i) => `${i + 1}. <b>${item.user.username}</b> ${item.user.solved}`,
       buttons: new InlineKeyboard().text("🔥 Cumulative rating", "command:rating_cml"),
     });
@@ -80,7 +80,7 @@ export default class Commands {
         `🟢 Easy - ${CML_EASY_POINTS} points\n` +
         `🟡 Medium - ${CML_MEDIUM_POINTS} points\n` +
         `🔴 Hard - ${CML_HARD_POINTS} points`,
-      fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page, "-user__solved_cml"),
+      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page, "-user__solved_cml"),
       formatItem: (item, i) => `${i + 1}. <b>${item.user.username}</b> ${item.user.solved_cml}`,
       buttons: new InlineKeyboard().text("🏆 Regular rating", "command:rating"),
     });
@@ -90,7 +90,7 @@ export default class Commands {
   static profile() {
     return paginatedButtons({
       name: "profile",
-      fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page),
+      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `profile:${item.user.id}`,
@@ -103,7 +103,7 @@ export default class Commands {
   static avatar() {
     return paginatedButtons({
       name: "avatar",
-      fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page),
+      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `avatar:${item.user.id}`,
@@ -116,7 +116,7 @@ export default class Commands {
   static langstats() {
     return paginatedButtons({
       name: "langstats",
-      fetchPage: (page, ctx) => Service.channels.getUsers(ctx.chatId, page),
+      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `langstats:${item.user.id}`,
