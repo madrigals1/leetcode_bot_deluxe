@@ -46,3 +46,10 @@ export class BackendNotAvailableError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.BackendNotAvailableError`;
   }
 }
+
+export class BotNotInitializedError extends LeetCodeBotError {
+  constructor() {
+    super("Bot is not initialized.");
+    this.name = `${LeetCodeBotError.name}.BotNotInitializedError`;
+  }
+}
