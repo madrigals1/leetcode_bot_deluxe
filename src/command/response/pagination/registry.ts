@@ -38,12 +38,15 @@ export class PaginationRegistry {
             throw new DataNotFoundError();
           }
 
+          const editReply = (text: string, options?: object) =>
+            lbCtx.editMessageText(text, options);
+
           await data.renderPage(
             lbCtx,
             fetchResult,
             page,
             data.defaultPageSize,
-            data.reply,
+            editReply,
             data.defaultButtonsPerRow,
           );
         } catch (error) {

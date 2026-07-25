@@ -23,6 +23,7 @@ export async function renderFirstButtonsPage<T>({
     data: PaginatedResponse<T>,
     page: number,
     pageSize: number,
+    reply: (text: string, options?: object) => Promise<unknown>,
   ) => renderButtonsPage({ lbCtx, response, data, page, pageSize, buttonsPerRow, reply });
 
   registerPaginationCallback({
@@ -34,7 +35,7 @@ export async function renderFirstButtonsPage<T>({
     reply,
   });
 
-  return renderButtonsPageWithResponse(lbCtx, data, 1, pageSize);
+  return renderButtonsPageWithResponse(lbCtx, data, 1, pageSize, reply);
 }
 
 function renderButtonsPage<T>({
