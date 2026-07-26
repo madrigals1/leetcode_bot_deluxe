@@ -1,4 +1,4 @@
-import type { PaginatedResponse } from "@/services/api";
+import type { PaginatedResponse } from "@/services/backend/api";
 import { LbContext } from "@/utils/context";
 import { DataNotFoundError } from "@/errors";
 import { buildKeyboard, buildNavRow, totalPages, registerPaginationCallback } from "./utils";

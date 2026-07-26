@@ -4,7 +4,7 @@ import {
 } from "@/command/decorator";
 import type { ParsedArgs } from "@/command/decorator";
 import { CommandRegistry } from "@/command/registry";
-import { Service } from "@/services";
+import { Service } from "@/services/backend";
 import { LbContext } from "@/utils/context";
 import {
   CML_EASY_POINTS,

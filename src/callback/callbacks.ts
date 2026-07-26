@@ -1,5 +1,5 @@
 import { callback } from "@/callback";
-import { Service } from "@/services";
+import { Service } from "@/services/backend";
 import { LbContext } from "@/utils/context";
 import { getDifficultyCount } from "@/utils/leetcode";
 import { editText, editPhoto, commandRedirect } from "@/callback/response/shortcuts";

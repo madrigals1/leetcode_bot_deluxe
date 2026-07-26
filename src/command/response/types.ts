@@ -1,7 +1,7 @@
 import type { InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
 import { LbContext } from "@/utils/context";
-import type { PaginatedResponse } from "@/services/api";
+import type { PaginatedResponse } from "@/services/backend/api";
 
 type ResponseType = "text" | "photo" | "paginatedText" | "paginatedButtons";
 
