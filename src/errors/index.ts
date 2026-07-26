@@ -53,3 +53,10 @@ export class BotNotInitializedError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.BotNotInitializedError`;
   }
 }
+
+export class VizApiNotAvailableError extends LeetCodeBotError {
+  constructor() {
+    super("VizAPI is not available.");
+    this.name = `${LeetCodeBotError.name}.VizApiNotAvailableError`;
+  }
+}
