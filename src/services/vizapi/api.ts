@@ -51,42 +51,42 @@ export interface LinkResponse {
   link: string;
 }
 
-class VizApiService {
-  async health(): Promise<HealthResponse> {
-    return this.fetch<HealthResponse>("/health");
+export class VizApiService {
+  static async health(): Promise<HealthResponse> {
+    return VizApiService.fetch<HealthResponse>("/health");
   }
 
-  async generateTable(
+  static async generateTable(
     table: Record<string, unknown>[],
   ): Promise<LinkResponse> {
-    return this.fetch<LinkResponse>("/table", {
+    return VizApiService.fetch<LinkResponse>("/table", {
       method: "POST",
       body: JSON.stringify({ table }),
     });
   }
 
-  async generateCompare(data: CompareData): Promise<LinkResponse> {
-    return this.fetch<LinkResponse>("/compare", {
+  static async generateCompare(data: CompareData): Promise<LinkResponse> {
+    return VizApiService.fetch<LinkResponse>("/compare", {
       method: "POST",
       body: JSON.stringify(data),
     });
   }
 
-  async generatePie(data: PieData): Promise<LinkResponse> {
-    return this.fetch<LinkResponse>("/pie", {
+  static async generatePie(data: PieData): Promise<LinkResponse> {
+    return VizApiService.fetch<LinkResponse>("/pie", {
       method: "POST",
       body: JSON.stringify(data),
     });
   }
 
-  async generateBar(data: BarData): Promise<LinkResponse> {
-    return this.fetch<LinkResponse>("/bar", {
+  static async generateBar(data: BarData): Promise<LinkResponse> {
+    return VizApiService.fetch<LinkResponse>("/bar", {
       method: "POST",
       body: JSON.stringify(data),
     });
   }
 
-  private async fetch<T>(
+  private static async fetch<T>(
     path: string,
     options: RequestInit = {},
   ): Promise<T> {
@@ -110,5 +110,3 @@ class VizApiService {
     return response.json() as Promise<T>;
   }
 }
-
-export const vizApiService = new VizApiService();

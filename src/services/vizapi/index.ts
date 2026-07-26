@@ -1,8 +1,6 @@
-import { vizApiService } from "./api";
+import { VizApiService } from "./api";
 
-export class VizService {
-  static vizapi = vizApiService;
-}
+export { VizApiService };
 
 export type {
   CompareField,
