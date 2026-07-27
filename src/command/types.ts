@@ -57,9 +57,6 @@ export interface PaginationBaseResponse<T = unknown> extends BaseResponse {
   name: string;
   fetchPage: (page: number, ctx: LbContext) => Promise<PaginatedResponse<T>>;
   itemsPerPage?: number;
-  pageButtonsPerRow?: number;
-  showPageNumbers?: boolean;
-  showFirstLastButtons?: boolean;
 }
 
 export interface PaginatedTextResponse<T = unknown> extends PaginationBaseResponse<T> {
