@@ -1,4 +1,7 @@
 import { InvalidArgumentAmountError } from "@/errors";
+import type { User } from "@/services/backend";
+import type { CompareData } from "@/services/vizapi";
+import { getDifficultyCount } from "@/utils/leetcode";
 
 export type ParsedArgs = Record<string, string>;
 
@@ -27,4 +30,30 @@ export function parseArgs(text: string, defs: CommandArg[]): ParsedArgs {
   }
 
   return result;
+}
+
+export function escapeHtml(text: string) {
+  return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
+}
+
+export function buildCompareData(user1: User, user2: User): CompareData {
+  const side = (u: User) => {
+    const stats = u.data?.submitStats?.acSubmissionNum ?? [];
+    return {
+      image: u.data?.profile?.userAvatar ?? "",
+      bio_fields: [
+        { name: "Name", value: u.data?.profile?.realName ?? u.username },
+        { name: "Username", value: u.username },
+      ],
+      compare_fields: [
+        { name: "Problems Solved", value: u.solved },
+        { name: "Cumulative Score", value: u.solved_cml },
+        { name: "Easy", value: getDifficultyCount(stats, "Easy") },
+        { name: "Medium", value: getDifficultyCount(stats, "Medium") },
+        { name: "Hard", value: getDifficultyCount(stats, "Hard") },
+      ],
+    };
+  };
+
+  return { left: side(user1), right: side(user2) };
 }
