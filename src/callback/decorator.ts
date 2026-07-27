@@ -25,11 +25,11 @@ export function callback(options: CallbackOptions) {
           await dispatchCallbackResponse(lbCtx, response);
         } catch (error) {
           if (error instanceof LeetCodeBotError) {
-            await ctx.answerCallbackQuery(error.message);
+            await ctx.editMessageText(error.message);
             return;
           }
 
-          await ctx.answerCallbackQuery("An error occurred.");
+          await ctx.editMessageText("An error occurred.");
         }
       },
     });

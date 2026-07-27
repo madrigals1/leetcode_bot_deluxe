@@ -49,11 +49,11 @@ export class CallbackRegistry {
         await metadata.handler(ctx);
       } catch (error) {
         if (error instanceof LeetCodeBotError) {
-          await ctx.answerCallbackQuery(error.message);
+          await ctx.editMessageText(error.message);
           return;
         }
 
-        await ctx.answerCallbackQuery("An error occurred.");
+        await ctx.editMessageText("An error occurred.");
       }
     });
   }
