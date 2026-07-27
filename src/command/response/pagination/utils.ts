@@ -1,8 +1,7 @@
 import { InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
 import { PaginationRegistry } from "./registry";
-import type { PaginationHandlerData } from "./registry";
-import type { RegisterPaginationCallbackOptions } from "./types";
+import type { PaginationHandlerData, RegisterPaginationCallbackOptions } from "@/command/types";
 
 export function buildKeyboard(
   itemRows?: InlineKeyboardButton[][],

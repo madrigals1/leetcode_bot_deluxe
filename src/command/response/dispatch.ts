@@ -3,8 +3,9 @@ import type {
   PaginatedTextResponse,
   PaginatedButtonsResponse,
   CommandResponse,
-} from "./types";
-import type { ReplyMethod, ReplyPhotoMethod } from "./pagination/types";
+  ReplyMethod,
+  ReplyPhotoMethod,
+} from "@/command/types";
 import { renderFirstPage } from "./pagination/text";
 import { renderFirstButtonsPage } from "./pagination/button";
 

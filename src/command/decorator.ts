@@ -3,18 +3,9 @@ import { UnauthorizedError } from "@/errors";
 import { LbContext } from "@/utils/context";
 import { isOwnerOrPrivate } from "@/utils/chat";
 import { dispatchResponse } from "@/command/response/dispatch";
-import type { CommandArg } from "./utils";
+import type { CommandOptions } from "./types";
 import { parseArgs } from "./utils";
 import { CommandRegistry } from "./registry";
-
-export { type ParsedArgs, type CommandArg, parseArgs } from "./utils";
-
-interface CommandOptions {
-  name: string;
-  description: string;
-  args?: CommandArg[];
-  requiresAdmin?: boolean;
-}
 
 export function command(options: CommandOptions) {
   return function (

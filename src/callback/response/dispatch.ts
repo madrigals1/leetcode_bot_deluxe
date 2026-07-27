@@ -1,6 +1,6 @@
 import { LbContext } from "@/utils/context";
 import type { CallbackResponse } from "./types";
-import type { TextResponse, PhotoResponse } from "@/command/response/types";
+import type { TextResponse, PhotoResponse } from "@/command/types";
 import { CommandRegistry } from "@/command/registry";
 import { parseArgs } from "@/command/utils";
 import { dispatchResponse } from "@/command/response/dispatch";

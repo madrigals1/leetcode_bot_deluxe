@@ -2,9 +2,7 @@ import { Bot, Context } from "grammy";
 
 import { LbContext } from "@/utils/context";
 import { LeetCodeBotError, DataNotFoundError } from "@/errors";
-import type { RegisterPaginationCallbackOptions } from "./types";
-
-export type PaginationHandlerData = Omit<RegisterPaginationCallbackOptions<unknown>, "name">;
+import type { PaginationHandlerData } from "@/command/types";
 
 export class PaginationRegistry {
   private static handlers = new Map<string, PaginationHandlerData>();

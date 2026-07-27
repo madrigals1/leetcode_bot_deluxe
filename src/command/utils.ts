@@ -2,13 +2,8 @@ import { InvalidArgumentAmountError } from "@/errors";
 import type { User } from "@/services/backend";
 import type { CompareData } from "@/services/vizapi";
 import { getDifficultyCount } from "@/utils/leetcode";
-
-export type ParsedArgs = Record<string, string>;
-
-export interface CommandArg {
-  name: string;
-  optional?: boolean;
-}
+import type { CommandArg } from "./types";
+import type { ParsedArgs } from "./types";
 
 export function parseArgs(text: string, defs: CommandArg[]): ParsedArgs {
   const parts = text.split(/\s+/).slice(1);

@@ -2,8 +2,7 @@ import type { PaginatedResponse } from "@/services/backend/api";
 import { LbContext } from "@/utils/context";
 import { DataNotFoundError } from "@/errors";
 import { buildKeyboard, buildNavRow, totalPages, defaultFooter, registerPaginationCallback } from "./utils";
-import type { RenderFirstPageOptions, RenderPageOptions } from "./types";
-import type { PaginatedTextResponse } from "../types";
+import type { RenderFirstPageOptions, RenderPageOptions, PaginatedTextResponse } from "@/command/types";
 
 export async function renderFirstPage<T>({
   lbCtx,

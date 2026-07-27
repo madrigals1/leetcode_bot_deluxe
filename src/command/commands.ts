@@ -2,7 +2,7 @@ import { InlineKeyboard } from "grammy";
 import {
   command,
 } from "@/command/decorator";
-import type { ParsedArgs } from "@/command/decorator";
+import type { ParsedArgs } from "@/command/types";
 import { CommandRegistry } from "@/command/registry";
 import { Service } from "@/services/backend";
 import { VizApiService } from "@/services/vizapi";
