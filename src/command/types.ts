@@ -24,11 +24,7 @@ export interface CommandOptions {
 
 // ── Registry types ──
 
-export interface CommandMetadata {
-  name: string;
-  description: string;
-  args?: CommandArg[];
-  requiresAdmin?: boolean;
+export interface CommandMetadata extends CommandOptions {
   handler: (ctx: Context) => CommandResponse | Promise<CommandResponse>;
   originalFn: (...args: unknown[]) => CommandResponse | Promise<CommandResponse>;
 }
