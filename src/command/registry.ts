@@ -2,11 +2,12 @@ import { Bot, Context } from "grammy";
 import { LeetCodeBotError } from "@/errors";
 import { RequireBot } from "@/utils/decorators";
 import type { CommandResponse } from "@/command/response/types";
+import type { CommandArg } from "./utils";
 
 export interface CommandMetadata {
   name: string;
   description: string;
-  args?: { name: string }[];
+  args?: CommandArg[];
   requiresAdmin?: boolean;
   handler: (ctx: Context) => CommandResponse | Promise<CommandResponse>;
   originalFn: (...args: unknown[]) => CommandResponse | Promise<CommandResponse>;
