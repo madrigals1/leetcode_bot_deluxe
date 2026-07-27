@@ -2,6 +2,7 @@ import { LbContext } from "@/utils/context";
 import type { CallbackResponse } from "./types";
 import type { TextResponse, PhotoResponse } from "@/command/response/types";
 import { CommandRegistry } from "@/command/registry";
+import { parseArgs } from "@/command/utils";
 import { dispatchResponse } from "@/command/response/dispatch";
 
 export async function dispatchCallbackResponse(
@@ -32,11 +33,19 @@ export async function dispatchCallbackResponse(
       return dispatchResponse(lbCtx, cmdResponse, editReply, editPhoto);
     }
     case "commandRedirect": {
-      const cmd = CommandRegistry.findByName(response.command);
+      const parts = response.command.split(/\s+/);
+      const cmdName = parts[0];
+      const cmd = CommandRegistry.findByName(cmdName);
+
       if (!cmd) {
         return;
       }
-      const result = await cmd.originalFn(lbCtx);
+
+      const args = cmd.args
+        ? parseArgs(response.command, cmd.args)
+        : {};
+
+      const result = await cmd.originalFn(lbCtx, args);
       return dispatchResponse(lbCtx, result, editReply, editPhoto);
     }
   }

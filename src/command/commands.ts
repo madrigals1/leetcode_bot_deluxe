@@ -5,6 +5,7 @@ import {
 import type { ParsedArgs } from "@/command/decorator";
 import { CommandRegistry } from "@/command/registry";
 import { Service } from "@/services/backend";
+import { VizApiService } from "@/services/vizapi";
 import { LbContext } from "@/utils/context";
 import {
   CML_EASY_POINTS,
@@ -13,9 +14,11 @@ import {
 } from "@/constants";
 import {
   text,
+  photo,
   paginatedText,
   paginatedButtons,
 } from "@/command/response/shortcuts";
+import { escapeHtml, buildCompareData } from "./utils";
 
 export default class Commands {
   @command({ name: "start", description: "🚀 Start the bot" })
@@ -133,6 +136,50 @@ export default class Commands {
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `submissions:${item.user.id}`,
+      }),
+      buttonsPerRow: 2,
+    });
+  }
+
+  @command({
+    name: "compare",
+    description: "🤝 Compare two users",
+    args: [
+      { name: "username1", optional: true },
+      { name: "username2", optional: true },
+    ],
+  })
+  static async compare(_ctx: LbContext, parsedArgs: ParsedArgs) {
+    if (parsedArgs.username1 && parsedArgs.username2) {
+      const [user1, user2] = await Promise.all([
+        Service.users.getByUsername(parsedArgs.username1),
+        Service.users.getByUsername(parsedArgs.username2),
+      ]);
+      const data = buildCompareData(user1, user2);
+      const { link } = await VizApiService.generateCompare(data);
+      return photo({ photo: link });
+    }
+
+    if (parsedArgs.username1) {
+      return paginatedButtons({
+        name: "compare",
+        text: `Select second user to compare with ${escapeHtml(parsedArgs.username1)}:`,
+        fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+        itemToButton: (item) => ({
+          text: item.user.username,
+          callback_data: `command:compare ${parsedArgs.username1} ${item.user.username}`,
+        }),
+        buttonsPerRow: 2,
+      });
+    }
+
+    return paginatedButtons({
+      name: "compare",
+      text: "Select first user to compare:",
+      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+      itemToButton: (item) => ({
+        text: item.user.username,
+        callback_data: `command:compare ${item.user.username}`,
       }),
       buttonsPerRow: 2,
     });

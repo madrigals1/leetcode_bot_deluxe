@@ -3,7 +3,7 @@ import { VizApiNotAvailableError } from "@/errors";
 
 export interface CompareField {
   name: string;
-  value: number;
+  value: string | number;
   bigger?: boolean;
 }
 
