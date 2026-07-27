@@ -4,11 +4,8 @@ import { VizApiService } from "@/services/vizapi";
 import { LbContext } from "@/utils/context";
 import { DataNotFoundError } from "@/errors";
 import { getDifficultyCount } from "@/utils/leetcode";
+import { escapeHtml } from "@/command/utils";
 import { editText, editPhoto, commandRedirect } from "@/callback/response/shortcuts";
-
-function escapeHtml(text: string) {
-  return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
-}
 
 export class Callbacks {
   @callback({ action: /^profile:(\d+)$/ })
