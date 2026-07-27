@@ -32,10 +32,6 @@ export function parseArgs(text: string, defs: CommandArg[]): ParsedArgs {
   return result;
 }
 
-export function escapeHtml(text: string) {
-  return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
-}
-
 export function buildCompareData(user1: User, user2: User): CompareData {
   const side = (u: User) => {
     const stats = u.data?.submitStats?.acSubmissionNum ?? [];

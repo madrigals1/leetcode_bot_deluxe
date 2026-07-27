@@ -4,7 +4,6 @@ import { VizApiService } from "@/services/vizapi";
 import { LbContext } from "@/utils/context";
 import { DataNotFoundError } from "@/errors";
 import { getDifficultyCount } from "@/utils/leetcode";
-import { escapeHtml } from "@/command/utils";
 import { editText, editPhoto, commandRedirect } from "@/callback/response/shortcuts";
 
 export class Callbacks {
@@ -17,7 +16,7 @@ export class Callbacks {
     const total = user.data?.submitStats?.totalSubmissionNum ?? [];
 
     const text =
-      `<b>${escapeHtml(name)}</b> - https://leetcode.com/${user.username}\n\n` +
+      `<b>${name}</b> - https://leetcode.com/${user.username}\n\n` +
       "<b>Solved Problems:</b>\n" +
       `🟢 Easy - ${getDifficultyCount(solved, "Easy")}\n` +
       `🟡 Medium - ${getDifficultyCount(solved, "Medium")}\n` +
@@ -48,7 +47,7 @@ export class Callbacks {
     const stats = user.data?.languageStats ?? [];
 
     const text =
-      `👨‍💻 Problems solved by <b>${escapeHtml(user.username)}</b> in:\n\n` +
+      `👨‍💻 Problems solved by <b>${user.username}</b> in:\n\n` +
       stats
         .sort((a, b) => b.problemsSolved - a.problemsSolved)
         .map((s) => `- <b>${s.languageName}</b> ${s.problemsSolved}`)

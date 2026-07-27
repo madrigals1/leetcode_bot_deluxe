@@ -18,7 +18,7 @@ import {
   paginatedText,
   paginatedButtons,
 } from "@/command/response/shortcuts";
-import { escapeHtml, buildCompareData } from "./utils";
+import { buildCompareData } from "./utils";
 
 export default class Commands {
   @command({ name: "start", description: "🚀 Start the bot" })
@@ -163,7 +163,7 @@ export default class Commands {
     if (parsedArgs.username1) {
       return paginatedButtons({
         name: "compare",
-        text: `Select second user to compare with ${escapeHtml(parsedArgs.username1)}:`,
+        text: `Select second user to compare with ${parsedArgs.username1}:`,
         fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
         itemToButton: (item) => ({
           text: item.user.username,
