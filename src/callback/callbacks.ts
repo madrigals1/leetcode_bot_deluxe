@@ -1,5 +1,6 @@
 import { callback } from "@/callback";
-import { Service, Submission } from "@/services/backend";
+import { Service } from "@/services/backend";
+import { VizApiService } from "@/services/vizapi";
 import { LbContext } from "@/utils/context";
 import { DataNotFoundError } from "@/errors";
 import { getDifficultyCount } from "@/utils/leetcode";
@@ -7,10 +8,6 @@ import { editText, editPhoto, commandRedirect } from "@/callback/response/shortc
 
 function escapeHtml(text: string) {
   return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
-}
-
-function formatSubmissionItem(s: Submission, idx: number) {
-  return `${idx}. <a href="${s.link}">${escapeHtml(s.name)}</a>\n   ${s.status} | ${s.language} | ${s.runtime}`;
 }
 
 export class Callbacks {
@@ -78,15 +75,15 @@ export class Callbacks {
       throw new DataNotFoundError();
     }
 
-    const items = submissions
-      .slice(0, 10)
-      .map((s, i) => formatSubmissionItem(s, i + 1))
-      .join("\n\n");
+    const table = submissions.slice(0, 10).map((s) => ({
+      Name: s.name,
+      Time: s.time,
+      Language: s.language,
+      Status: s.status,
+    }));
 
-    const text =
-      `<b>Last submissions for ${escapeHtml(user.username)}</b>\n\n` +
-      items;
+    const { link } = await VizApiService.generateTable(table);
 
-    return editText(text);
+    return editPhoto({ photo: link });
   }
 }
