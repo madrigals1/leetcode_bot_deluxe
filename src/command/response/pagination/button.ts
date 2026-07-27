@@ -63,7 +63,7 @@ function renderButtonsPage<T>({
     response.buttons,
   );
 
-  return reply("Select an item:", {
+  return reply(response.text ?? "Select an item:", {
     reply_markup: keyboard,
   });
 }

@@ -38,6 +38,7 @@ export interface PaginatedTextResponse<T = unknown> extends PaginationBaseRespon
 
 export interface PaginatedButtonsResponse<T = unknown> extends PaginationBaseResponse<T> {
   type: "paginatedButtons";
+  text?: string;
   itemToButton: (item: T) => InlineKeyboardButton;
   buttonsPerRow?: number;
 }
