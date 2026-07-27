@@ -1,44 +1,19 @@
 import { Context } from "grammy";
-import { InvalidArgumentAmountError, UnauthorizedError } from "@/errors";
+import { UnauthorizedError } from "@/errors";
 import { LbContext } from "@/utils/context";
 import { isOwnerOrPrivate } from "@/utils/chat";
 import { dispatchResponse } from "@/command/response/dispatch";
+import type { CommandArg } from "./utils";
+import { parseArgs } from "./utils";
 import { CommandRegistry } from "./registry";
 
-export type ParsedArgs = Record<string, string>;
-
-interface CommandArg {
-  name: string;
-  optional?: boolean;
-}
+export { type ParsedArgs, type CommandArg, parseArgs } from "./utils";
 
 interface CommandOptions {
   name: string;
   description: string;
   args?: CommandArg[];
   requiresAdmin?: boolean;
-}
-
-function parseArgs(text: string, defs: CommandArg[]): ParsedArgs {
-  const parts = text.split(/\s+/).slice(1);
-
-  const requiredCount = defs.filter((a) => !a.optional).length;
-
-  if (parts.length < requiredCount) {
-    throw new InvalidArgumentAmountError(requiredCount, parts.length);
-  }
-
-  if (parts.length > defs.length) {
-    throw new InvalidArgumentAmountError(defs.length, parts.length);
-  }
-
-  const result: ParsedArgs = {};
-
-  for (let i = 0; i < defs.length; i++) {
-    result[defs[i].name] = parts[i] ?? "";
-  }
-
-  return result;
 }
 
 export function command(options: CommandOptions) {
