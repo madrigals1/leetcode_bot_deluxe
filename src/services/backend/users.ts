@@ -1,5 +1,15 @@
 import { ApiService, type PaginatedResponse } from "./api";
 
+export interface Submission {
+  link: string;
+  name: string;
+  time: string;
+  memory: string;
+  status: string;
+  runtime: string;
+  language: string;
+}
+
 export interface User {
   id: number;
   url: string;
@@ -14,6 +24,9 @@ export interface User {
     submitStats?: {
       acSubmissionNum: Array<{ difficulty: string; count: number }>;
       totalSubmissionNum: Array<{ difficulty: string; count: number }>;
+    };
+    computed?: {
+      submissions?: Submission[];
     };
     languageStats?: Array<{
       languageName: string;

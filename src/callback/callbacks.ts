@@ -1,11 +1,16 @@
 import { callback } from "@/callback";
-import { Service } from "@/services/backend";
+import { Service, Submission } from "@/services/backend";
 import { LbContext } from "@/utils/context";
+import { DataNotFoundError } from "@/errors";
 import { getDifficultyCount } from "@/utils/leetcode";
 import { editText, editPhoto, commandRedirect } from "@/callback/response/shortcuts";
 
 function escapeHtml(text: string) {
   return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
+}
+
+function formatSubmissionItem(s: Submission, idx: number) {
+  return `${idx}. <a href="${s.link}">${escapeHtml(s.name)}</a>\n   ${s.status} | ${s.language} | ${s.runtime}`;
 }
 
 export class Callbacks {
@@ -61,5 +66,27 @@ export class Callbacks {
   @callback({ action: /^command:(.+)$/ })
   static onCommandRedirect(lbctx: LbContext) {
     return commandRedirect(lbctx.match[1]);
+  }
+
+  @callback({ action: /^submissions:(\d+)$/ })
+  static async onSubmissionsUser(lbctx: LbContext) {
+    const userId = Number(lbctx.match[1]);
+    const user = await Service.users.getById(userId);
+    const submissions = user.data?.computed?.submissions ?? [];
+
+    if (submissions.length === 0) {
+      throw new DataNotFoundError();
+    }
+
+    const items = submissions
+      .slice(0, 10)
+      .map((s, i) => formatSubmissionItem(s, i + 1))
+      .join("\n\n");
+
+    const text =
+      `<b>Last submissions for ${escapeHtml(user.username)}</b>\n\n` +
+      items;
+
+    return editText(text);
   }
 }

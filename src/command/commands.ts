@@ -124,4 +124,17 @@ export default class Commands {
       buttonsPerRow: 2,
     });
   }
+
+  @command({ name: "submissions", description: "📝 View recent submissions" })
+  static submissions() {
+    return paginatedButtons({
+      name: "submissions",
+      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+      itemToButton: (item) => ({
+        text: item.user.username,
+        callback_data: `submissions:${item.user.id}`,
+      }),
+      buttonsPerRow: 2,
+    });
+  }
 }
