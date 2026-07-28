@@ -15,9 +15,11 @@ import {
 import {
   text,
   photo,
+  buttons,
   paginatedText,
   paginatedButtons,
 } from "@/command/response/shortcuts";
+import { getDifficultyCount } from "@/utils/leetcode";
 import { buildCompareData } from "./utils";
 
 export default class Commands {
@@ -89,14 +91,40 @@ export default class Commands {
     });
   }
 
-  @command({ name: "profile", description: "👤 View user profiles" })
-  static profile() {
+  @command({
+    name: "profile",
+    description: "👤 View user profiles",
+    args: [{ name: "username", optional: true }],
+  })
+  static async profile(_ctx: LbContext, parsedArgs: ParsedArgs) {
+    if (parsedArgs.username) {
+      const user = await UsersService.getByUsername(parsedArgs.username);
+      const name = user.data?.profile?.realName ?? user.username;
+      const solved = user.data?.submitStats?.acSubmissionNum ?? [];
+      const total = user.data?.submitStats?.totalSubmissionNum ?? [];
+
+      const profileText =
+        `<b>${name}</b> - https://leetcode.com/${user.username}\n\n` +
+        "Solved Problems:\n" +
+        `🟢 Easy - <b>${getDifficultyCount(solved, "Easy")}</b>\n` +
+        `🟡 Medium - <b>${getDifficultyCount(solved, "Medium")}</b>\n` +
+        `🔴 Hard - <b>${getDifficultyCount(solved, "Hard")}</b>\n` +
+        `🔵 All - <b>${getDifficultyCount(solved, "All")} / ${getDifficultyCount(total, "All")}</b>\n` +
+        `🔷 Cumulative - <b>${user.solved_cml}</b>`;
+
+      const keyboard = new InlineKeyboard()
+        .text("Submissions", `submissions:${user.id}`)
+        .text("Avatar", `avatar:${user.id}`);
+
+      return buttons({ text: profileText, buttons: keyboard });
+    }
+
     return paginatedButtons({
       name: "profile",
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
-        callback_data: `profile:${item.user.id}`,
+        callback_data: `command:profile ${item.user.username}`,
       }),
       buttonsPerRow: 2,
     });
