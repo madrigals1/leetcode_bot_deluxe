@@ -4,7 +4,7 @@ import {
 } from "@/command/decorator";
 import type { ParsedArgs } from "@/command/types";
 import { CommandRegistry } from "@/command/registry";
-import { Service } from "@/services/backend";
+import { UsersService, ChannelsService } from "@/services/backend";
 import { VizApiService } from "@/services/vizapi";
 import { LbContext } from "@/utils/context";
 import {
@@ -41,7 +41,7 @@ export default class Commands {
   })
   static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
     try {
-      await Service.users.addToChannel(parsedArgs.username, ctx.chatId);
+      await UsersService.addToChannel(parsedArgs.username, ctx.chatId);
       return text(`User ${parsedArgs.username} was successfully added.`);
     } catch {
       return text(`Failed to add user ${parsedArgs.username}.`);
@@ -56,7 +56,7 @@ export default class Commands {
   })
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
     try {
-      await Service.users.removeFromChannel(parsedArgs.username, ctx.chatId);
+      await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
       return text(`User ${parsedArgs.username} was successfully removed.`);
     } catch {
       return text(`Failed to remove user ${parsedArgs.username}.`);
@@ -68,7 +68,7 @@ export default class Commands {
     return paginatedText({
       name: "rating",
       header: "Rating  🏆",
-      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       formatItem: (item, i) => `${i + 1}. <b>${item.user.username}</b> ${item.user.solved}`,
       buttons: new InlineKeyboard().text("🔥 Cumulative rating", "command:rating_cml"),
     });
@@ -83,7 +83,7 @@ export default class Commands {
         `🟢 Easy - ${CML_EASY_POINTS} points\n` +
         `🟡 Medium - ${CML_MEDIUM_POINTS} points\n` +
         `🔴 Hard - ${CML_HARD_POINTS} points`,
-      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page, "-user__solved_cml"),
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page, "-user__solved_cml"),
       formatItem: (item, i) => `${i + 1}. <b>${item.user.username}</b> ${item.user.solved_cml}`,
       buttons: new InlineKeyboard().text("🏆 Regular rating", "command:rating"),
     });
@@ -93,7 +93,7 @@ export default class Commands {
   static profile() {
     return paginatedButtons({
       name: "profile",
-      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `profile:${item.user.id}`,
@@ -106,7 +106,7 @@ export default class Commands {
   static avatar() {
     return paginatedButtons({
       name: "avatar",
-      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `avatar:${item.user.id}`,
@@ -119,7 +119,7 @@ export default class Commands {
   static langstats() {
     return paginatedButtons({
       name: "langstats",
-      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `langstats:${item.user.id}`,
@@ -132,7 +132,7 @@ export default class Commands {
   static submissions() {
     return paginatedButtons({
       name: "submissions",
-      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `submissions:${item.user.id}`,
@@ -152,8 +152,8 @@ export default class Commands {
   static async compare(_ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username1 && parsedArgs.username2) {
       const [user1, user2] = await Promise.all([
-        Service.users.getByUsername(parsedArgs.username1),
-        Service.users.getByUsername(parsedArgs.username2),
+        UsersService.getByUsername(parsedArgs.username1),
+        UsersService.getByUsername(parsedArgs.username2),
       ]);
       const data = buildCompareData(user1, user2);
       const { link } = await VizApiService.generateCompare(data);
@@ -164,7 +164,7 @@ export default class Commands {
       return paginatedButtons({
         name: "compare",
         text: `Select second user to compare with ${parsedArgs.username1}:`,
-        fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+        fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
         itemToButton: (item) => ({
           text: item.user.username,
           callback_data: `command:compare ${parsedArgs.username1} ${item.user.username}`,
@@ -176,7 +176,7 @@ export default class Commands {
     return paginatedButtons({
       name: "compare",
       text: "Select first user to compare:",
-      fetchPage: (page, ctx) => Service.channels.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `command:compare ${item.user.username}`,

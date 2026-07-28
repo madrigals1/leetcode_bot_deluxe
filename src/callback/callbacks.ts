@@ -1,5 +1,5 @@
 import { callback } from "@/callback";
-import { Service } from "@/services/backend";
+import { UsersService } from "@/services/backend";
 import { VizApiService } from "@/services/vizapi";
 import { LbContext } from "@/utils/context";
 import { DataNotFoundError } from "@/errors";
@@ -10,7 +10,7 @@ export class Callbacks {
   @callback({ action: /^profile:(\d+)$/ })
   static async onProfileUser(lbctx: LbContext) {
     const userId = Number(lbctx.match[1]);
-    const user = await Service.users.getById(userId);
+    const user = await UsersService.getById(userId);
     const name = user.data?.profile?.realName ?? user.username;
     const solved = user.data?.submitStats?.acSubmissionNum ?? [];
     const total = user.data?.submitStats?.totalSubmissionNum ?? [];
@@ -30,7 +30,7 @@ export class Callbacks {
   @callback({ action: /^avatar:(\d+)$/ })
   static async onAvatarUser(lbctx: LbContext) {
     const userId = Number(lbctx.match[1]);
-    const user = await Service.users.getById(userId);
+    const user = await UsersService.getById(userId);
     const avatarUrl = user.data?.profile?.userAvatar;
 
     if (avatarUrl) {
@@ -43,7 +43,7 @@ export class Callbacks {
   @callback({ action: /^langstats:(\d+)$/ })
   static async onLangStatsUser(lbctx: LbContext) {
     const userId = Number(lbctx.match[1]);
-    const user = await Service.users.getById(userId);
+    const user = await UsersService.getById(userId);
     const stats = user.data?.languageStats ?? [];
 
     const text =
@@ -64,7 +64,7 @@ export class Callbacks {
   @callback({ action: /^submissions:(\d+)$/ })
   static async onSubmissionsUser(lbctx: LbContext) {
     const userId = Number(lbctx.match[1]);
-    const user = await Service.users.getById(userId);
+    const user = await UsersService.getById(userId);
     const submissions = user.data?.computed?.submissions ?? [];
 
     if (submissions.length === 0) {
