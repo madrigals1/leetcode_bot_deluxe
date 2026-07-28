@@ -1,4 +1,4 @@
-import { ApiService } from "./api";
+import { ApiService } from "./api_service";
 import type { Subscription } from "./types";
 
 class SubscriptionsService extends ApiService {

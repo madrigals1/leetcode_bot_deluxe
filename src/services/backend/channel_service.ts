@@ -1,4 +1,4 @@
-import { ApiService } from "./api";
+import { ApiService } from "./api_service";
 import type { PaginatedResponse, Channel, ChannelUser } from "./types";
 
 class ChannelsService extends ApiService {

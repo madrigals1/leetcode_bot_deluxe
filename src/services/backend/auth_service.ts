@@ -1,4 +1,4 @@
-import { ApiService } from "./api";
+import { ApiService } from "./api_service";
 import type { LoginResponse } from "./types";
 
 class AuthService extends ApiService {

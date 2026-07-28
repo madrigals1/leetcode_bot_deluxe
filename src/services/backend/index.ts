@@ -1,9 +1,9 @@
-import { authService } from "./auth";
-import { channelsService } from "./channels";
-import { contestNotificationsService } from "./contestNotifications";
-import { contestsService } from "./contests";
-import { subscriptionsService } from "./subscriptions";
-import { usersService } from "./users";
+import { authService } from "./auth_service";
+import { channelsService } from "./channel_service";
+import { contestNotificationsService } from "./contest_notification_service";
+import { contestsService } from "./contest_service";
+import { subscriptionsService } from "./subscription_service";
+import { usersService } from "./user_service";
 
 export class Service {
   static auth = authService;
