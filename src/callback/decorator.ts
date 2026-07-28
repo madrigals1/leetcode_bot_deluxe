@@ -3,11 +3,7 @@ import { LbContext } from "@/utils/context";
 import { LeetCodeBotError } from "@/errors";
 import { CallbackRegistry } from "./registry";
 import { dispatchCallbackResponse } from "./response/dispatch";
-import type { CallbackResponse } from "./response/types";
-
-interface CallbackOptions {
-  action: string | RegExp;
-}
+import type { CallbackOptions, CallbackResponse } from "./types";
 
 export function callback(options: CallbackOptions) {
   return function (

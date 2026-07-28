@@ -1,5 +1,13 @@
 import type { InlineKeyboard } from "grammy";
 
+// ── Decorator types ──
+
+export interface CallbackOptions {
+  action: string | RegExp;
+}
+
+// ── Response types ──
+
 type CallbackResponseType = "editText" | "editPhoto" | "commandRedirect";
 
 interface BaseCallbackResponse {

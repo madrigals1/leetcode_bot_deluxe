@@ -2,7 +2,7 @@ import type {
   EditTextResponse,
   EditPhotoResponse,
   CommandRedirectResponse,
-} from "./types";
+} from "@/callback/types";
 
 export function editText(text: string): EditTextResponse {
   return { text, type: "editText" };
