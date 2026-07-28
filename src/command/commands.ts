@@ -158,14 +158,32 @@ export default class Commands {
     });
   }
 
-  @command({ name: "langstats", description: "📊 View language statistics" })
-  static langstats() {
+  @command({
+    name: "langstats",
+    description: "📊 View language statistics",
+    args: [{ name: "username", optional: true }],
+  })
+  static async langstats(_ctx: LbContext, parsedArgs: ParsedArgs) {
+    if (parsedArgs.username) {
+      const user = await UsersService.getByUsername(parsedArgs.username);
+      const stats = user.data?.languageStats ?? [];
+
+      const langText =
+        `👨‍💻 Problems solved by <b>${user.username}</b> in:\n\n` +
+        stats
+          .sort((a, b) => b.problemsSolved - a.problemsSolved)
+          .map((s) => `- <b>${s.languageName}</b> ${s.problemsSolved}`)
+          .join("\n");
+
+      return text(langText);
+    }
+
     return paginatedButtons({
       name: "langstats",
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
-        callback_data: `langstats:${item.user.id}`,
+        callback_data: `command:langstats ${item.user.username}`,
       }),
       buttonsPerRow: 2,
     });
