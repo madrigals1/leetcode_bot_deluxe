@@ -20,6 +20,7 @@ import {
   paginatedButtons,
 } from "@/command/response/shortcuts";
 import { getDifficultyCount } from "@/utils/leetcode";
+import { DataNotFoundError } from "@/errors";
 import { buildCompareData } from "./utils";
 
 export default class Commands {
@@ -113,8 +114,8 @@ export default class Commands {
         `🔷 Cumulative - <b>${user.solved_cml}</b>`;
 
       const keyboard = new InlineKeyboard()
-        .text("Submissions", `submissions:${user.id}`)
-        .text("Avatar", `avatar:${user.id}`);
+        .text("Submissions", `command:submissions ${user.username}`)
+        .text("Avatar", `command:avatar ${user.username}`);
 
       return buttons({ text: profileText, buttons: keyboard });
     }
@@ -189,14 +190,38 @@ export default class Commands {
     });
   }
 
-  @command({ name: "submissions", description: "📝 View recent submissions" })
-  static submissions() {
+  @command({
+    name: "submissions",
+    description: "📝 View recent submissions",
+    args: [{ name: "username", optional: true }],
+  })
+  static async submissions(_ctx: LbContext, parsedArgs: ParsedArgs) {
+    if (parsedArgs.username) {
+      const user = await UsersService.getByUsername(parsedArgs.username);
+      const submissions = user.data?.computed?.submissions ?? [];
+
+      if (submissions.length === 0) {
+        throw new DataNotFoundError();
+      }
+
+      const table = submissions.slice(0, 10).map((s) => ({
+        Name: s.name,
+        Time: s.time,
+        Language: s.language,
+        Status: s.status,
+      }));
+
+      const { link } = await VizApiService.generateTable(table);
+
+      return photo({ photo: link });
+    }
+
     return paginatedButtons({
       name: "submissions",
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
-        callback_data: `submissions:${item.user.id}`,
+        callback_data: `command:submissions ${item.user.username}`,
       }),
       buttonsPerRow: 2,
     });
