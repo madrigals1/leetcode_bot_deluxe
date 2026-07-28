@@ -115,8 +115,8 @@ export default class Commands {
         `🔷 Cumulative - <b>${user.solved_cml}</b>`;
 
       const keyboard = new InlineKeyboard()
-        .text("Submissions", `command:submissions ${user.username}`)
-        .text("Avatar", `command:avatar ${user.username}`);
+        .text("📝 Submissions", `command:submissions ${user.username}`)
+        .text("🖼️ Avatar", `command:avatar ${user.username}`);
 
       return buttons({ text: profileText, buttons: keyboard });
     }
