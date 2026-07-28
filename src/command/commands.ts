@@ -116,6 +116,7 @@ export default class Commands {
 
       const keyboard = new InlineKeyboard()
         .text("📝 Submissions", `command:submissions ${user.username}`)
+        .text("📊 Problems", `command:problems ${user.username}`)
         .text("🖼️ Avatar", `command:avatar ${user.username}`);
 
       return buttons({ text: profileText, buttons: keyboard });
