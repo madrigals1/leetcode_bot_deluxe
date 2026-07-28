@@ -1,10 +1,5 @@
 import { ApiService } from "./api";
-
-export interface LoginResponse {
-  message: string;
-  user: { id: number; url: string; username: string };
-  tokens: { refresh: string; access: string };
-}
+import type { LoginResponse } from "./types";
 
 class AuthService extends ApiService {
   login(username: string, password: string) {

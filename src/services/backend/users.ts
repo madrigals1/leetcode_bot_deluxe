@@ -1,41 +1,5 @@
-import { ApiService, type PaginatedResponse } from "./api";
-
-export interface Submission {
-  link: string;
-  name: string;
-  time: string;
-  memory: string;
-  status: string;
-  runtime: string;
-  language: string;
-}
-
-export interface User {
-  id: number;
-  url: string;
-  username: string;
-  solved: number;
-  solved_cml: number;
-  data: {
-    profile?: {
-      realName?: string;
-      userAvatar?: string;
-    };
-    submitStats?: {
-      acSubmissionNum: Array<{ difficulty: string; count: number }>;
-      totalSubmissionNum: Array<{ difficulty: string; count: number }>;
-    };
-    computed?: {
-      submissions?: Submission[];
-    };
-    languageStats?: Array<{
-      languageName: string;
-      problemsSolved: number;
-    }>;
-  };
-  created_at: string;
-  updated_at: string;
-}
+import { ApiService } from "./api";
+import type { PaginatedResponse, User } from "./types";
 
 class UsersService extends ApiService {
   list(params?: { channel_chat_id?: number; page?: number }) {

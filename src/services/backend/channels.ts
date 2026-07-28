@@ -1,23 +1,5 @@
-import { ApiService, type PaginatedResponse } from "./api";
-
-export interface Channel {
-  id: number;
-  chat_id: number;
-  title: string;
-  subscriptions: Array<{ id: number; type: string }>;
-}
-
-export interface ChannelUser {
-  id: number;
-  user: {
-    id: number;
-    username: string;
-    solved: number;
-    solved_cml: number;
-  };
-  created_at: string;
-  updated_at: string;
-}
+import { ApiService } from "./api";
+import type { PaginatedResponse, Channel, ChannelUser } from "./types";
 
 class ChannelsService extends ApiService {
   list(params?: { chat_id?: number }) {

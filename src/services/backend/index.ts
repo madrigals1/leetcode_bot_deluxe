@@ -14,10 +14,14 @@ export class Service {
   static contestNotifications = contestNotificationsService;
 }
 
-export type { LoginResponse } from "./auth";
-export type { PaginatedResponse } from "./api";
-export type { User, Submission } from "./users";
-export type { Channel } from "./channels";
-export type { Subscription } from "./subscriptions";
-export type { Contest } from "./contests";
-export type { ContestNotification } from "./contestNotifications";
+export type {
+  LoginResponse,
+  PaginatedResponse,
+  User,
+  Submission,
+  Channel,
+  ChannelUser,
+  Contest,
+  Subscription,
+  ContestNotification,
+} from "./types";

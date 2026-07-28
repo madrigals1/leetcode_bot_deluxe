@@ -2,7 +2,7 @@ import type { InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
 import type { Context } from "grammy";
 import { LbContext } from "@/utils/context";
-import type { PaginatedResponse } from "@/services/backend/api";
+import type { PaginatedResponse } from "@/services/backend/types";
 
 // ── Argument types ──
 

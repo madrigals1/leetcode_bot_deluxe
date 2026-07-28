@@ -1,10 +1,5 @@
 import { ApiService } from "./api";
-
-export interface ContestNotification {
-  id: number;
-  contest: { id: number; title: string; start_time: string };
-  subscription: { id: number; type: string };
-}
+import type { ContestNotification } from "./types";
 
 class ContestNotificationsService extends ApiService {
   list() {

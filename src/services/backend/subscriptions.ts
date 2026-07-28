@@ -1,10 +1,5 @@
 import { ApiService } from "./api";
-
-export interface Subscription {
-  id: number;
-  channel: { id: number; chat_id: number; title: string };
-  type: string;
-}
+import type { Subscription } from "./types";
 
 class SubscriptionsService extends ApiService {
   list() {
