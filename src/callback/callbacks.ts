@@ -6,19 +6,6 @@ import { DataNotFoundError } from "@/errors";
 import { editText, editPhoto, commandRedirect } from "@/callback/response/shortcuts";
 
 export class Callbacks {
-  @callback({ action: /^avatar:(\d+)$/ })
-  static async onAvatarUser(lbctx: LbContext) {
-    const userId = Number(lbctx.match[1]);
-    const user = await UsersService.getById(userId);
-    const avatarUrl = user.data?.profile?.userAvatar;
-
-    if (avatarUrl) {
-      return editPhoto({ photo: avatarUrl });
-    }
-
-    return editText("No avatar found.");
-  }
-
   @callback({ action: /^langstats:(\d+)$/ })
   static async onLangStatsUser(lbctx: LbContext) {
     const userId = Number(lbctx.match[1]);

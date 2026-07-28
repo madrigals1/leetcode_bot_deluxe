@@ -130,14 +130,29 @@ export default class Commands {
     });
   }
 
-  @command({ name: "avatar", description: "🖼️ View user avatars" })
-  static avatar() {
+  @command({
+    name: "avatar",
+    description: "🖼️ View user avatars",
+    args: [{ name: "username", optional: true }],
+  })
+  static async avatar(_ctx: LbContext, parsedArgs: ParsedArgs) {
+    if (parsedArgs.username) {
+      const user = await UsersService.getByUsername(parsedArgs.username);
+      const avatarUrl = user.data?.profile?.userAvatar;
+
+      if (avatarUrl) {
+        return photo({ photo: avatarUrl });
+      }
+
+      return text("No avatar found.");
+    }
+
     return paginatedButtons({
       name: "avatar",
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
-        callback_data: `avatar:${item.user.id}`,
+        callback_data: `command:avatar ${item.user.username}`,
       }),
       buttonsPerRow: 2,
     });
