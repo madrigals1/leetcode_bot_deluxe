@@ -1,8 +1,8 @@
 import { ApiService } from "./api_service";
 import type { PaginatedResponse, User } from "./types";
 
-class UsersService extends ApiService {
-  list(params?: { channel_chat_id?: number; page?: number }) {
+export class UsersService {
+  static list(params?: { channel_chat_id?: number; page?: number }) {
     const queryParts: string[] = [];
 
     if (params?.channel_chat_id) {
@@ -16,30 +16,30 @@ class UsersService extends ApiService {
     }
 
     const query = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
-    return this.fetch<PaginatedResponse<User>>(`/api/v1/users/${query}`);
+    return ApiService.fetch<PaginatedResponse<User>>(`/api/v1/users/${query}`);
   }
 
-  getByUsername(username: string) {
-    return this.fetch<User>(`/api/v1/users/${username}/`);
+  static getByUsername(username: string) {
+    return ApiService.fetch<User>(`/api/v1/users/${username}/`);
   }
 
-  getById(id: number) {
-    return this.fetch<User>(`/api/v1/users/${id}/`);
+  static getById(id: number) {
+    return ApiService.fetch<User>(`/api/v1/users/${id}/`);
   }
 
-  create(username: string) {
-    return this.fetch<User>("/api/v1/users/", {
+  static create(username: string) {
+    return ApiService.fetch<User>("/api/v1/users/", {
       method: "POST",
       body: JSON.stringify({ username }),
     });
   }
 
-  refresh(username: string) {
-    return this.fetch<User>(`/api/v1/users/${username}/refresh/`);
+  static refresh(username: string) {
+    return ApiService.fetch<User>(`/api/v1/users/${username}/refresh/`);
   }
 
-  addToChannel(username: string, chatId: number) {
-    return this.fetch<{ message: string }>(
+  static addToChannel(username: string, chatId: number) {
+    return ApiService.fetch<{ message: string }>(
       "/api/v1/users/add-to-channel/",
       {
         method: "POST",
@@ -48,8 +48,8 @@ class UsersService extends ApiService {
     );
   }
 
-  removeFromChannel(username: string, chatId: number) {
-    return this.fetch<{ message: string }>(
+  static removeFromChannel(username: string, chatId: number) {
+    return ApiService.fetch<{ message: string }>(
       "/api/v1/users/remove-from-channel/",
       {
         method: "POST",
@@ -58,11 +58,9 @@ class UsersService extends ApiService {
     );
   }
 
-  avatar(username: string) {
-    return this.fetch<{ avatar_url: string }>(
+  static avatar(username: string) {
+    return ApiService.fetch<{ avatar_url: string }>(
       `/api/v1/users/${username}/avatar/`,
     );
   }
 }
-
-export const usersService = new UsersService();

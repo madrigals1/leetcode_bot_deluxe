@@ -1,17 +1,17 @@
 import { ApiService } from "./api_service";
 import type { Contest } from "./types";
 
-class ContestsService extends ApiService {
-  list() {
-    return this.fetch<Contest[]>("/api/v1/contests/");
+export class ContestsService {
+  static list() {
+    return ApiService.fetch<Contest[]>("/api/v1/contests/");
   }
 
-  getById(id: number) {
-    return this.fetch<Contest>(`/api/v1/contests/${id}/`);
+  static getById(id: number) {
+    return ApiService.fetch<Contest>(`/api/v1/contests/${id}/`);
   }
 
-  create(title: string, startTime: string, duration: number) {
-    return this.fetch<Contest>("/api/v1/contests/", {
+  static create(title: string, startTime: string, duration: number) {
+    return ApiService.fetch<Contest>("/api/v1/contests/", {
       method: "POST",
       body: JSON.stringify({
         title,
@@ -21,11 +21,9 @@ class ContestsService extends ApiService {
     });
   }
 
-  delete(id: number) {
-    return this.fetch<void>(`/api/v1/contests/${id}/`, {
+  static delete(id: number) {
+    return ApiService.fetch<void>(`/api/v1/contests/${id}/`, {
       method: "DELETE",
     });
   }
 }
-
-export const contestsService = new ContestsService();

@@ -42,7 +42,7 @@ export class ApiService {
     return ApiService.refreshAccessToken();
   }
 
-  protected async fetch<T>(
+  static async fetch<T>(
     path: string,
     options: RequestInit = {},
   ): Promise<T> {

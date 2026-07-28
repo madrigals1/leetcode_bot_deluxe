@@ -1,17 +1,17 @@
 import { ApiService } from "./api_service";
 import type { PaginatedResponse, Channel, ChannelUser } from "./types";
 
-class ChannelsService extends ApiService {
-  list(params?: { chat_id?: number }) {
+export class ChannelsService {
+  static list(params?: { chat_id?: number }) {
     const query = params?.chat_id ? `?chat_id=${params.chat_id}` : "";
-    return this.fetch<Channel[]>(`/api/v1/channels/${query}`);
+    return ApiService.fetch<Channel[]>(`/api/v1/channels/${query}`);
   }
 
-  get(pk: number) {
-    return this.fetch<Channel>(`/api/v1/channels/${pk}/`);
+  static get(pk: number) {
+    return ApiService.fetch<Channel>(`/api/v1/channels/${pk}/`);
   }
 
-  getUsers(chatId: number, page?: number, ordering?: string) {
+  static getUsers(chatId: number, page?: number, ordering?: string) {
     const params = new URLSearchParams();
     if (page) {
       params.set("page", String(page));
@@ -20,12 +20,12 @@ class ChannelsService extends ApiService {
       params.set("ordering", ordering);
     }
     const query = params.toString() ? `?${params.toString()}` : "";
-    return this.fetch<PaginatedResponse<ChannelUser>>(
+    return ApiService.fetch<PaginatedResponse<ChannelUser>>(
       `/api/v1/channels/${chatId}/users/${query}`,
     );
   }
 
-  getUsersSimplified(chatId: number, page?: number, ordering?: string) {
+  static getUsersSimplified(chatId: number, page?: number, ordering?: string) {
     const params = new URLSearchParams();
     if (page) {
       params.set("page", String(page));
@@ -34,33 +34,33 @@ class ChannelsService extends ApiService {
       params.set("ordering", ordering);
     }
     const query = params.toString() ? `?${params.toString()}` : "";
-    return this.fetch<PaginatedResponse<ChannelUser>>(
+    return ApiService.fetch<PaginatedResponse<ChannelUser>>(
       `/api/v1/channels/${chatId}/users/simplified/${query}`,
     );
   }
 
-  create(chatId: number, title: string) {
-    return this.fetch<Channel>("/api/v1/channels/", {
+  static create(chatId: number, title: string) {
+    return ApiService.fetch<Channel>("/api/v1/channels/", {
       method: "POST",
       body: JSON.stringify({ chat_id: chatId, title }),
     });
   }
 
-  getOrCreate(chatId: number, title: string) {
-    return this.fetch<Channel>("/api/v1/channels/get-or-create/", {
+  static getOrCreate(chatId: number, title: string) {
+    return ApiService.fetch<Channel>("/api/v1/channels/get-or-create/", {
       method: "POST",
       body: JSON.stringify({ chat_id: chatId, title }),
     });
   }
 
-  refresh(chatId: number) {
-    return this.fetch<{ message: string }>(
+  static refresh(chatId: number) {
+    return ApiService.fetch<{ message: string }>(
       `/api/v1/channels/${chatId}/refresh/`,
     );
   }
 
-  subscribe(chatId: number, type: string) {
-    return this.fetch<{ message: string }>(
+  static subscribe(chatId: number, type: string) {
+    return ApiService.fetch<{ message: string }>(
       `/api/v1/channels/${chatId}/subscribe/`,
       {
         method: "POST",
@@ -69,8 +69,8 @@ class ChannelsService extends ApiService {
     );
   }
 
-  unsubscribe(chatId: number, type: string) {
-    return this.fetch<{ message: string }>(
+  static unsubscribe(chatId: number, type: string) {
+    return ApiService.fetch<{ message: string }>(
       `/api/v1/channels/${chatId}/unsubscribe/`,
       {
         method: "POST",
@@ -79,11 +79,9 @@ class ChannelsService extends ApiService {
     );
   }
 
-  delete(pk: number) {
-    return this.fetch<void>(`/api/v1/channels/${pk}/`, {
+  static delete(pk: number) {
+    return ApiService.fetch<void>(`/api/v1/channels/${pk}/`, {
       method: "DELETE",
     });
   }
 }
-
-export const channelsService = new ChannelsService();

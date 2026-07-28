@@ -1,17 +1,17 @@
-import { authService } from "./auth_service";
-import { channelsService } from "./channel_service";
-import { contestNotificationsService } from "./contest_notification_service";
-import { contestsService } from "./contest_service";
-import { subscriptionsService } from "./subscription_service";
-import { usersService } from "./user_service";
+import { AuthService } from "./auth_service";
+import { ChannelsService } from "./channel_service";
+import { ContestNotificationsService } from "./contest_notification_service";
+import { ContestsService } from "./contest_service";
+import { SubscriptionsService } from "./subscription_service";
+import { UsersService } from "./user_service";
 
 export class Service {
-  static auth = authService;
-  static users = usersService;
-  static channels = channelsService;
-  static subscriptions = subscriptionsService;
-  static contests = contestsService;
-  static contestNotifications = contestNotificationsService;
+  static auth = AuthService;
+  static users = UsersService;
+  static channels = ChannelsService;
+  static subscriptions = SubscriptionsService;
+  static contests = ContestsService;
+  static contestNotifications = ContestNotificationsService;
 }
 
 export type {

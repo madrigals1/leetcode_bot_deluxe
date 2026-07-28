@@ -1,24 +1,24 @@
 import { ApiService } from "./api_service";
 import type { Subscription } from "./types";
 
-class SubscriptionsService extends ApiService {
-  list() {
-    return this.fetch<Subscription[]>("/api/v1/subscriptions/");
+export class SubscriptionsService {
+  static list() {
+    return ApiService.fetch<Subscription[]>("/api/v1/subscriptions/");
   }
 
-  getById(id: number) {
-    return this.fetch<Subscription>(`/api/v1/subscriptions/${id}/`);
+  static getById(id: number) {
+    return ApiService.fetch<Subscription>(`/api/v1/subscriptions/${id}/`);
   }
 
-  create(channelId: number, type: string) {
-    return this.fetch<Subscription>("/api/v1/subscriptions/", {
+  static create(channelId: number, type: string) {
+    return ApiService.fetch<Subscription>("/api/v1/subscriptions/", {
       method: "POST",
       body: JSON.stringify({ channel: channelId, type }),
     });
   }
 
-  delete(channelId: number, type: string) {
-    return this.fetch<{ message: string }>(
+  static delete(channelId: number, type: string) {
+    return ApiService.fetch<{ message: string }>(
       "/api/v1/subscriptions/delete/",
       {
         method: "POST",
@@ -27,5 +27,3 @@ class SubscriptionsService extends ApiService {
     );
   }
 }
-
-export const subscriptionsService = new SubscriptionsService();
