@@ -6,6 +6,7 @@ import type { ParsedArgs } from "@/command/types";
 import { CommandRegistry } from "@/command/registry";
 import { UsersService, ChannelsService } from "@/services/backend";
 import { VizApiService } from "@/services/vizapi";
+import type { PieData } from "@/services/vizapi";
 import { LbContext } from "@/utils/context";
 import {
   CML_EASY_POINTS,
@@ -222,6 +223,48 @@ export default class Commands {
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `command:submissions ${item.user.username}`,
+      }),
+      buttonsPerRow: 2,
+    });
+  }
+
+  @command({
+    name: "problems",
+    description: "🥧 Show problems solved pie chart",
+    args: [{ name: "username", optional: true }],
+  })
+  static async problems(_ctx: LbContext, parsedArgs: ParsedArgs) {
+    if (parsedArgs.username) {
+      const user = await UsersService.getByUsername(parsedArgs.username);
+      const stats = user.data?.submitStats?.acSubmissionNum ?? [];
+
+      const getCount = (difficulty: string) =>
+        stats.find((s) => s.difficulty === difficulty)?.count ?? 0;
+
+      const pieData: PieData = {
+        title: `Problems solved by ${user.username}`,
+        sliceName: "Difficulty",
+        sliceValue: "Count",
+        sliceData: [
+          { sliceName: "Easy", sliceValue: getCount("Easy"), sliceColor: "#22c55e" },
+          { sliceName: "Medium", sliceValue: getCount("Medium"), sliceColor: "#eab308" },
+          { sliceName: "Hard", sliceValue: getCount("Hard"), sliceColor: "#ef4444" },
+        ],
+        chartArea: {},
+        width: 600,
+        height: 400,
+      };
+
+      const { link } = await VizApiService.generatePie(pieData);
+      return photo({ photo: link });
+    }
+
+    return paginatedButtons({
+      name: "problems",
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      itemToButton: (item) => ({
+        text: item.user.username,
+        callback_data: `command:problems ${item.user.username}`,
       }),
       buttonsPerRow: 2,
     });
