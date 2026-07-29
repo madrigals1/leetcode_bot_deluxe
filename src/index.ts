@@ -32,6 +32,14 @@ import "./callback/callbacks";
   CallbackRegistry.registerAllCallbacks();
   PaginationRegistry.setBot(bot);
 
+  bot.catch((err) => {
+    console.error("Unhandled bot error:", err.error);
+    const ctx = err.ctx;
+    if (ctx && ctx.callbackQuery) {
+      ctx.answerCallbackQuery("An error occurred. Please try again.");
+    }
+  });
+
   bot.start({
     onStart: (botInfo) =>
       console.log(`Bot @${botInfo.username} is running.`),
