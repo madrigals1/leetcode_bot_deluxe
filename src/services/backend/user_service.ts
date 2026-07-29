@@ -1,5 +1,6 @@
 import { ApiService } from "./api_service";
 import type { PaginatedResponse, User } from "./types";
+import { userNotFound } from "@/errors/catchers";
 
 export class UsersService {
   static list(params?: { channel_chat_id?: number; page?: number }) {
@@ -20,7 +21,9 @@ export class UsersService {
   }
 
   static getByUsername(username: string) {
-    return ApiService.fetch<User>(`/api/v1/users/${username}/`);
+    return ApiService
+      .fetch<User>(`/api/v1/users/${username}/`)
+      .catch(userNotFound(username));
   }
 
   static getById(id: number) {
@@ -35,7 +38,9 @@ export class UsersService {
   }
 
   static refresh(username: string) {
-    return ApiService.fetch<User>(`/api/v1/users/${username}/refresh/`);
+    return ApiService
+      .fetch<User>(`/api/v1/users/${username}/refresh/`)
+      .catch(userNotFound(username));
   }
 
   static addToChannel(username: string, chatId: number) {
@@ -49,18 +54,20 @@ export class UsersService {
   }
 
   static removeFromChannel(username: string, chatId: number) {
-    return ApiService.fetch<{ message: string }>(
-      "/api/v1/users/remove-from-channel/",
-      {
-        method: "POST",
-        body: JSON.stringify({ username, chat_id: chatId }),
-      },
-    );
+    return ApiService
+      .fetch<{ message: string }>(
+        "/api/v1/users/remove-from-channel/",
+        {
+          method: "POST",
+          body: JSON.stringify({ username, chat_id: chatId }),
+        },
+      )
+      .catch(userNotFound(username));
   }
 
   static avatar(username: string) {
-    return ApiService.fetch<{ avatar_url: string }>(
-      `/api/v1/users/${username}/avatar/`,
-    );
+    return ApiService
+      .fetch<{ avatar_url: string }>(`/api/v1/users/${username}/avatar/`)
+      .catch(userNotFound(username));
   }
 }

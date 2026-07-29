@@ -60,3 +60,10 @@ export class VizApiNotAvailableError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.VizApiNotAvailableError`;
   }
 }
+
+export class BackendUserNotFoundError extends LeetCodeBotError {
+  constructor(username: string) {
+    super(`User "${username}" not found.`);
+    this.name = `${LeetCodeBotError.name}.BackendUserNotFoundError`;
+  }
+}
