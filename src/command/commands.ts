@@ -60,12 +60,8 @@ export default class Commands {
   })
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      try {
-        await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
-        return text(`User ${parsedArgs.username} was successfully removed.`);
-      } catch {
-        return text(`Failed to remove user ${parsedArgs.username}.`);
-      }
+      await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
+      return text(`User ${parsedArgs.username} was successfully removed.`);
     }
 
     return paginatedButtons({
