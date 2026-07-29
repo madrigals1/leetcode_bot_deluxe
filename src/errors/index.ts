@@ -62,8 +62,12 @@ export class VizApiNotAvailableError extends LeetCodeBotError {
 }
 
 export class BackendUserNotFoundError extends LeetCodeBotError {
-  constructor(username: string) {
-    super(`User "${username}" not found.`);
+  constructor(username: string, chatId?: number) {
+    super(
+      chatId
+        ? `User "${username}" not found in channel ${chatId}.`
+        : `User "${username}" not found.`
+    );
     this.name = `${LeetCodeBotError.name}.BackendUserNotFoundError`;
   }
 }
