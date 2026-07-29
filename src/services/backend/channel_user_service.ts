@@ -1,5 +1,5 @@
 import { ApiService } from "./api_service";
-import type { User } from "./types";
+import type { ChannelUser, User } from "./types";
 import { userNotFound } from "@/errors/catchers";
 
 export class ChannelUsersService {
@@ -7,5 +7,24 @@ export class ChannelUsersService {
     return ApiService
       .fetch<User>(`/api/v1/channels/${chatId}/users/${username}/`)
       .catch(userNotFound(username, chatId));
+  }
+
+  static iam(chatId: number, telegramUsername: string, leetcodeUsername: string) {
+    return ApiService.fetch<ChannelUser>(
+      `/api/v1/channels/${chatId}/users/iam/`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          telegram_username: telegramUsername,
+          leetcode_username: leetcodeUsername,
+        }),
+      },
+    );
+  }
+
+  static rank(chatId: number) {
+    return ApiService.fetch<ChannelUser[]>(
+      `/api/v1/channels/${chatId}/users/rank/`,
+    );
   }
 }
