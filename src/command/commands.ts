@@ -103,6 +103,41 @@ export default class Commands {
     });
   }
 
+  @command({ name: "myrank", description: "🏆 Show your channel ranking" })
+  static async rank(ctx: LbContext) {
+    const telegramUsername = ctx.ctx.from?.username;
+
+    if (!telegramUsername) {
+      return text("Could not determine your Telegram username.");
+    }
+
+    const { placement, nearest_above, solved_to_next } = await ChannelUsersService.rank(
+      ctx.chatId,
+      telegramUsername,
+    );
+
+    if (!placement) {
+      return text(
+        "You are not in the ranking. Use /iam leetcode_username to link your LeetCode account."
+      );
+    }
+
+    const parts = [`Your placement: <b>#${placement}</b> 🏆`];
+
+    if (nearest_above) {
+      parts.push(
+        `⬆️ User ahead: <b>${nearest_above.username}</b> — ` +
+        `${nearest_above.solved} solved (${nearest_above.solved_cml} cumulative)`,
+      );
+    }
+
+    if (solved_to_next !== undefined) {
+      parts.push(`🎯 Problems needed to advance: <b>${solved_to_next}</b>`);
+    }
+
+    return text(parts.join("\n\n"));
+  }
+
   @command({ name: "rating", description: "🏆 Show rating leaderboard" })
   static rating() {
     return paginatedText({

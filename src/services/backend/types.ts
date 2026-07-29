@@ -75,6 +75,20 @@ export interface ChannelUser {
   updated_at: string;
 }
 
+// ── Rank types ──
+
+export interface NearestAbove {
+  username: string;
+  solved: number;
+  solved_cml: number;
+}
+
+export interface RankResponse {
+  placement?: number;
+  nearest_above?: NearestAbove;
+  solved_to_next?: number;
+}
+
 // ── Contest types ──
 
 export interface Contest {

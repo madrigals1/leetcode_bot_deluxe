@@ -1,5 +1,5 @@
 import { ApiService } from "./api_service";
-import type { ChannelUser, User } from "./types";
+import type { ChannelUser, RankResponse, User } from "./types";
 import { userNotFound } from "@/errors/catchers";
 
 export class ChannelUsersService {
@@ -22,9 +22,13 @@ export class ChannelUsersService {
     );
   }
 
-  static rank(chatId: number) {
-    return ApiService.fetch<ChannelUser[]>(
+  static rank(chatId: number, telegramUsername: string) {
+    return ApiService.fetch<RankResponse>(
       `/api/v1/channels/${chatId}/users/rank/`,
+      {
+        method: "POST",
+        body: JSON.stringify({ telegram_username: telegramUsername }),
+      },
     );
   }
 }
