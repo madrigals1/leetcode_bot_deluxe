@@ -46,7 +46,7 @@ export default class Commands {
   static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
     try {
       await UsersService.addToChannel(parsedArgs.username, ctx.chatId);
-      return text(`User ${parsedArgs.username} was successfully added.`);
+      return text(`User "${parsedArgs.username}" was successfully added.`);
     } catch {
       return text(`Failed to add user ${parsedArgs.username}.`);
     }
@@ -61,7 +61,7 @@ export default class Commands {
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
       await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
-      return text(`User ${parsedArgs.username} was successfully removed.`);
+      return text(`User "${parsedArgs.username}" was successfully removed.`);
     }
 
     return paginatedButtons({
