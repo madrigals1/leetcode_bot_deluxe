@@ -55,16 +55,29 @@ export default class Commands {
   @command({
     name: "remove",
     description: "➖ Remove a user from the channel",
-    args: [{ name: "username" }],
+    args: [{ name: "username", optional: true }],
     requiresAdmin: true,
   })
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
-    try {
-      await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
-      return text(`User ${parsedArgs.username} was successfully removed.`);
-    } catch {
-      return text(`Failed to remove user ${parsedArgs.username}.`);
+    if (parsedArgs.username) {
+      try {
+        await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
+        return text(`User ${parsedArgs.username} was successfully removed.`);
+      } catch {
+        return text(`Failed to remove user ${parsedArgs.username}.`);
+      }
     }
+
+    return paginatedButtons({
+      name: "remove",
+      text: "Select a user to remove:",
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      itemToButton: (item) => ({
+        text: item.user.username,
+        callback_data: `command:remove ${item.user.username}`,
+      }),
+      buttonsPerRow: 2,
+    });
   }
 
   @command({ name: "rating", description: "🏆 Show rating leaderboard" })
