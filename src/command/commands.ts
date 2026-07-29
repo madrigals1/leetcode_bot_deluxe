@@ -4,7 +4,7 @@ import {
 } from "@/command/decorator";
 import type { ParsedArgs } from "@/command/types";
 import { CommandRegistry } from "@/command/registry";
-import { UsersService, ChannelsService } from "@/services/backend";
+import { UsersService, ChannelsService, ChannelUsersService } from "@/services/backend";
 import { VizApiService } from "@/services/vizapi";
 import type { PieData } from "@/services/vizapi";
 import { LbContext } from "@/utils/context";
@@ -107,9 +107,9 @@ export default class Commands {
     description: "👤 View user profiles",
     args: [{ name: "username", optional: true }],
   })
-  static async profile(_ctx: LbContext, parsedArgs: ParsedArgs) {
+  static async profile(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await UsersService.getByUsername(parsedArgs.username);
+      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
       const name = user.data?.profile?.realName ?? user.username;
       const solved = user.data?.submitStats?.acSubmissionNum ?? [];
       const total = user.data?.submitStats?.totalSubmissionNum ?? [];
@@ -147,9 +147,9 @@ export default class Commands {
     description: "🖼️ View user avatars",
     args: [{ name: "username", optional: true }],
   })
-  static async avatar(_ctx: LbContext, parsedArgs: ParsedArgs) {
+  static async avatar(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await UsersService.getByUsername(parsedArgs.username);
+      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
       const avatarUrl = user.data?.profile?.userAvatar;
 
       if (avatarUrl) {
@@ -175,9 +175,9 @@ export default class Commands {
     description: "📊 View language statistics",
     args: [{ name: "username", optional: true }],
   })
-  static async langstats(_ctx: LbContext, parsedArgs: ParsedArgs) {
+  static async langstats(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await UsersService.getByUsername(parsedArgs.username);
+      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
       const stats = user.data?.languageStats ?? [];
 
       const langText =
@@ -206,9 +206,9 @@ export default class Commands {
     description: "📝 View recent submissions",
     args: [{ name: "username", optional: true }],
   })
-  static async submissions(_ctx: LbContext, parsedArgs: ParsedArgs) {
+  static async submissions(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await UsersService.getByUsername(parsedArgs.username);
+      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
       const submissions = user.data?.computed?.submissions ?? [];
 
       if (submissions.length === 0) {
@@ -243,9 +243,9 @@ export default class Commands {
     description: "🥧 Show problems solved pie chart",
     args: [{ name: "username", optional: true }],
   })
-  static async problems(_ctx: LbContext, parsedArgs: ParsedArgs) {
+  static async problems(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await UsersService.getByUsername(parsedArgs.username);
+      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
       const stats = user.data?.submitStats?.acSubmissionNum ?? [];
 
       const getCount = (difficulty: string) =>
@@ -288,11 +288,11 @@ export default class Commands {
       { name: "username2", optional: true },
     ],
   })
-  static async compare(_ctx: LbContext, parsedArgs: ParsedArgs) {
+  static async compare(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username1 && parsedArgs.username2) {
       const [user1, user2] = await Promise.all([
-        UsersService.getByUsername(parsedArgs.username1),
-        UsersService.getByUsername(parsedArgs.username2),
+        ChannelUsersService.getUserInChannel(parsedArgs.username1, ctx.chatId),
+        ChannelUsersService.getUserInChannel(parsedArgs.username2, ctx.chatId),
       ]);
       const data = buildCompareData(user1, user2);
       const { link } = await VizApiService.generateCompare(data);
