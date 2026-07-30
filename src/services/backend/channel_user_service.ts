@@ -1,11 +1,12 @@
 import { ApiService } from "./api_service";
-import type { ChannelUser, RankResponse, User } from "./types";
+import type { ChannelUser, RankResponse } from "./types";
 import { userNotFound } from "@/errors/catchers";
 
 export class ChannelUsersService {
   static getUserInChannel(username: string, chatId: number) {
     return ApiService
-      .fetch<User>(`/api/v1/channels/${chatId}/users/${username}/`)
+      .fetch<ChannelUser>(`/api/v1/channels/${chatId}/users/${username}/`)
+      .then(data => data.user)
       .catch(userNotFound(username, chatId));
   }
 

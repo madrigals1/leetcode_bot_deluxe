@@ -65,12 +65,7 @@ export interface Channel {
 
 export interface ChannelUser {
   id: number;
-  user: {
-    id: number;
-    username: string;
-    solved: number;
-    solved_cml: number;
-  };
+  user: User;
   created_at: string;
   updated_at: string;
 }
