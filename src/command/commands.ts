@@ -24,6 +24,7 @@ import {
 import { getDifficultyCount } from "@/utils/leetcode";
 import { DataNotFoundError } from "@/errors";
 import { buildCompareData } from "./utils";
+import { timeAgo } from "short-time-ago";
 
 export default class Commands {
   @command({ name: "start", description: "🚀 Start the bot" })
@@ -205,7 +206,8 @@ export default class Commands {
         `🟡 Medium - <b>${getDifficultyCount(solved, "Medium")}</b>\n` +
         `🔴 Hard - <b>${getDifficultyCount(solved, "Hard")}</b>\n` +
         `🔵 All - <b>${getDifficultyCount(solved, "All")} / ${getDifficultyCount(total, "All")}</b>\n` +
-        `🔷 Cumulative - <b>${user.solved_cml}</b>`;
+        `🔷 Cumulative - <b>${user.solved_cml}</b>\n\n` +
+        `🕐 Last refreshed: <b>${timeAgo(new Date(user.updated_at))}</b>`;
 
       const keyboard = new InlineKeyboard()
         .text("📝 Submissions", `command:submissions ${user.username}`)
