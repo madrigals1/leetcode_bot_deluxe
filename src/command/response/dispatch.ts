@@ -11,13 +11,10 @@ import { renderFirstButtonsPage } from "./pagination/button";
 
 export async function dispatchResponse(
   lbCtx: LbContext,
-  response: CommandResponse | undefined,
+  response: CommandResponse,
   reply: ReplyMethod,
   replyPhoto: ReplyPhotoMethod,
 ) {
-  if (!response) {
-    return;
-  }
   switch (response.type) {
     case "text":
       return reply(response.text, {
@@ -28,6 +25,13 @@ export async function dispatchResponse(
         caption: response.caption,
         reply_markup: response.buttons,
       });
+    case "editText":
+      return lbCtx.ctx.api.editMessageText(
+        lbCtx.chatId,
+        response.message_id,
+        response.text,
+        { reply_markup: response.buttons },
+      );
     case "paginatedText":
       return handlePaginatedTextResponse(lbCtx, response, reply);
     case "paginatedButtons":

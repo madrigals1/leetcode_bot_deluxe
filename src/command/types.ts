@@ -31,7 +31,7 @@ export interface CommandMetadata extends CommandOptions {
 
 // ── Response types ──
 
-type ResponseType = "text" | "photo" | "paginatedText" | "paginatedButtons";
+type ResponseType = "text" | "photo" | "paginatedText" | "paginatedButtons" | "editText";
 
 export interface BaseResponse {
   type: ResponseType;
@@ -47,6 +47,12 @@ export interface PhotoResponse extends BaseResponse {
   type: "photo";
   photo: string;
   caption?: string;
+}
+
+export interface EditTextResponse extends BaseResponse {
+  type: "editText";
+  text: string;
+  message_id: number;
 }
 
 export interface PaginationBaseResponse<T = unknown> extends BaseResponse {
@@ -71,6 +77,7 @@ export interface PaginatedButtonsResponse<T = unknown> extends PaginationBaseRes
 export type CommandResponse =
   | TextResponse
   | PhotoResponse
+  | EditTextResponse
   | PaginatedTextResponse<unknown>
   | PaginatedButtonsResponse<unknown>;
 

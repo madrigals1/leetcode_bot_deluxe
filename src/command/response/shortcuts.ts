@@ -1,6 +1,7 @@
 import type {
   TextResponse,
   PhotoResponse,
+  EditTextResponse,
   PaginatedTextResponse,
   PaginatedButtonsResponse,
 } from "@/command/types";
@@ -11,6 +12,10 @@ export function text(text: string): TextResponse {
 
 export function buttons(options: Omit<TextResponse, "type">): TextResponse {
   return { ...options, type: "text" };
+}
+
+export function editText(options: Omit<EditTextResponse, "type">): EditTextResponse {
+  return { ...options, type: "editText" };
 }
 
 export function photo(options: Omit<PhotoResponse, "type">): PhotoResponse {

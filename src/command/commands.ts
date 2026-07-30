@@ -17,6 +17,7 @@ import {
   text,
   photo,
   buttons,
+  editText,
   paginatedText,
   paginatedButtons,
 } from "@/command/response/shortcuts";
@@ -107,7 +108,10 @@ export default class Commands {
   static async refresh(lbctx: LbContext) {
     const msg = await lbctx.ctx.reply("🔄 Refreshing LeetCode data for all users in this channel...");
     await ChannelsService.refresh(lbctx.chatId);
-    await lbctx.ctx.api.editMessageText(lbctx.chatId, msg.message_id, "✅ LeetCode data has been refreshed for all users in this channel!");
+    return editText({
+      text: "✅ LeetCode data has been refreshed for all users in this channel!",
+      message_id: msg.message_id,
+    });
   }
 
   @command({ name: "myrank", description: "🏆 Show your channel ranking" })
