@@ -111,10 +111,13 @@ export default class Commands {
       return text("Could not determine your Telegram username.");
     }
 
-    const { placement, nearest_above, solved_to_next } = await ChannelUsersService.rank(
-      ctx.chatId,
-      telegramUsername,
-    );
+    const {
+      leetcode_username,
+      solved,
+      placement,
+      nearest_above,
+      solved_to_next,
+    } = await ChannelUsersService.rank(ctx.chatId, telegramUsername);
 
     if (!placement) {
       return text(
@@ -124,18 +127,26 @@ export default class Commands {
 
     const parts = [`Your placement: <b>#${placement}</b> 🏆`];
 
+    if (leetcode_username) {
+      parts.push(`Username: <b>${leetcode_username}</b>`);
+    }
+
+    if (solved !== undefined) {
+      parts.push(`Solved: <b>${solved}</b>`);
+    }
+
     if (nearest_above) {
       parts.push(
-        `⬆️ User ahead: <b>${nearest_above.username}</b> — ` +
+        `\n⬆️ User ahead: <b>${nearest_above.username}</b> — ` +
         `${nearest_above.solved} solved (${nearest_above.solved_cml} cumulative)`,
       );
     }
 
     if (solved_to_next !== undefined) {
-      parts.push(`🎯 Problems needed to advance: <b>${solved_to_next}</b>`);
+      parts.push(`\n🎯 Problems needed to advance: <b>${solved_to_next}</b>`);
     }
 
-    return text(parts.join("\n\n"));
+    return text(parts.join("\n"));
   }
 
   @command({ name: "rating", description: "🏆 Show rating leaderboard" })

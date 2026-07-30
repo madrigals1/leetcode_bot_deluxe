@@ -84,6 +84,8 @@ export interface NearestAbove {
 }
 
 export interface RankResponse {
+  leetcode_username?: string;
+  solved?: number;
   placement?: number;
   nearest_above?: NearestAbove;
   solved_to_next?: number;
