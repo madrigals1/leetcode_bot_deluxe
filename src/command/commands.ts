@@ -103,6 +103,12 @@ export default class Commands {
     });
   }
 
+  @command({ name: "refresh", description: "🔄 Refresh all users' LeetCode data" })
+  static async refresh(ctx: LbContext) {
+    const { message } = await ChannelsService.refresh(ctx.chatId);
+    return text(message);
+  }
+
   @command({ name: "myrank", description: "🏆 Show your channel ranking" })
   static async rank(ctx: LbContext) {
     const telegramUsername = ctx.ctx.from?.username;
