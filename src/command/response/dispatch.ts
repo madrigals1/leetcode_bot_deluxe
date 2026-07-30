@@ -11,10 +11,13 @@ import { renderFirstButtonsPage } from "./pagination/button";
 
 export async function dispatchResponse(
   lbCtx: LbContext,
-  response: CommandResponse,
+  response: CommandResponse | undefined,
   reply: ReplyMethod,
   replyPhoto: ReplyPhotoMethod,
 ) {
+  if (!response) {
+    return;
+  }
   switch (response.type) {
     case "text":
       return reply(response.text, {

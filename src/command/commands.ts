@@ -104,9 +104,10 @@ export default class Commands {
   }
 
   @command({ name: "refresh", description: "🔄 Refresh all users' LeetCode data" })
-  static async refresh(ctx: LbContext) {
-    const { message } = await ChannelsService.refresh(ctx.chatId);
-    return text(message);
+  static async refresh(lbctx: LbContext) {
+    const msg = await lbctx.ctx.reply("🔄 Refreshing LeetCode data for all users in this channel...");
+    await ChannelsService.refresh(lbctx.chatId);
+    await lbctx.ctx.api.editMessageText(lbctx.chatId, msg.message_id, "✅ LeetCode data has been refreshed for all users in this channel!");
   }
 
   @command({ name: "myrank", description: "🏆 Show your channel ranking" })

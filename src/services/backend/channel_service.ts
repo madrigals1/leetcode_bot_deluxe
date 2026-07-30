@@ -54,7 +54,7 @@ export class ChannelsService {
   }
 
   static refresh(chatId: number) {
-    return ApiService.fetch<{ message: string }>(
+    return ApiService.fetch<{ detail: string }>(
       `/api/v1/channels/${chatId}/refresh/`,
     );
   }
