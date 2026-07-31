@@ -58,6 +58,7 @@ export default class Commands {
     name: "add",
     description: "➕ Add a user to the channel",
     args: [{ name: "username" }],
+    example: "/add leetcode_username",
   })
   static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
     try {
@@ -72,6 +73,7 @@ export default class Commands {
     name: "remove",
     description: "➖ Remove a user from the channel",
     args: [{ name: "username", optional: true }],
+    example: "/remove leetcode_username",
     requiresAdmin: true,
   })
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
@@ -96,6 +98,7 @@ export default class Commands {
     name: "track",
     description: "🆔 Track a LeetCode username",
     args: [{ name: "leetcode_username" }],
+    example: "/track leetcode_username",
   })
   static async track(ctx: LbContext, parsedArgs: ParsedArgs) {
     const telegramUsername = ctx.ctx.from?.username;
@@ -207,6 +210,7 @@ export default class Commands {
     name: "profile",
     description: "👤 View user profiles",
     args: [{ name: "username", optional: true }],
+    example: "/profile leetcode_username",
   })
   static async profile(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -248,6 +252,7 @@ export default class Commands {
     name: "avatar",
     description: "🖼️ View user avatars",
     args: [{ name: "username", optional: true }],
+    example: "/avatar leetcode_username",
   })
   static async avatar(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -276,6 +281,7 @@ export default class Commands {
     name: "langstats",
     description: "📊 View language statistics",
     args: [{ name: "username", optional: true }],
+    example: "/langstats leetcode_username",
   })
   static async langstats(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -307,6 +313,7 @@ export default class Commands {
     name: "submissions",
     description: "📝 View recent submissions",
     args: [{ name: "username", optional: true }],
+    example: "/submissions leetcode_username",
   })
   static async submissions(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -344,6 +351,7 @@ export default class Commands {
     name: "problems",
     description: "🥧 Show problems solved pie chart",
     args: [{ name: "username", optional: true }],
+    example: "/problems leetcode_username",
   })
   static async problems(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -389,6 +397,7 @@ export default class Commands {
       { name: "username1", optional: true },
       { name: "username2", optional: true },
     ],
+    example: "/compare leetcode_username1 leetcode_username2",
   })
   static async compare(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username1 && parsedArgs.username2) {

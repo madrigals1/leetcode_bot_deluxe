@@ -36,7 +36,7 @@ export function command(options: CommandOptions) {
         }
 
         const args = options.args
-          ? parseArgs(ctx.message?.text ?? "", options.args)
+          ? parseArgs(ctx.message?.text ?? "", options.args, options.example)
           : {};
 
         const response = await originalHandler(lbCtx, args);

@@ -5,17 +5,21 @@ import { getDifficultyCount } from "@/utils/leetcode";
 import type { CommandArg } from "./types";
 import type { ParsedArgs } from "./types";
 
-export function parseArgs(text: string, defs: CommandArg[]): ParsedArgs {
+export function parseArgs(
+  text: string,
+  defs: CommandArg[],
+  example?: string,
+): ParsedArgs {
   const parts = text.split(/\s+/).slice(1);
 
   const requiredCount = defs.filter((a) => !a.optional).length;
 
   if (parts.length < requiredCount) {
-    throw new InvalidArgumentAmountError(requiredCount, parts.length);
+    throw new InvalidArgumentAmountError(requiredCount, parts.length, example);
   }
 
   if (parts.length > defs.length) {
-    throw new InvalidArgumentAmountError(defs.length, parts.length);
+    throw new InvalidArgumentAmountError(defs.length, parts.length, example);
   }
 
   const result: ParsedArgs = {};

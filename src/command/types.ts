@@ -19,6 +19,7 @@ export interface CommandOptions {
   name: string;
   description: string;
   args?: CommandArg[];
+  example?: string;
   requiresAdmin?: boolean;
   requiresSuperAdmin?: boolean;
 }

@@ -6,8 +6,11 @@ export class LeetCodeBotError extends Error {
 }
 
 export class InvalidArgumentAmountError extends LeetCodeBotError {
-  constructor(expected: number, got: number) {
-    super(`Invalid argument count: expected ${expected}, got ${got}.`);
+  constructor(expected: number, got: number, example?: string) {
+    super(
+      `❗ Invalid argument count: expected ${expected}, got ${got}.`
+      + (example ? `\n\nExample: <b>${example}</b>` : "")
+    );
     this.name = `${LeetCodeBotError.name}.InvalidArgumentAmountError`;
   }
 }
