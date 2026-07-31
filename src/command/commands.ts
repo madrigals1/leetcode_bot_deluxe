@@ -169,7 +169,7 @@ export default class Commands {
   }
 
   @command({ name: "myrank", description: "🏆 Show your channel ranking", example: "/myrank" })
-  static async rank(ctx: LbContext) {
+  static async myrank(ctx: LbContext) {
     const telegramUsername = ctx.ctx.from?.username;
 
     if (!telegramUsername) {
