@@ -71,3 +71,13 @@ export class BackendUserNotFoundError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.BackendUserNotFoundError`;
   }
 }
+
+export class TelegramUserHasNoClaimError extends LeetCodeBotError {
+  constructor() {
+    super(
+      `❗ You need to link your LeetCode account first.\n`
+      + `Use <b>/iam leetcode_username</b> to link your  account.`
+    );
+    this.name = `${LeetCodeBotError.name}.TelegramUserHasNoClaimError`;
+  }
+}

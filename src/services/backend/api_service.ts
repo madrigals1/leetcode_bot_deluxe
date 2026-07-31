@@ -63,7 +63,13 @@ export class ApiService {
     }
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      let body = { error: undefined };
+      try {
+        body = await response.json();
+      } catch {
+        // response body is not valid JSON
+      }
+      throw new Error(body.error ?? `API error: ${response.status}`);
     }
 
     return response.json() as Promise<T>;
