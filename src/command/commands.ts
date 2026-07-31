@@ -53,7 +53,11 @@ export default class Commands {
       .filter((cmd) => !cmd.requiresSuperAdmin)
       .map((cmd) => `${cmd.name} - ${cmd.description}`)
       .join("\n");
-    return text(commands);
+
+    const keyboard = new InlineKeyboard()
+      .text("🛡️ Superadmin", "command:superadmin");
+
+    return buttons({ text: commands, buttons: keyboard });
   }
 
   @command({
@@ -68,11 +72,16 @@ export default class Commands {
       (username) => `- <b>${username}</b>`,
     ).join("\n");
 
-    return text(
-      `🛡️ <b>Superadmins:</b>\n${superAdmins}\n\n` +
-      `💬 Channel ID: <code>${ctx.chatId}</code>\n` +
-      `👥 Users in channel: <b>${count}</b>`,
-    );
+    const keyboard = new InlineKeyboard()
+      .text("🤖 BotFather", "command:botfather");
+
+    return buttons({
+      text:
+        `🛡️ <b>Superadmins:</b>\n${superAdmins}\n\n` +
+        `💬 Channel ID: <code>${ctx.chatId}</code>\n` +
+        `👥 Users in channel: <b>${count}</b>`,
+      buttons: keyboard,
+    });
   }
 
   @command({
