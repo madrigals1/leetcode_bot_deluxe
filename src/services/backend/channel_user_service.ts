@@ -12,7 +12,7 @@ export class ChannelUsersService {
 
   static track(chatId: number, telegramUsername: string, leetcodeUsername: string) {
     return ApiService.fetch<ChannelUser>(
-      `/api/v1/channels/${chatId}/users/iam/`,
+      `/api/v1/channels/${chatId}/users/track/`,
       {
         method: "POST",
         body: JSON.stringify({
