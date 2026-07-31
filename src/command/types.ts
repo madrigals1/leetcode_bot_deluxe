@@ -20,6 +20,7 @@ export interface CommandOptions {
   description: string;
   args?: CommandArg[];
   requiresAdmin?: boolean;
+  requiresSuperAdmin?: boolean;
 }
 
 // ── Registry types ──

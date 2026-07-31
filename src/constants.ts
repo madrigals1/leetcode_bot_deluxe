@@ -23,6 +23,14 @@ export const TOKEN_MAX_AGE_MS =
 
 export const VIZAPI_URL = getRequiredEnv("VIZAPI_URL");
 
+export const SUPER_ADMIN_TELEGRAM_USERNAMES = getEnv(
+  "SUPER_ADMIN_TELEGRAM_USERNAMES",
+  "",
+)
+  .split(",")
+  .map((username) => username.trim())
+  .filter(Boolean);
+
 export const CML_EASY_POINTS = getEnv("CML_EASY_POINTS", "0.5");
 export const CML_MEDIUM_POINTS = getEnv("CML_MEDIUM_POINTS", "1.5");
 export const CML_HARD_POINTS = getEnv("CML_HARD_POINTS", "5");
