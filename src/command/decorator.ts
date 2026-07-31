@@ -35,9 +35,11 @@ export function command(options: CommandOptions) {
           throw new UnauthorizedError();
         }
 
-        const args = options.args
-          ? parseArgs(ctx.message?.text ?? "", options.args, options.example)
-          : {};
+        const args = parseArgs(
+          ctx.message?.text ?? "",
+          options.args ?? [],
+          options.example,
+        );
 
         const response = await originalHandler(lbCtx, args);
         const reply = (text: string, options?: object) => lbCtx.reply(text, options);

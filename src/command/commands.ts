@@ -27,12 +27,12 @@ import { buildCompareData } from "./utils";
 import { timeAgo } from "short-time-ago";
 
 export default class Commands {
-  @command({ name: "start", description: "🚀 Start the bot" })
+  @command({ name: "start", description: "🚀 Start the bot", example: "/start" })
   static start() {
     return text("Welcome to the LeetCode BOT.\n\nUse /commands to see available commands.");
   }
 
-  @command({ name: "commands", description: "❓ Show this help message" })
+  @command({ name: "commands", description: "❓ Show this help message", example: "/commands" })
   static commands() {
     const commands = CommandRegistry.getAll()
       .filter((cmd) => !cmd.requiresSuperAdmin)
@@ -44,6 +44,7 @@ export default class Commands {
   @command({
     name: "botfather",
     description: "🤖 Show commands in BotFather format",
+    example: "/botfather",
     requiresSuperAdmin: true,
   })
   static botfather() {
@@ -124,7 +125,11 @@ export default class Commands {
     }
   }
 
-  @command({ name: "refresh", description: "🔄 Refresh all users' LeetCode data" })
+  @command({
+    name: "refresh",
+    description: "🔄 Refresh all users' LeetCode data",
+    example: "/refresh",
+  })
   static async refresh(lbctx: LbContext) {
     const msg = await lbctx.ctx.reply("🔄 Refreshing LeetCode data for all users in this channel...");
     await ChannelsService.refresh(lbctx.chatId);
@@ -134,7 +139,7 @@ export default class Commands {
     });
   }
 
-  @command({ name: "myrank", description: "🏆 Show your channel ranking" })
+  @command({ name: "myrank", description: "🏆 Show your channel ranking", example: "/myrank" })
   static async rank(ctx: LbContext) {
     const telegramUsername = ctx.ctx.from?.username;
 
@@ -180,7 +185,7 @@ export default class Commands {
     return text(parts.join("\n"));
   }
 
-  @command({ name: "rating", description: "🏆 Show rating leaderboard" })
+  @command({ name: "rating", description: "🏆 Show rating leaderboard", example: "/rating" })
   static rating() {
     return paginatedText({
       name: "rating",
@@ -191,7 +196,11 @@ export default class Commands {
     });
   }
 
-  @command({ name: "rating_cml", description: "🔥 Show cumulative rating" })
+  @command({
+    name: "rating_cml",
+    description: "🔥 Show cumulative rating",
+    example: "/rating_cml",
+  })
   static ratingCml() {
     return paginatedText({
       name: "rating_cml",
