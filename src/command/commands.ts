@@ -79,11 +79,11 @@ export default class Commands {
   }
 
   @command({
-    name: "iam",
-    description: "🆔 Identify yourself with your LeetCode username",
+    name: "track",
+    description: "🆔 Track a LeetCode username",
     args: [{ name: "leetcode_username" }],
   })
-  static async iam(ctx: LbContext, parsedArgs: ParsedArgs) {
+  static async track(ctx: LbContext, parsedArgs: ParsedArgs) {
     const telegramUsername = ctx.ctx.from?.username;
 
     if (!telegramUsername) {
@@ -91,17 +91,17 @@ export default class Commands {
     }
 
     try {
-      await ChannelUsersService.iam(
+      await ChannelUsersService.track(
         ctx.chatId,
         telegramUsername,
         parsedArgs.leetcode_username,
       );
       return text(
-        `Successfully linked to <b>${parsedArgs.leetcode_username}</b> on LeetCode. `
+        `Now tracking <b>${parsedArgs.leetcode_username}</b> on LeetCode. `
         + `Use /myrank to see your ranking.`,
       );
     } catch {
-      return text("Failed to identify. Please try again.");
+      return text("Failed to track. Please try again.");
     }
   }
 
@@ -133,7 +133,7 @@ export default class Commands {
 
     if (!placement) {
       return text(
-        "You are not in the ranking. Use /iam leetcode_username to link your LeetCode account."
+        "You are not in the ranking. Use /track leetcode_username to track a LeetCode account."
       );
     }
 

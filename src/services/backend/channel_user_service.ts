@@ -10,7 +10,7 @@ export class ChannelUsersService {
       .catch(userNotFound(username, chatId));
   }
 
-  static iam(chatId: number, telegramUsername: string, leetcodeUsername: string) {
+  static track(chatId: number, telegramUsername: string, leetcodeUsername: string) {
     return ApiService.fetch<ChannelUser>(
       `/api/v1/channels/${chatId}/users/iam/`,
       {
