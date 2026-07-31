@@ -41,6 +41,18 @@ export default class Commands {
   }
 
   @command({
+    name: "botfather",
+    description: "🤖 Show commands in BotFather format",
+    requiresSuperAdmin: true,
+  })
+  static botfather() {
+    const commands = CommandRegistry.getAll()
+      .map((cmd) => `${cmd.name} - ${cmd.description}`)
+      .join("\n");
+    return text(commands);
+  }
+
+  @command({
     name: "add",
     description: "➕ Add a user to the channel",
     args: [{ name: "username" }],
