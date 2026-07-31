@@ -35,6 +35,7 @@ export default class Commands {
   @command({ name: "commands", description: "❓ Show this help message" })
   static commands() {
     const commands = CommandRegistry.getAll()
+      .filter((cmd) => !cmd.requiresSuperAdmin)
       .map((cmd) => `${cmd.description} - <b>/${cmd.name}</b>`)
       .join("\n");
     return text(`Available commands:\n\n${commands}`);
@@ -47,6 +48,7 @@ export default class Commands {
   })
   static botfather() {
     const commands = CommandRegistry.getAll()
+      .filter((cmd) => !cmd.requiresSuperAdmin)
       .map((cmd) => `${cmd.name} - ${cmd.description}`)
       .join("\n");
     return text(commands);
