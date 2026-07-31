@@ -204,7 +204,7 @@ export default class Commands {
     if (nearest_above) {
       parts.push(
         `\n⬆️ User ahead: <b>${nearest_above.username}</b> — ` +
-        `${nearest_above.solved} solved (${nearest_above.solved_cml} cumulative)`,
+        `<b>${nearest_above.solved}</b> solved (${nearest_above.solved_cml} cumulative)`,
       );
     }
 
