@@ -179,6 +179,7 @@ export default class Commands {
     const {
       leetcode_username,
       solved,
+      solved_cml,
       placement,
       nearest_above,
       solved_to_next,
@@ -196,8 +197,8 @@ export default class Commands {
       parts.push(`Username: <b>${leetcode_username}</b>`);
     }
 
-    if (solved !== undefined) {
-      parts.push(`Solved: <b>${solved}</b>`);
+    if (solved !== undefined && solved_cml !== undefined) {
+      parts.push(`Solved: <b>${solved}</b> (${solved_cml} cumulative)`);
     }
 
     if (nearest_above) {
