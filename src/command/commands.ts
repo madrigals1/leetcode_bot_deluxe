@@ -191,7 +191,7 @@ export default class Commands {
       );
     }
 
-    const parts = [`Your placement: <b>#${placement}</b> 🏆`];
+    const parts = [`Placement: <b>#${placement}</b> 🏆`];
 
     if (leetcode_username) {
       parts.push(`Username: <b>${leetcode_username}</b>`);
