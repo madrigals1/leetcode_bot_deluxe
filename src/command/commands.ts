@@ -96,9 +96,11 @@ export default class Commands {
         telegramUsername,
         parsedArgs.leetcode_username,
       );
+      const boldUsername = `<b>"${parsedArgs.leetcode_username}"</b>`;
+
       return text(
-        `Now tracking <b>${parsedArgs.leetcode_username}</b> on LeetCode. `
-        + `Use /myrank to see your ranking.`,
+        `Now tracking ${boldUsername} on LeetCode. `
+        + `Use /myrank to see ranking for ${boldUsername}.`,
       );
     } catch {
       return text("Failed to track. Please try again.");
