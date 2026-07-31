@@ -55,6 +55,30 @@ export default class Commands {
   }
 
   @command({
+    name: "remove",
+    description: "➖ Remove a user from the channel",
+    args: [{ name: "username", optional: true }],
+    requiresAdmin: true,
+  })
+  static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
+    if (parsedArgs.username) {
+      await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
+      return text(`User "${parsedArgs.username}" was successfully removed.`);
+    }
+
+    return paginatedButtons({
+      name: "remove",
+      text: "Select a user to remove:",
+      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      itemToButton: (item) => ({
+        text: item.user.username,
+        callback_data: `command:remove ${item.user.username}`,
+      }),
+      buttonsPerRow: 2,
+    });
+  }
+
+  @command({
     name: "iam",
     description: "🆔 Identify yourself with your LeetCode username",
     args: [{ name: "leetcode_username" }],
@@ -79,30 +103,6 @@ export default class Commands {
     } catch {
       return text("Failed to identify. Please try again.");
     }
-  }
-
-  @command({
-    name: "remove",
-    description: "➖ Remove a user from the channel",
-    args: [{ name: "username", optional: true }],
-    requiresAdmin: true,
-  })
-  static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
-    if (parsedArgs.username) {
-      await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
-      return text(`User "${parsedArgs.username}" was successfully removed.`);
-    }
-
-    return paginatedButtons({
-      name: "remove",
-      text: "Select a user to remove:",
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
-      itemToButton: (item) => ({
-        text: item.user.username,
-        callback_data: `command:remove ${item.user.username}`,
-      }),
-      buttonsPerRow: 2,
-    });
   }
 
   @command({ name: "refresh", description: "🔄 Refresh all users' LeetCode data" })
