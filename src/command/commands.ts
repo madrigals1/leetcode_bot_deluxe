@@ -12,6 +12,7 @@ import {
   CML_EASY_POINTS,
   CML_MEDIUM_POINTS,
   CML_HARD_POINTS,
+  SUPER_ADMIN_TELEGRAM_USERNAMES,
 } from "@/constants";
 import {
   text,
@@ -53,6 +54,25 @@ export default class Commands {
       .map((cmd) => `${cmd.name} - ${cmd.description}`)
       .join("\n");
     return text(commands);
+  }
+
+  @command({
+    name: "superadmin",
+    description: "🛡️ Show superadmin info",
+    example: "/superadmin",
+    requiresSuperAdmin: true,
+  })
+  static async superadmin(ctx: LbContext) {
+    const { count } = await ChannelsService.getUsersSimplified(ctx.chatId);
+    const superAdmins = SUPER_ADMIN_TELEGRAM_USERNAMES.map(
+      (username) => `- <b>${username}</b>`,
+    ).join("\n");
+
+    return text(
+      `🛡️ <b>Superadmins:</b>\n${superAdmins}\n\n` +
+      `💬 Channel ID: <code>${ctx.chatId}</code>\n` +
+      `👥 Users in channel: <b>${count}</b>`,
+    );
   }
 
   @command({
