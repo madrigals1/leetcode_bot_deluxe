@@ -71,13 +71,13 @@ export class BackendUserNotFoundError extends LeetCodeBotError {
   }
 }
 
-export class TelegramUserHasNoClaimError extends LeetCodeBotError {
+export class TelegramUserHasNoTrackError extends LeetCodeBotError {
   constructor() {
     super(
       `❗ You need to track a LeetCode username first.\n`
       + `Use <b>/track leetcode_username</b> to start tracking.`
     );
-    this.name = `${LeetCodeBotError.name}.TelegramUserHasNoClaimError`;
+    this.name = `${LeetCodeBotError.name}.TelegramUserHasNoTrackError`;
   }
 }
 

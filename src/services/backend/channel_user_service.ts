@@ -1,6 +1,6 @@
 import { ApiService } from "./api_service";
 import type { ChannelUser, RankResponse } from "./types";
-import { telegramUserHasNoClaim, userNotFound, leetcodeUserNotFound } from "@/errors/catchers";
+import { telegramUserHasNoTrack, userNotFound, leetcodeUserNotFound } from "@/errors/catchers";
 
 export class ChannelUsersService {
   static getUserInChannel(username: string, chatId: number) {
@@ -32,6 +32,6 @@ export class ChannelUsersService {
         method: "POST",
         body: JSON.stringify({ telegram_username: telegramUsername }),
       },
-    ).catch(telegramUserHasNoClaim());
+    ).catch(telegramUserHasNoTrack());
   }
 }

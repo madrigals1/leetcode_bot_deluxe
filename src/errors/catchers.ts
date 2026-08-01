@@ -1,6 +1,6 @@
 import {
   BackendUserNotFoundError,
-  TelegramUserHasNoClaimError,
+  TelegramUserHasNoTrackError,
   LeetCodeUserNotFoundError,
 } from ".";
 
@@ -13,10 +13,10 @@ export function userNotFound(username: string) {
   };
 }
 
-export function telegramUserHasNoClaim() {
+export function telegramUserHasNoTrack() {
   return (err: Error) => {
     if (err.message.includes("TELEGRAM_USER_HAS_NO_CLAIM")) {
-      throw new TelegramUserHasNoClaimError();
+      throw new TelegramUserHasNoTrackError();
     }
     throw err;
   };
