@@ -2,6 +2,7 @@ import {
   BackendUserNotFoundError,
   TelegramUserHasNoTrackError,
   LeetCodeUserNotFoundError,
+  UserAlreadyInChannelError,
 } from ".";
 
 export function userNotFound(username: string) {
@@ -26,6 +27,15 @@ export function leetcodeUserNotFound(username: string) {
   return (err: Error) => {
     if (err.message.includes("USER_NOT_FOUND_IN_LEETCODE")) {
       throw new LeetCodeUserNotFoundError(username);
+    }
+    throw err;
+  };
+}
+
+export function userAlreadyInChannel(username: string) {
+  return (err: Error) => {
+    if (err.message.includes("USER_ALREADY_IN_CHANNEL")) {
+      throw new UserAlreadyInChannelError(username);
     }
     throw err;
   };

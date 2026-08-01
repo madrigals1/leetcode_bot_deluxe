@@ -87,3 +87,10 @@ export class LeetCodeUserNotFoundError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.LeetCodeUserNotFoundError`;
   }
 }
+
+export class UserAlreadyInChannelError extends LeetCodeBotError {
+  constructor(username: string) {
+    super(`⚠️ User "<b>${username}</b>" is already in this channel.`);
+    this.name = `${LeetCodeBotError.name}.UserAlreadyInChannelError`;
+  }
+}
