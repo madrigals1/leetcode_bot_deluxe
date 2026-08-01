@@ -170,7 +170,8 @@ export default class Commands {
 
     if (!placement) {
       return errorText(
-        "You are not in the ranking. Use /track leetcode_username to track a LeetCode account."
+        "You are not tracking anyone in this channel. Use /track leetcode_username to track a "
+        + "LeetCode account."
       );
     }
 
