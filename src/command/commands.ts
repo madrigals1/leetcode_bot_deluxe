@@ -25,6 +25,7 @@ import {
   paginatedButtons,
 } from "@/command/response/shortcuts";
 import { getDifficultyCount } from "@/utils/leetcode";
+import { boldUsername } from "@/utils/format";
 import { DataNotFoundError } from "@/errors";
 import { buildCompareData } from "./utils";
 import { timeAgo } from "short-time-ago";
@@ -94,7 +95,7 @@ export default class Commands {
   })
   static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
     await UsersService.addToChannel(parsedArgs.username, ctx.chatId);
-    return successText(`User <b>"${parsedArgs.username}"</b> was successfully added.`);
+    return successText(`User ${boldUsername(parsedArgs.username)} was successfully added.`);
   }
 
   @command({
@@ -107,7 +108,7 @@ export default class Commands {
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
       await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
-      return successText(`User <b>"${parsedArgs.username}"</b> was successfully removed.`);
+      return successText(`User ${boldUsername(parsedArgs.username)} was successfully removed.`);
     }
 
     return paginatedButtons({
@@ -134,11 +135,11 @@ export default class Commands {
       ctx.telegramUsername,
       parsedArgs.leetcode_username,
     );
-    const boldUsername = `<b>"${parsedArgs.leetcode_username}"</b>`;
+    const username = boldUsername(parsedArgs.leetcode_username);
 
     return successText(
-      `Now tracking ${boldUsername} on LeetCode. `
-      + `Use /myrank to see ranking for ${boldUsername}.`,
+      `Now tracking ${username} on LeetCode. `
+      + `Use /myrank to see ranking for ${username}.`,
     );
   }
 
@@ -310,7 +311,7 @@ export default class Commands {
       const stats = user.data?.languageStats ?? [];
 
       const langText =
-        `👨‍💻 Problems solved by <b>${user.username}</b> in:\n\n` +
+        `👨‍💻 Problems solved by ${boldUsername(user.username)} in:\n\n` +
         stats
           .sort((a, b) => b.problemsSolved - a.problemsSolved)
           .map((s) => `- <b>${s.languageName}</b> ${s.problemsSolved}`)

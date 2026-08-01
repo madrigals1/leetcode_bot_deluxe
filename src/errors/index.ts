@@ -1,3 +1,5 @@
+import { boldUsername } from "@/utils/format";
+
 export class LeetCodeBotError extends Error {
   constructor(message: string) {
     super(message);
@@ -73,7 +75,7 @@ export class VizApiNotAvailableError extends LeetCodeBotError {
 
 export class BackendUserNotFoundError extends LeetCodeBotError {
   constructor(username: string) {
-    super( `❗ User "${username}" not found in this channel.`);
+    super(`❗ User ${boldUsername(username)} not found in this channel.`);
     this.name = `${LeetCodeBotError.name}.BackendUserNotFoundError`;
   }
 }
@@ -90,14 +92,14 @@ export class TelegramUserHasNoTrackError extends LeetCodeBotError {
 
 export class LeetCodeUserNotFoundError extends LeetCodeBotError {
   constructor(username: string) {
-    super(`❗ User "<b>${username}</b>" does not exist in LeetCode.`);
+    super(`❗ User ${boldUsername(username)} does not exist in LeetCode.`);
     this.name = `${LeetCodeBotError.name}.LeetCodeUserNotFoundError`;
   }
 }
 
 export class UserAlreadyInChannelError extends LeetCodeBotError {
   constructor(username: string) {
-    super(`⚠️ User "<b>${username}</b>" is already in this channel.`);
+    super(`⚠️ User ${boldUsername(username)} is already in this channel.`);
     this.name = `${LeetCodeBotError.name}.UserAlreadyInChannelError`;
   }
 }
