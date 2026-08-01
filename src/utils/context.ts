@@ -1,5 +1,9 @@
 import { Context, InlineKeyboard } from "grammy";
-import { ChatIdNotFoundError, MatchNotFoundError } from "@/errors";
+import {
+  ChatIdNotFoundError,
+  MatchNotFoundError,
+  TelegramUsernameNotFoundError,
+} from "@/errors";
 
 export class LbContext {
   public readonly chatId: number;
@@ -10,6 +14,16 @@ export class LbContext {
     }
 
     this.chatId = ctx.chat.id;
+  }
+
+  get telegramUsername(): string {
+    const username = this.ctx.from?.username;
+
+    if (!username) {
+      throw new TelegramUsernameNotFoundError();
+    }
+
+    return username;
   }
 
   get match(): RegExpMatchArray {

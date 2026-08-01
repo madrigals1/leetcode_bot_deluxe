@@ -129,15 +129,9 @@ export default class Commands {
     example: "/track leetcode_username",
   })
   static async track(ctx: LbContext, parsedArgs: ParsedArgs) {
-    const telegramUsername = ctx.ctx.from?.username;
-
-    if (!telegramUsername) {
-      return errorText("Could not determine your Telegram username.");
-    }
-
     await ChannelUsersService.track(
       ctx.chatId,
-      telegramUsername,
+      ctx.telegramUsername,
       parsedArgs.leetcode_username,
     );
     const boldUsername = `<b>"${parsedArgs.leetcode_username}"</b>`;
@@ -164,12 +158,6 @@ export default class Commands {
 
   @command({ name: "myrank", description: "🏆 Show your channel ranking", example: "/myrank" })
   static async myrank(ctx: LbContext) {
-    const telegramUsername = ctx.ctx.from?.username;
-
-    if (!telegramUsername) {
-      return errorText("Could not determine your Telegram username.");
-    }
-
     const {
       leetcode_username,
       solved,
@@ -177,7 +165,7 @@ export default class Commands {
       placement,
       nearest_above,
       solved_to_next,
-    } = await ChannelUsersService.rank(ctx.chatId, telegramUsername);
+    } = await ChannelUsersService.rank(ctx.chatId, ctx.telegramUsername);
 
     if (!placement) {
       return errorText(

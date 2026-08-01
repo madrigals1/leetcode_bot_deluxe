@@ -29,6 +29,13 @@ export class ChatIdNotFoundError extends LeetCodeBotError {
   }
 }
 
+export class TelegramUsernameNotFoundError extends LeetCodeBotError {
+  constructor() {
+    super("❗ Could not determine your Telegram username.");
+    this.name = `${LeetCodeBotError.name}.TelegramUsernameNotFoundError`;
+  }
+}
+
 export class MatchNotFoundError extends LeetCodeBotError {
   constructor() {
     super("❗ Internal error: match result not found.");
