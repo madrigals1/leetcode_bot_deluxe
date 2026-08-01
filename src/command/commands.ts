@@ -16,6 +16,7 @@ import {
 } from "@/constants";
 import {
   text,
+  errorText,
   photo,
   buttons,
   editText,
@@ -130,7 +131,7 @@ export default class Commands {
     const telegramUsername = ctx.ctx.from?.username;
 
     if (!telegramUsername) {
-      return text("Could not determine your Telegram username.");
+      return errorText("Could not determine your Telegram username.");
     }
 
     await ChannelUsersService.track(
@@ -165,7 +166,7 @@ export default class Commands {
     const telegramUsername = ctx.ctx.from?.username;
 
     if (!telegramUsername) {
-      return text("Could not determine your Telegram username.");
+      return errorText("Could not determine your Telegram username.");
     }
 
     const {
@@ -178,7 +179,7 @@ export default class Commands {
     } = await ChannelUsersService.rank(ctx.chatId, telegramUsername);
 
     if (!placement) {
-      return text(
+      return errorText(
         "You are not in the ranking. Use /track leetcode_username to track a LeetCode account."
       );
     }
@@ -294,7 +295,7 @@ export default class Commands {
         return photo({ photo: avatarUrl });
       }
 
-      return text("No avatar found.");
+      return errorText("No avatar found.");
     }
 
     return paginatedButtons({
