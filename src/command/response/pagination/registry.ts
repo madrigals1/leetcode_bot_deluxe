@@ -52,7 +52,7 @@ export class PaginationRegistry {
             await ctx.answerCallbackQuery(error.message);
             return;
           }
-          await ctx.editMessageText("Failed to fetch data.");
+          await ctx.editMessageText("❗ Failed to fetch data.");
         }
       },
     );

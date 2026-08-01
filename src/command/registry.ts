@@ -46,7 +46,7 @@ export class CommandRegistry {
           return;
         }
 
-        await ctx.reply("An error occurred.");
+        await ctx.reply("❗ An error occurred.");
       }
     });
   }
