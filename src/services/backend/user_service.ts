@@ -1,6 +1,6 @@
 import { ApiService } from "./api_service";
 import type { PaginatedResponse, User } from "./types";
-import { userNotFound } from "@/errors/catchers";
+import { leetcodeUserNotFound, userNotFound } from "@/errors/catchers";
 
 export class UsersService {
   static list(params?: { channel_chat_id?: number; page?: number }) {
@@ -50,7 +50,7 @@ export class UsersService {
         method: "POST",
         body: JSON.stringify({ username, chat_id: chatId }),
       },
-    );
+    ).catch(leetcodeUserNotFound(username));
   }
 
   static removeFromChannel(username: string, chatId: number) {

@@ -84,3 +84,10 @@ export class TelegramUserHasNoClaimError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.TelegramUserHasNoClaimError`;
   }
 }
+
+export class LeetCodeUserNotFoundError extends LeetCodeBotError {
+  constructor(username: string) {
+    super(`❗ User "<b>${username}</b>" does not exist in LeetCode.`);
+    this.name = `${LeetCodeBotError.name}.LeetCodeUserNotFoundError`;
+  }
+}

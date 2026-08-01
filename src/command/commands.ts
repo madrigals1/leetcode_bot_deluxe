@@ -91,12 +91,8 @@ export default class Commands {
     example: "/add leetcode_username",
   })
   static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
-    try {
-      await UsersService.addToChannel(parsedArgs.username, ctx.chatId);
-      return text(`User "${parsedArgs.username}" was successfully added.`);
-    } catch {
-      return text(`Failed to add user ${parsedArgs.username}.`);
-    }
+    await UsersService.addToChannel(parsedArgs.username, ctx.chatId);
+    return text(`User "${parsedArgs.username}" was successfully added.`);
   }
 
   @command({
