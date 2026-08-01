@@ -170,8 +170,8 @@ export default class Commands {
 
     if (!placement) {
       return errorText(
-        "You are not tracking anyone in this channel. Use /track leetcode_username to track a "
-        + "LeetCode account."
+        'You are not tracking anyone in this channel.\n\n' +
+        `Use <b>/track leetcode_username</b> to track a LeetCode account.`
       );
     }
 
