@@ -17,6 +17,7 @@ import {
 import {
   text,
   errorText,
+  successText,
   photo,
   buttons,
   editText,
@@ -93,7 +94,7 @@ export default class Commands {
   })
   static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
     await UsersService.addToChannel(parsedArgs.username, ctx.chatId);
-    return text(`User "${parsedArgs.username}" was successfully added.`);
+    return successText(`User <b>"${parsedArgs.username}"</b> was successfully added.`);
   }
 
   @command({
@@ -106,7 +107,7 @@ export default class Commands {
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
       await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
-      return text(`User "${parsedArgs.username}" was successfully removed.`);
+      return successText(`User <b>"${parsedArgs.username}"</b> was successfully removed.`);
     }
 
     return paginatedButtons({
@@ -141,7 +142,7 @@ export default class Commands {
     );
     const boldUsername = `<b>"${parsedArgs.leetcode_username}"</b>`;
 
-    return text(
+    return successText(
       `Now tracking ${boldUsername} on LeetCode. `
       + `Use /myrank to see ranking for ${boldUsername}.`,
     );

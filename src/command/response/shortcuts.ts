@@ -14,6 +14,10 @@ export function errorText(message: string): TextResponse {
   return text(`❗ ${message}`);
 }
 
+export function successText(message: string): TextResponse {
+  return text(`✅ ${message}`);
+}
+
 export function buttons(options: Omit<TextResponse, "type">): TextResponse {
   return { ...options, type: "text" };
 }
