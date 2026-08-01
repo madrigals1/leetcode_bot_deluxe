@@ -4,10 +4,10 @@ import {
   LeetCodeUserNotFoundError,
 } from ".";
 
-export function userNotFound(username: string, chatId?: number) {
+export function userNotFound(username: string) {
   return (err: Error) => {
-    if (err.message.includes("404")) {
-      throw new BackendUserNotFoundError(username, chatId);
+    if (err.message.includes("USER_NOT_FOUND_IN_DATABASE")) {
+      throw new BackendUserNotFoundError(username);
     }
     throw err;
   };

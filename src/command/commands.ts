@@ -133,21 +133,17 @@ export default class Commands {
       return text("Could not determine your Telegram username.");
     }
 
-    try {
-      await ChannelUsersService.track(
-        ctx.chatId,
-        telegramUsername,
-        parsedArgs.leetcode_username,
-      );
-      const boldUsername = `<b>"${parsedArgs.leetcode_username}"</b>`;
+    await ChannelUsersService.track(
+      ctx.chatId,
+      telegramUsername,
+      parsedArgs.leetcode_username,
+    );
+    const boldUsername = `<b>"${parsedArgs.leetcode_username}"</b>`;
 
-      return text(
-        `Now tracking ${boldUsername} on LeetCode. `
-        + `Use /myrank to see ranking for ${boldUsername}.`,
-      );
-    } catch {
-      return text("Failed to track. Please try again.");
-    }
+    return text(
+      `Now tracking ${boldUsername} on LeetCode. `
+      + `Use /myrank to see ranking for ${boldUsername}.`,
+    );
   }
 
   @command({
