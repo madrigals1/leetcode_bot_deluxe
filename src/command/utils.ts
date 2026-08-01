@@ -2,8 +2,23 @@ import { InvalidArgumentAmountError } from "@/errors";
 import type { User } from "@/services/backend";
 import type { CompareData } from "@/services/vizapi";
 import { getDifficultyCount } from "@/utils/leetcode";
+import { stripEmojis } from "@/utils/format";
 import type { CommandArg } from "./types";
+import type { CommandOptions } from "./types";
 import type { ParsedArgs } from "./types";
+
+export function buildExample(options: CommandOptions): string {
+  const args = options.args ?? [];
+  const placeholders = args.map((arg) => arg.name).join(" ");
+
+  let command = `/${options.name}`;
+
+  if (placeholders) {
+    command += ` ${placeholders}`;
+  }
+
+  return `\n\nExample:\n<b>${command}</b> - ${stripEmojis(options.description)}`;
+}
 
 export function parseArgs(
   text: string,

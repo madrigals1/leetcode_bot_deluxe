@@ -4,7 +4,7 @@ import { LbContext } from "@/utils/context";
 import { isOwnerOrPrivate, isSuperAdmin } from "@/utils/chat";
 import { dispatchResponse } from "@/command/response/dispatch";
 import type { CommandOptions } from "./types";
-import { parseArgs } from "./utils";
+import { parseArgs, buildExample } from "./utils";
 import { CommandRegistry } from "./registry";
 
 export function command(options: CommandOptions) {
@@ -35,13 +35,13 @@ export function command(options: CommandOptions) {
           throw new UnauthorizedError();
         }
 
-        const args = parseArgs(
+        const parsedArgs = parseArgs(
           ctx.message?.text ?? "",
           options.args ?? [],
-          options.example,
+          buildExample(options),
         );
 
-        const response = await originalHandler(lbCtx, args);
+        const response = await originalHandler(lbCtx, parsedArgs);
         const reply = (text: string, options?: object) => lbCtx.reply(text, options);
         const replyPhoto = (photo: string, options?: object) =>
           lbCtx.replyWithPhoto(photo, options);

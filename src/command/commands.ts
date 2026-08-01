@@ -31,12 +31,12 @@ import { buildCompareData } from "./utils";
 import { timeAgo } from "short-time-ago";
 
 export default class Commands {
-  @command({ name: "start", description: "🚀 Start the bot", example: "/start" })
+  @command({ name: "start", description: "🚀 Start the bot" })
   static start() {
     return text("Welcome to the LeetCode BOT.\n\nUse /commands to see available commands.");
   }
 
-  @command({ name: "commands", description: "❓ Show this help message", example: "/commands" })
+  @command({ name: "commands", description: "❓ Show this help message" })
   static commands() {
     const commands = CommandRegistry.getAll()
       .filter((cmd) => !cmd.requiresSuperAdmin)
@@ -48,7 +48,6 @@ export default class Commands {
   @command({
     name: "botfather",
     description: "🤖 Show commands in BotFather format",
-    example: "/botfather",
     requiresSuperAdmin: true,
   })
   static botfather() {
@@ -66,7 +65,6 @@ export default class Commands {
   @command({
     name: "superadmin",
     description: "🛡️ Show superadmin info",
-    example: "/superadmin",
     requiresSuperAdmin: true,
   })
   static async superadmin(ctx: LbContext) {
@@ -91,7 +89,6 @@ export default class Commands {
     name: "add",
     description: "➕ Add a user to the channel",
     args: [{ name: "username" }],
-    example: "/add leetcode_username",
   })
   static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
     await UsersService.addToChannel(parsedArgs.username, ctx.chatId);
@@ -102,7 +99,6 @@ export default class Commands {
     name: "remove",
     description: "➖ Remove a user from the channel",
     args: [{ name: "username", optional: true }],
-    example: "/remove leetcode_username",
     requiresAdmin: true,
   })
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
@@ -127,7 +123,6 @@ export default class Commands {
     name: "track",
     description: "🆔 Track a LeetCode username",
     args: [{ name: "leetcode_username" }],
-    example: "/track leetcode_username",
   })
   static async track(ctx: LbContext, parsedArgs: ParsedArgs) {
     await ChannelUsersService.track(
@@ -146,7 +141,6 @@ export default class Commands {
   @command({
     name: "refresh",
     description: "🔄 Refresh all users' LeetCode data",
-    example: "/refresh",
   })
   static async refresh(lbctx: LbContext) {
     const msg = await lbctx.ctx.reply("🔄 Refreshing LeetCode data for all users in this channel...");
@@ -157,7 +151,7 @@ export default class Commands {
     });
   }
 
-  @command({ name: "myrank", description: "🏆 Show your channel ranking", example: "/myrank" })
+  @command({ name: "myrank", description: "🏆 Show your channel ranking" })
   static async myrank(ctx: LbContext) {
     const {
       leetcode_username,
@@ -199,7 +193,7 @@ export default class Commands {
     return text(parts.join("\n"));
   }
 
-  @command({ name: "rating", description: "🏆 Show rating leaderboard", example: "/rating" })
+  @command({ name: "rating", description: "🏆 Show rating leaderboard" })
   static rating() {
     return paginatedText({
       name: "rating",
@@ -213,7 +207,6 @@ export default class Commands {
   @command({
     name: "rating_cml",
     description: "🔥 Show cumulative rating",
-    example: "/rating_cml",
   })
   static ratingCml() {
     return paginatedText({
@@ -233,7 +226,6 @@ export default class Commands {
     name: "profile",
     description: "👤 View user profiles",
     args: [{ name: "username", optional: true }],
-    example: "/profile leetcode_username",
   })
   static async profile(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -276,7 +268,6 @@ export default class Commands {
     name: "avatar",
     description: "🖼️ View user avatars",
     args: [{ name: "username", optional: true }],
-    example: "/avatar leetcode_username",
   })
   static async avatar(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -305,7 +296,6 @@ export default class Commands {
     name: "langstats",
     description: "📊 View language statistics",
     args: [{ name: "username", optional: true }],
-    example: "/langstats leetcode_username",
   })
   static async langstats(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -337,7 +327,6 @@ export default class Commands {
     name: "submissions",
     description: "📝 View recent submissions",
     args: [{ name: "username", optional: true }],
-    example: "/submissions leetcode_username",
   })
   static async submissions(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -375,7 +364,6 @@ export default class Commands {
     name: "problems",
     description: "🥧 Show problems solved pie chart",
     args: [{ name: "username", optional: true }],
-    example: "/problems leetcode_username",
   })
   static async problems(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
@@ -421,7 +409,6 @@ export default class Commands {
       { name: "username1", optional: true },
       { name: "username2", optional: true },
     ],
-    example: "/compare leetcode_username1 leetcode_username2",
   })
   static async compare(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username1 && parsedArgs.username2) {
