@@ -64,11 +64,13 @@ export class ApiService {
 
     if (!response.ok) {
       let body = { error: undefined };
+
       try {
         body = await response.json();
       } catch {
         // response body is not valid JSON
       }
+
       throw new Error(body.error ?? `API error: ${response.status}`);
     }
 
