@@ -320,6 +320,7 @@ export default class Commands {
 
     return paginatedButtons({
       name: "langstats",
+      text: "Select a user to view their language statistics:",
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
