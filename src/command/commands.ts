@@ -191,8 +191,8 @@ export default class Commands {
     }
 
     parts.push(
-      `\n<blockquote>💡 You can change your tracked username anytime with:\n `
-      + '<b>/track leetcode_username</b>.</blockquote>',
+      `\n<blockquote>💡 You can change your tracked username with: `
+      + '<b>/track username</b>.</blockquote>',
     );
 
     return text(parts.join("\n"));
