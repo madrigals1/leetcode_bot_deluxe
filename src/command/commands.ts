@@ -433,7 +433,7 @@ export default class Commands {
     if (parsedArgs.username1) {
       return paginatedButtons({
         name: "compare",
-        text: `Select second user to compare with ${parsedArgs.username1}:`,
+        text: `Select second user to compare with ${boldUsername(parsedArgs.username1)}:`,
         fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
         itemToButton: (item) => ({
           text: item.user.username,
