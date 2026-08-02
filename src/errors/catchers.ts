@@ -7,7 +7,10 @@ import {
 
 export function userNotFound(username: string) {
   return (err: Error) => {
-    if (err.message.includes("USER_NOT_FOUND_IN_DATABASE")) {
+    if (
+      err.message.includes("USER_NOT_FOUND_IN_DATABASE")
+      || err.message.includes("USER_NOT_FOUND_IN_CHANNEL")
+    ) {
       throw new BackendUserNotFoundError(username);
     }
     throw err;
