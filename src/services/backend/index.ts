@@ -1,4 +1,5 @@
 export * from "./auth_service";
+export * from "./admin_service";
 export * from "./channel_service";
 export * from "./contest_notification_service";
 export * from "./contest_service";

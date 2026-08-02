@@ -4,7 +4,7 @@ import {
 } from "@/command/decorator";
 import type { ParsedArgs } from "@/command/types";
 import { CommandRegistry } from "@/command/registry";
-import { UsersService, ChannelsService, ChannelUsersService } from "@/services/backend";
+import { UsersService, ChannelsService, ChannelUsersService, AdminService } from "@/services/backend";
 import { VizApiService } from "@/services/vizapi";
 import type { PieData } from "@/services/vizapi";
 import { LbContext } from "@/utils/context";
@@ -25,10 +25,9 @@ import {
   paginatedButtons,
 } from "@/command/response/shortcuts";
 import { getDifficultyCount } from "@/utils/leetcode";
-import { boldUsername } from "@/utils/format";
+import { boldUsername, humanizeTimestamp } from "@/utils/format";
 import { DataNotFoundError } from "@/errors";
 import { buildCompareData } from "./utils";
-import { timeAgo } from "short-time-ago";
 
 export default class Commands {
   @command({ name: "start", description: "🚀 Start the bot" })
@@ -68,10 +67,30 @@ export default class Commands {
     requiresSuperAdmin: true,
   })
   static async superadmin(ctx: LbContext) {
-    const { count } = await ChannelsService.getUsersSimplified(ctx.chatId);
+    const [{ count }, adminData] = await Promise.all([
+      ChannelsService.getUsersSimplified(ctx.chatId),
+      AdminService.getData(),
+    ]);
     const superAdmins = SUPER_ADMIN_TELEGRAM_USERNAMES.map(
       (username) => `- <b>${username}</b>`,
     ).join("\n");
+
+    const stats = [
+      ["Total users", adminData.total_users],
+      ["Total channels", adminData.total_channels],
+      ["Total channel users", adminData.total_channel_users],
+      ["Total tracks", adminData.total_tracks],
+      ["Total subscriptions", adminData.total_subscriptions],
+      ["Total contests", adminData.total_contests],
+      ["Total contest notifications", adminData.total_contest_notifications],
+    ].map(([label, value]) => `- ${label}: <b>${value}</b>`).join("\n");
+
+    const jobs = adminData.scheduled_jobs
+      .map(
+        (job) =>
+          `- <b>${job.id}</b> — next run: <code>${humanizeTimestamp(job.next_run_at)}</code>`,
+      )
+      .join("\n");
 
     const keyboard = new InlineKeyboard()
       .text("🤖 BotFather", "command:botfather");
@@ -80,7 +99,11 @@ export default class Commands {
       text:
         `🛡️ <b>Superadmins:</b>\n${superAdmins}\n\n` +
         `💬 Channel ID: <code>${ctx.chatId}</code>\n` +
-        `👥 Users in channel: <b>${count}</b>`,
+        `👥 Users in channel: <b>${count}</b>\n\n` +
+        `📊 <b>Statistics:</b>\n${stats}\n\n` +
+        `👤 Oldest updated: <b>${adminData.oldest_updated_user ?? "-"}</b>\n` +
+        `🕐 At: <code>${humanizeTimestamp(adminData.oldest_updated_at)}</code>\n\n` +
+        `⏰ <b>Scheduled jobs:</b>\n${jobs}`,
       buttons: keyboard,
     });
   }
@@ -247,7 +270,7 @@ export default class Commands {
         `🔴 Hard - <b>${getDifficultyCount(solved, "Hard")}</b>\n` +
         `🔵 All - <b>${getDifficultyCount(solved, "All")} / ${getDifficultyCount(total, "All")}</b>\n` +
         `🔷 Cumulative - <b>${user.solved_cml}</b>\n\n` +
-        `🕐 Last refreshed: <b>${timeAgo(new Date(user.updated_at))}</b>`;
+        `🕐 Last refreshed: <b>${humanizeTimestamp(user.updated_at)}</b>`;
 
       const keyboard = new InlineKeyboard()
         .text("📝 Submissions", `command:submissions ${user.username}`)

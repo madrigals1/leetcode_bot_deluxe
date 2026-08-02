@@ -111,3 +111,26 @@ export interface ContestNotification {
   contest: { id: number; title: string; start_time: string };
   subscription: { id: number; type: string };
 }
+
+// ── Admin types ──
+
+export interface ScheduledJob {
+  id: string;
+  last_run_at: string | null;
+  last_duration: string | null;
+  last_status: string | null;
+  next_run_at: string | null;
+}
+
+export interface AdminData {
+  total_users: number;
+  total_channels: number;
+  total_channel_users: number;
+  total_tracks: number;
+  total_subscriptions: number;
+  total_contests: number;
+  total_contest_notifications: number;
+  oldest_updated_user: string | null;
+  oldest_updated_at: string | null;
+  scheduled_jobs: ScheduledJob[];
+}
