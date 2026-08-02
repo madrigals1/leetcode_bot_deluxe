@@ -358,6 +358,7 @@ export default class Commands {
 
     return paginatedButtons({
       name: "submissions",
+      text: "Select a user to view their submissions:",
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
@@ -400,6 +401,7 @@ export default class Commands {
 
     return paginatedButtons({
       name: "problems",
+      text: "Select a user to view their problems:",
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
