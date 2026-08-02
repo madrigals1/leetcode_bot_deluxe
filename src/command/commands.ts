@@ -288,6 +288,7 @@ export default class Commands {
 
     return paginatedButtons({
       name: "avatar",
+      text: "Select a user to view their avatar:",
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
