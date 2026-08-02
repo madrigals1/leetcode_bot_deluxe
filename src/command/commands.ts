@@ -33,7 +33,7 @@ import { timeAgo } from "short-time-ago";
 export default class Commands {
   @command({ name: "start", description: "🚀 Start the bot" })
   static start() {
-    return text("Welcome to the LeetCode BOT.\n\nUse /commands to see available commands.");
+    return text("Welcome to the LeetCode BOT.\n\nUse <b>/commands</b> to see available commands.");
   }
 
   @command({ name: "commands", description: "❓ Show this help message" })

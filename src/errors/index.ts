@@ -78,7 +78,7 @@ export class VizApiNotAvailableError extends LeetCodeBotError {
 
 export class BackendUserNotFoundError extends LeetCodeBotError {
   constructor(username: string) {
-    super(`❗ User ${boldUsername(username)} not found in this channel.`);
+    super(`❗ User ${boldUsername(username)} was not found in this channel.`);
     this.name = `${LeetCodeBotError.name}.BackendUserNotFoundError`;
   }
 }
@@ -102,7 +102,7 @@ export class LeetCodeUserNotFoundError extends LeetCodeBotError {
 
 export class UserAlreadyInChannelError extends LeetCodeBotError {
   constructor(username: string) {
-    super(`⚠️ User ${boldUsername(username)} is already in this channel.`);
+    super(`⚠️ User ${boldUsername(username)} is already added to this channel.`);
     this.name = `${LeetCodeBotError.name}.UserAlreadyInChannelError`;
   }
 }
