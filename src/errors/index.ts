@@ -106,3 +106,10 @@ export class UserAlreadyInChannelError extends LeetCodeBotError {
     this.name = `${LeetCodeBotError.name}.UserAlreadyInChannelError`;
   }
 }
+
+export class UserAlreadyTrackedError extends LeetCodeBotError {
+  constructor(username: string) {
+    super(`⚠️ You are already tracking ${boldUsername(username)}.`);
+    this.name = `${LeetCodeBotError.name}.UserAlreadyTrackedError`;
+  }
+}

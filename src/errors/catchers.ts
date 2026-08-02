@@ -3,6 +3,7 @@ import {
   TelegramUserHasNoTrackError,
   LeetCodeUserNotFoundError,
   UserAlreadyInChannelError,
+  UserAlreadyTrackedError,
 } from ".";
 
 export function userNotFound(username: string) {
@@ -39,6 +40,15 @@ export function userAlreadyInChannel(username: string) {
   return (err: Error) => {
     if (err.message.includes("USER_ALREADY_IN_CHANNEL")) {
       throw new UserAlreadyInChannelError(username);
+    }
+    throw err;
+  };
+}
+
+export function userAlreadyTracked(username: string) {
+  return (err: Error) => {
+    if (err.message.includes("USER_ALREADY_TRACKED")) {
+      throw new UserAlreadyTrackedError(username);
     }
     throw err;
   };

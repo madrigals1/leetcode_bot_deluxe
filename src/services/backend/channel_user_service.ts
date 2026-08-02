@@ -1,6 +1,6 @@
 import { ApiService } from "./api_service";
 import type { ChannelUser, RankResponse } from "./types";
-import { telegramUserHasNoTrack, userNotFound, leetcodeUserNotFound } from "@/errors/catchers";
+import { telegramUserHasNoTrack, userNotFound, leetcodeUserNotFound, userAlreadyTracked } from "@/errors/catchers";
 
 export class ChannelUsersService {
   static getUserInChannel(username: string, chatId: number) {
@@ -22,7 +22,8 @@ export class ChannelUsersService {
           }),
         },
       )
-      .catch(leetcodeUserNotFound(leetcodeUsername));
+      .catch(leetcodeUserNotFound(leetcodeUsername))
+      .catch(userAlreadyTracked(leetcodeUsername));
   }
 
   static rank(chatId: number, telegramUsername: string) {
