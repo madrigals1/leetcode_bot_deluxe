@@ -190,6 +190,11 @@ export default class Commands {
       parts.push(`\n🎯 Problems needed to advance: <b>${solved_to_next}</b>`);
     }
 
+    parts.push(
+      `\n<blockquote>💡 You can change your tracked username anytime with:\n `
+      + '<b>/track leetcode_username</b>.</blockquote>',
+    );
+
     return text(parts.join("\n"));
   }
 
