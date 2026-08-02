@@ -134,7 +134,7 @@ export default class Commands {
 
     return successText(
       `Now tracking ${username} on LeetCode. `
-      + `Use /myrank to see ranking for ${username}.`,
+      + `Use <b>/myrank</b> to see ranking for ${username}.`,
     );
   }
 
