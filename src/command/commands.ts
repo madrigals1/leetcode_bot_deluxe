@@ -93,7 +93,8 @@ export default class Commands {
       .join("\n");
 
     const keyboard = new InlineKeyboard()
-      .text("🤖 BotFather", "command:botfather");
+      .text("🤖 BotFather", "command:botfather")
+      .text("💬 Chat ID", "command:chatid");
 
     return buttons({
       text:
@@ -106,6 +107,15 @@ export default class Commands {
         `⏰ <b>Scheduled jobs:</b>\n${jobs}`,
       buttons: keyboard,
     });
+  }
+
+  @command({
+    name: "chatid",
+    description: "💬 Show the current chat ID",
+    requiresAdmin: true,
+  })
+  static chatid(ctx: LbContext) {
+    return text(`💬 Chat ID: <code>${ctx.chatId}</code>`);
   }
 
   @command({
