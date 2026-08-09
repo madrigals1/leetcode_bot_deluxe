@@ -25,7 +25,10 @@ export function parseArgs(
   defs: CommandArg[],
   example?: string,
 ): ParsedArgs {
-  const parts = text.split(/\s+/).slice(1);
+  const parts = text
+    .split(/\s+/)
+    .slice(1)
+    .map((part) => part.toLowerCase());
 
   const requiredCount = defs.filter((a) => !a.optional).length;
 
