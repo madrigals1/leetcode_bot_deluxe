@@ -20,7 +20,7 @@ export function userNotFound(username: string) {
 
 export function telegramUserHasNoTrack() {
   return (err: Error) => {
-    if (err.message.includes("TELEGRAM_USER_HAS_NO_CLAIM")) {
+    if (err.message.includes("TELEGRAM_USER_HAS_NO_TRACK")) {
       throw new TelegramUserHasNoTrackError();
     }
     throw err;
