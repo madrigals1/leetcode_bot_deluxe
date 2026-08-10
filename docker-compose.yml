@@ -8,6 +8,8 @@ services:
     image: leetcode_bot_deluxe
     env_file:
       - .env
+    ports:
+      - "${METRICS_PORT}:9091"
     networks:
       - leetcode_bot_network
 

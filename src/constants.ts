@@ -23,6 +23,8 @@ export const TOKEN_MAX_AGE_MS =
 
 export const VIZAPI_URL = getRequiredEnv("VIZAPI_URL");
 
+export const METRICS_PORT = Number(getEnv("METRICS_PORT", "9091"));
+
 export const SUPER_ADMIN_TELEGRAM_USERNAMES = getEnv(
   "SUPER_ADMIN_TELEGRAM_USERNAMES",
   "",

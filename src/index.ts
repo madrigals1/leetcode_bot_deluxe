@@ -4,6 +4,7 @@ import { CommandRegistry } from "./command";
 import { CallbackRegistry } from "./callback";
 import { PaginationRegistry } from "@/command/response/pagination/registry";
 import { VizApiService } from "@/services/vizapi";
+import { startMetricsServer } from "@/metrics";
 
 // Side-effect: ensures @callback decorators execute and register handlers
 import "./callback/callbacks";
@@ -11,6 +12,8 @@ import "./callback/callbacks";
 (async () => {
   const health = await VizApiService.health();
   console.log(`VizAPI health: ${health.status} (uptime ${health.uptime}s)`);
+
+  startMetricsServer();
 
   const bot = new Bot(TELEGRAM_BOT_TOKEN!);
 

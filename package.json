@@ -38,6 +38,7 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "grammy": "^1.45.1",
+    "prom-client": "^15.1.3",
     "short-time-ago": "^3.1.0"
   }
 }
