@@ -41,8 +41,6 @@ export class CommandRegistry {
       try {
         await metadata.handler(ctx);
       } catch (error) {
-        console.log(error);
-
         if (error instanceof LeetCodeBotError) {
           await ctx.reply(error.message);
           return;
