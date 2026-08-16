@@ -1,7 +1,7 @@
 services:
   leetcode_bot_deluxe:
     container_name: leetcode_bot_deluxe
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./deployment/Dockerfile
