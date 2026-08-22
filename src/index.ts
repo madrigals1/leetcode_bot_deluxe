@@ -4,14 +4,23 @@ import { CommandRegistry } from "./command";
 import { CallbackRegistry } from "./callback";
 import { PaginationRegistry } from "@/command/response/pagination/registry";
 import { VizApiService } from "@/services/vizapi";
+import { HealthCheckService } from "@/services/backend/health_check_service";
 import { startMetricsServer } from "@/metrics";
+import { formatUptime } from "@/utils/format";
 
 // Side-effect: ensures @callback decorators execute and register handlers
 import "./callback/callbacks";
 
 (async () => {
-  const health = await VizApiService.health();
-  console.log(`VizAPI health: ${health.status} (uptime ${health.uptime}s)`);
+  const [vizHealth, backendHealth] = await Promise.all([
+    VizApiService.health(),
+    HealthCheckService.health(),
+  ]);
+  console.log(`VizAPI health: ${vizHealth.status} (uptime ${formatUptime(vizHealth.uptime)})`);
+  console.log(
+    `Backend health: ${backendHealth.status} (db ${backendHealth.database}, ` +
+      `${backendHealth.service} v${backendHealth.version}, uptime ${formatUptime(backendHealth.uptime)})`,
+  );
 
   startMetricsServer();
 

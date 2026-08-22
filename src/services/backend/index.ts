@@ -1,3 +1,4 @@
+export * from "./health_check_service";
 export * from "./auth_service";
 export * from "./admin_service";
 export * from "./channel_service";
