@@ -15,7 +15,7 @@ import "./callback/callbacks";
 
   startMetricsServer();
 
-  const bot = new Bot(TELEGRAM_BOT_TOKEN!);
+  const bot = new Bot(TELEGRAM_BOT_TOKEN);
 
   // Make the bot respond in HTML only
   bot.api.config.use((prev, method, payload) => {
