@@ -85,6 +85,7 @@ export interface RankResponse {
   placement?: number;
   nearest_above?: NearestAbove;
   solved_to_next?: number;
+  last_refreshed?: string;
 }
 
 // ── Contest types ──

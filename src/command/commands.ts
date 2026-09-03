@@ -193,6 +193,7 @@ export default class Commands {
       placement,
       nearest_above,
       solved_to_next,
+      last_refreshed,
     } = await ChannelUsersService.rank(ctx.chatId, ctx.telegramUsername);
 
     if (!placement) {
@@ -210,6 +211,10 @@ export default class Commands {
 
     if (solved !== undefined && solved_cml !== undefined) {
       parts.push(`Solved: <b>${solved}</b> (${solved_cml} cumulative)`);
+    }
+
+    if (last_refreshed) {
+      parts.push(`🕐 Last refreshed: <b>${humanizeTimestamp(last_refreshed)}</b>`);
     }
 
     if (nearest_above) {
