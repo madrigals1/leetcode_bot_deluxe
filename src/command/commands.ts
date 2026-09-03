@@ -176,7 +176,7 @@ export default class Commands {
     description: "🔄 Refresh all users' LeetCode data",
   })
   static async refresh(lbctx: LbContext) {
-    const msg = await lbctx.ctx.reply("🔄 Refreshing LeetCode data for all users in this channel...");
+    const msg = await lbctx.ctx.reply("🔄 Fetching data from LeetCode to the database...");
     await ChannelsService.refresh(lbctx.chatId);
     return editText({
       text: "✅ LeetCode data has been refreshed for all users in this channel!",
