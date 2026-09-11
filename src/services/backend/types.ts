@@ -56,13 +56,6 @@ export interface User {
 
 // ── Channel types ──
 
-export interface Channel {
-  id: number;
-  chat_id: number;
-  title: string;
-  subscriptions: Array<{ id: number; type: string }>;
-}
-
 export interface ChannelUser {
   id: number;
   user: User;
@@ -86,31 +79,6 @@ export interface RankResponse {
   nearest_above?: NearestAbove;
   solved_to_next?: number;
   last_refreshed?: string;
-}
-
-// ── Contest types ──
-
-export interface Contest {
-  id: number;
-  title: string;
-  start_time: string;
-  duration: number;
-}
-
-// ── Subscription types ──
-
-export interface Subscription {
-  id: number;
-  channel: { id: number; chat_id: number; title: string };
-  type: string;
-}
-
-// ── Contest notification types ──
-
-export interface ContestNotification {
-  id: number;
-  contest: { id: number; title: string; start_time: string };
-  subscription: { id: number; type: string };
 }
 
 // ── Admin types ──
