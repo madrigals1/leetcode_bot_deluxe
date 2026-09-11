@@ -17,8 +17,9 @@ tables, solved-problems pie charts, and user comparisons.
 
 ## Commands
 
-- `npm run start` — dev mode, watch mode, env from `.env.local`
-- `npm run start:prod` — production mode, env from `.env`
+- `npm run start` — dev mode, watch mode (`tsx`), env from `.env.local`
+- `npm run build` — compile to `dist/` and rewrite `@/*` aliases
+- `npm run start:prod` — build then run `node dist/index.js`, env from `.env`
 - `npm run debug` — `tsx --inspect-brk`
 - `npm run lint` — ESLint (flat config, `eslint.config.mjs`)
 
@@ -29,6 +30,10 @@ tables, solved-problems pie charts, and user comparisons.
 
 - TypeScript, `strict` mode, CommonJS, ESNext target, `experimentalDecorators: true`.
 - Path alias `@/*` → `src/*`.
+- Production build: `tsgo` (the native Go TypeScript compiler,
+  `@typescript/native-preview`, drop-in for `tsc`) emits to `dist/`, then
+  `tsc-alias` rewrites `@/*` requires to relative paths so `node dist/index.js`
+  runs with no runtime alias shim. Dev still uses `tsx` (it resolves aliases natively).
 - ESLint flat config with `typescript-eslint` + `@stylistic/eslint-plugin`.
   Formatting is enforced by ESLint (2-space indent, `curly: all`, `max-len: 100`);
   there is no Prettier.
@@ -123,41 +128,25 @@ Prioritized list of what could be done next (verified against the code):
 3. **Global pagination state.** `PaginationRegistry.handlers` is a single
    name-keyed map; concurrent `/compare` stage-2 flows in different chats can
    cross-contaminate (closures capture the first user's arg).
-4. **ApiService JWT refresh has no single-flight lock and no fetch timeouts.**
-   `src/services/backend/api_service.ts:12-43` — concurrent stale-token requests
-   each hit `/api/token/refresh/`; a hung backend hangs handlers forever.
-   Same missing-timeout issue in `src/services/vizapi/api.ts`.
-5. **Duplicate HTTP clients.** `api_service.ts` and `vizapi/api.ts` are ~80%
-   identical; extract a shared `httpJson` helper (timeout + error mapping args).
-6. **Thin/zero Prometheus metrics.** `src/metrics.ts` only exposes default Node
-   metrics; add custom counters (backend/vizapi request counts, error rates,
-   command usage).
-7. **Broken `test` script** (`"test": "npm test"` → infinite recursion) and no
+4. **Broken `test` script** (`"test": "npm test"` → infinite recursion) and no
    tests at all. Add a real framework (e.g. `node:test` or vitest) and tests for
    `parseArgs`, pagination, dispatchers, error catchers.
-8. **Dead code.** Unused service classes: `AuthService`, `SubscriptionsService`,
-   `ContestsService`, `ContestNotificationsService` (scaffolding for a planned
-   contest-notifications feature); several unused methods on `ChannelService`
-   and `UserService`; `generateBar` in VizAPI; `CommandRegistry.registerCommand`,
-   `CallbackRegistry.registerCallback`, `CallbackRegistry.findByAction`.
-9. **`PaginationHandlerData.reply` stored but never read** (`src/command/types.ts`)
+5. **Unused `AuthService`** (`src/services/backend/auth_service.ts`): login/logout
+   client for the backend auth API, kept for reference but never called by the bot.
+   Either wire it up (rotate the JWT refresh token) or delete it.
+6. **`PaginationHandlerData.reply` stored but never read** (`src/command/types.ts`)
    and the `registerPaginationCallback` flow stores the extra keyboard captured
    at first render — page navigation re-uses only the header/items, so the
    "refresh" extra buttons persist but that's fine; the dead `reply` field can
    be removed.
-10. **Fetch errors are lossy.** Backend refresh failure throws a bare `Error`;
-    VizAPI discards the response body (`src/services/vizapi/api.ts:107`).
-    Backend error contract depends on an `error` JSON field — a Django
-    `{"detail": ...}` payload would defeat `errors/catchers.ts`.
-11. **Fragile error-code mapping.** Catchers match sentinel substrings
-    (`err.message.includes("...")`); two distinct codes
-    (`USER_NOT_FOUND_IN_DATABASE` vs `USER_NOT_FOUND_IN_CHANNEL`) collapse to
-    one user-facing message. Prefer typed error codes from the API client.
-12. **Docker polish** (`deployment/Dockerfile`): runs `tsx` on uncompiled TS in
-    prod, ships all devDeps, no multi-stage build, no HEALTHCHECK/EXPOSE, runs
-    as root; `.gitignore` misses `dist/`; entrypoint echoes "Running with .env
-    file" but `.env` isn't in the image.
-13. **Minor nits:** `import { LbContext }` should be `import type` in
-    `src/command/types.ts`; `humanizeTimestamp` doesn't guard invalid dates;
-    pagination page numbers aren't validated (`_page:0` / negative → negative
-    item indices); response dispatchers have no exhaustive `default` branch.
+7. **Fetch errors are lossy.** Backend refresh failure throws a bare `Error`.
+   Backend error contract depends on an `error` JSON field — a Django
+   `{"detail": ...}` payload would defeat `errors/catchers.ts`.
+8. **Fragile error-code mapping.** Catchers match sentinel substrings
+   (`err.message.includes("...")`); two distinct codes
+   (`USER_NOT_FOUND_IN_DATABASE` vs `USER_NOT_FOUND_IN_CHANNEL`) collapse to
+   one user-facing message. Prefer typed error codes from the API client.
+9. **Minor nits:** `import { LbContext }` should be `import type` in
+   `src/command/types.ts`; `humanizeTimestamp` doesn't guard invalid dates;
+   pagination page numbers aren't validated (`_page:0` / negative → negative
+   item indices); response dispatchers have no exhaustive `default` branch.

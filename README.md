@@ -9,8 +9,7 @@ A Telegram bot that tracks LeetCode statistics for users in Telegram groups and 
 - **🎯 Track LeetCode users** in any Telegram group or channel
 - **🏆 Rankings & leaderboards** with simple and cumulative (weighted) scoring
 - **👤 User profiles** with detailed stats (solved problems, submissions, languages)
-- **📊 Visual charts** — pie charts, bar charts, comparison images, and submission tables
-- **⏰ Contest tracking** with notification subscriptions
+- **📊 Visual charts** — pie charts, comparison images, and submission tables
 - **📑 Pagination** for large result sets (text lists and inline button grids)
 - **🔒 Role-based permissions** — regular users, admins, and super admins
 - **📈 Prometheus metrics** endpoint for monitoring
@@ -110,9 +109,13 @@ The container exposes the metrics port (`9091` by default) and attaches to an ex
 ## 🧑‍💻 Development
 
 ```bash
-npm run start        # ▶️ Start in dev mode (watch)
-npm run start:prod   # 🚀 Start in production mode
+npm run start        # ▶️ Start in dev mode (watch, tsx)
+npm run build        # 🛠️ Compile TS to dist/ (tsgo + alias rewrite)
+npm run start:prod   # 🚀 Build and start in production mode (node dist/index.js)
 npm run lint         # 🧹 Run ESLint
 ```
 
-The project uses TypeScript with strict mode, ESNext target, and path aliases (`@/*` → `src/*`). 📘
+The project uses TypeScript with strict mode, ESNext target, and path aliases
+(`@/*` → `src/*`). Dev runs via `tsx` (which honors the alias); production
+compiles with the native `tsgo` compiler and rewrites aliases with `tsc-alias`,
+so `dist/` runs under plain Node without extra runtime deps. 📘
