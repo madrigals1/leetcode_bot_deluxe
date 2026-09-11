@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${METRICS_PORT}:9091"
+      - "${METRICS_PORT}:${METRICS_PORT}"
     networks:
       - leetcode_bot_network
 
