@@ -113,6 +113,7 @@ npm run start        # ▶️ Start in dev mode (watch, tsx)
 npm run build        # 🛠️ Compile TS to dist/ (tsgo + alias rewrite)
 npm run start:prod   # 🚀 Build and start in production mode (node dist/index.js)
 npm run lint         # 🧹 Run ESLint
+npm run test         # 🧪 Run the Vitest suite
 ```
 
 The project uses TypeScript with strict mode, ESNext target, and path aliases

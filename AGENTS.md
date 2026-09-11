@@ -21,10 +21,22 @@ tables, solved-problems pie charts, and user comparisons.
 - `npm run build` — compile to `dist/` and rewrite `@/*` aliases
 - `npm run start:prod` — build then run `node dist/index.js`, env from `.env`
 - `npm run debug` — `tsx --inspect-brk`
-- `npm run lint` — ESLint (flat config, `eslint.config.mjs`)
+- `npm run lint` — ESLint (flat config, `eslint.config.mjs`) over `src/` and `tests/`
+- `npm run test` — Vitest, one-off run
+- `npm run test:watch` — Vitest watch mode
+- `npm run test:coverage` — Vitest with v8 coverage
 
-> `npm test` is **broken** — `package.json` has `"test": "npm test"` (self
-> recursive). There are no tests in the repo.
+## Testing
+
+- **Vitest** (`vitest.config.ts`): aliases `@/*` → `src/*`, node environment,
+  honours `experimentalDecorators` via esbuild. Globals are disabled — import
+  `describe`/`it`/`expect`/`vi` from `vitest` explicitly.
+- Unit tests are **colocated** as `*.test.ts` next to the code; `tsconfig.json`
+  excludes them from the `tsgo` build so `dist/` stays clean. Integration-style
+  tests live in `tests/` with reusable fakes in `tests/helpers/`
+  (`makeFakeBot`, `makeFakeContext`) and payloads in `tests/fixtures/`.
+- Modules that import `@/metrics` (counters) are `vi.mock`ed per test file to
+  assert increments deterministically (prom-client `get()` is opaque in v15).
 
 ## Language & tooling
 
@@ -128,9 +140,11 @@ Prioritized list of what could be done next (verified against the code):
 3. **Global pagination state.** `PaginationRegistry.handlers` is a single
    name-keyed map; concurrent `/compare` stage-2 flows in different chats can
    cross-contaminate (closures capture the first user's arg).
-4. **Broken `test` script** (`"test": "npm test"` → infinite recursion) and no
-   tests at all. Add a real framework (e.g. `node:test` or vitest) and tests for
-   `parseArgs`, pagination, dispatchers, error catchers.
+4. **More test coverage.** Vitest is set up (`npm run test`, 45 tests); next
+   targets are the two response dispatchers, the registries
+   (`src/command/registry.ts`, `src/callback/registry.ts`), and the service
+   clients against a mocked `fetch` (single-flight JWT refresh, vizapi
+   payloads).
 5. **Unused `AuthService`** (`src/services/backend/auth_service.ts`): login/logout
    client for the backend auth API, kept for reference but never called by the bot.
    Either wire it up (rotate the JWT refresh token) or delete it.
