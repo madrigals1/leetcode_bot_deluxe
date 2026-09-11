@@ -27,6 +27,7 @@ export function parseArgs(
 ): ParsedArgs {
   const parts = text
     .split(/\s+/)
+    .filter((part) => part.length > 0)
     .slice(1)
     .map((part) => part.toLowerCase());
 
