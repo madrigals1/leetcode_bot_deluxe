@@ -30,6 +30,10 @@ export class PaginationRegistry {
         try {
           const lbCtx = new LbContext(ctx);
           const page = Number(match[2]);
+          if (!Number.isInteger(page) || page < 1) {
+            await ctx.answerCallbackQuery("Invalid page number.");
+            return;
+          }
           const fetchResult = await data.fetchPage(page, lbCtx);
 
           const fetchResults = (fetchResult as { results?: unknown[] }).results;
