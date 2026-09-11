@@ -21,12 +21,6 @@ export class CommandRegistry {
   }
 
   @RequireBot
-  static registerCommand(metadata: CommandMetadata) {
-    CommandRegistry.commands.push(metadata);
-    CommandRegistry.registerWithBot(metadata);
-  }
-
-  @RequireBot
   static registerAllCommands() {
     for (const cmd of CommandRegistry.commands) {
       CommandRegistry.registerWithBot(cmd);

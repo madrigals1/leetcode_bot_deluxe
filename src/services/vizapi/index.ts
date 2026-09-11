@@ -8,7 +8,6 @@ export type {
   CompareData,
   SliceDataRow,
   PieData,
-  BarData,
   HealthResponse,
   LinkResponse,
 } from "./api";

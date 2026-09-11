@@ -38,11 +38,6 @@ export interface PieData {
   fontSize?: number;
 }
 
-export interface BarData {
-  data: unknown[][];
-  options: { width: number; height: number; [key: string]: unknown };
-}
-
 export interface HealthResponse {
   status: string;
   uptime: number;
@@ -75,13 +70,6 @@ export class VizApiService {
 
   static async generatePie(data: PieData): Promise<LinkResponse> {
     return VizApiService.fetch<LinkResponse>("/pie", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-  }
-
-  static async generateBar(data: BarData): Promise<LinkResponse> {
-    return VizApiService.fetch<LinkResponse>("/bar", {
       method: "POST",
       body: JSON.stringify(data),
     });

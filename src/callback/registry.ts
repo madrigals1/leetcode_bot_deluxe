@@ -21,23 +21,10 @@ export class CallbackRegistry {
   }
 
   @RequireBot
-  static registerCallback(metadata: CallbackMetadata) {
-    CallbackRegistry.callbacks.push(metadata);
-    CallbackRegistry.registerWithBot(metadata);
-  }
-
-  @RequireBot
   static registerAllCallbacks() {
     for (const cb of CallbackRegistry.callbacks) {
       CallbackRegistry.registerWithBot(cb);
     }
-  }
-
-  static findByAction(action: RegExp) {
-    return CallbackRegistry.callbacks.find(
-      (c) =>
-        c.action instanceof RegExp && c.action.source === action.source,
-    );
   }
 
   static getAll() {
