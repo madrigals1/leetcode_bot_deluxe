@@ -5,7 +5,7 @@ import { CallbackRegistry } from "./callback";
 import { PaginationRegistry } from "@/command/response/pagination/registry";
 import { VizApiService } from "@/services/vizapi";
 import { HealthCheckService } from "@/services/backend/health_check_service";
-import { startMetricsServer } from "@/metrics";
+import { startMetricsServer, uncaughtErrorsTotal } from "@/metrics";
 import { formatUptime } from "@/utils/format";
 
 // Side-effect: ensures @callback decorators execute and register handlers
@@ -45,6 +45,9 @@ import "./callback/callbacks";
   PaginationRegistry.setBot(bot);
 
   bot.catch((err) => {
+    uncaughtErrorsTotal.inc({
+      error: err.error instanceof Error ? err.error.name : "unknown",
+    });
     console.error("Unhandled bot error:", err.error);
     const ctx = err.ctx;
     if (ctx && ctx.callbackQuery) {

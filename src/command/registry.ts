@@ -1,6 +1,10 @@
 import { Bot, Context } from "grammy";
 import { LeetCodeBotError } from "@/errors";
-import { commandsErrorsTotal, commandsTotal } from "@/metrics";
+import {
+  commandDurationSeconds,
+  commandsErrorsTotal,
+  commandsTotal,
+} from "@/metrics";
 import { RequireBot } from "@/utils/decorators";
 import type { CommandMetadata } from "./types";
 
@@ -40,6 +44,9 @@ export class CommandRegistry {
   private static registerWithBot(metadata: CommandMetadata) {
     CommandRegistry.bot!.command(metadata.name, async (ctx: Context) => {
       commandsTotal.inc({ command: metadata.name });
+      const stopTimer = commandDurationSeconds.startTimer({
+        command: metadata.name,
+      });
 
       try {
         await metadata.handler(ctx);
@@ -55,6 +62,8 @@ export class CommandRegistry {
         }
 
         await ctx.reply("❗ An error occurred.");
+      } finally {
+        stopTimer();
       }
     });
   }

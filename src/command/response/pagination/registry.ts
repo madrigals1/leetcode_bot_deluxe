@@ -2,6 +2,7 @@ import { Bot, Context } from "grammy";
 
 import { LbContext } from "@/utils/context";
 import { LeetCodeBotError, DataNotFoundError } from "@/errors";
+import { paginationErrorsTotal } from "@/metrics";
 import type { PaginationHandlerData } from "@/command/types";
 
 export class PaginationRegistry {
@@ -48,6 +49,8 @@ export class PaginationRegistry {
             data.defaultButtonsPerRow,
           );
         } catch (error) {
+          paginationErrorsTotal.inc({ name });
+
           if (error instanceof LeetCodeBotError) {
             await ctx.answerCallbackQuery(error.message);
             return;

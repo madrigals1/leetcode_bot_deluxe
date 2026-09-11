@@ -1,5 +1,6 @@
 import { Bot, Context } from "grammy";
 import { LeetCodeBotError } from "@/errors";
+import { callbacksTotal } from "@/metrics";
 import { RequireBot } from "@/utils/decorators";
 
 export interface CallbackMetadata {
@@ -44,7 +45,14 @@ export class CallbackRegistry {
   }
 
   private static registerWithBot(metadata: CallbackMetadata) {
+    const action =
+      typeof metadata.action === "string"
+        ? metadata.action
+        : metadata.action.source;
+
     CallbackRegistry.bot!.callbackQuery(metadata.action, async (ctx) => {
+      callbacksTotal.inc({ action });
+
       try {
         await metadata.handler(ctx);
       } catch (error) {

@@ -1,5 +1,5 @@
 import { createServer } from "http";
-import { collectDefaultMetrics, Counter, register } from "prom-client";
+import { collectDefaultMetrics, Counter, Histogram, register } from "prom-client";
 import { METRICS_PORT } from "./constants";
 
 collectDefaultMetrics();
@@ -26,6 +26,30 @@ export const commandsErrorsTotal = new Counter({
   name: "leetcode_bot_commands_errors_total",
   help: "Bot command handler failures.",
   labelNames: ["command", "error"],
+});
+
+export const commandDurationSeconds = new Histogram({
+  name: "leetcode_bot_command_duration_seconds",
+  help: "Bot command handler execution duration.",
+  labelNames: ["command"],
+});
+
+export const callbacksTotal = new Counter({
+  name: "leetcode_bot_callbacks_total",
+  help: "Invoked bot inline-button callbacks.",
+  labelNames: ["action"],
+});
+
+export const uncaughtErrorsTotal = new Counter({
+  name: "leetcode_bot_uncaught_errors_total",
+  help: "Unhandled bot errors caught by the global error handler.",
+  labelNames: ["error"],
+});
+
+export const paginationErrorsTotal = new Counter({
+  name: "leetcode_bot_pagination_errors_total",
+  help: "Failed pagination page loads.",
+  labelNames: ["name"],
 });
 
 export function startMetricsServer(): void {
