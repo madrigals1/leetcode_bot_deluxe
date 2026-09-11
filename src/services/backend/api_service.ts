@@ -4,7 +4,7 @@ import {
   TOKEN_MAX_AGE_MS,
 } from "@/constants";
 import { BackendNotAvailableError } from "@/errors";
-import { fetchWithTimeout } from "@/utils/http";
+import { httpJson } from "@/utils/http";
 
 export class ApiService {
   private static cachedAccessToken?: string;
@@ -12,23 +12,19 @@ export class ApiService {
   private static refreshPromise?: Promise<string>;
 
   private static async doRefreshAccessToken(): Promise<string> {
-    let response: Response;
-    try {
-      response = await fetchWithTimeout(`${BACKEND_URL}/api/token/refresh/`, {
+    const data = await httpJson<{ access: string }>(
+      `${BACKEND_URL}/api/token/refresh/`,
+      {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refresh: BACKEND_JWT_REFRESH_TOKEN }),
-      });
-    } catch {
-      throw new BackendNotAvailableError();
-    }
+      },
+      {
+        onNetworkError: () => new BackendNotAvailableError(),
+        onHttpError: () => "Failed to refresh access token.",
+      },
+    );
 
-    if (!response.ok) {
-      throw new Error("Failed to refresh access token.");
-    }
-
-    const data = await response.json();
-    ApiService.cachedAccessToken = data.access as string;
+    ApiService.cachedAccessToken = data.access;
     ApiService.lastRefreshedAt = Date.now();
     return ApiService.cachedAccessToken;
   }
@@ -62,32 +58,11 @@ export class ApiService {
   ): Promise<T> {
     const token = await ApiService.getAccessToken();
 
-    let response: Response;
-    try {
-      response = await fetchWithTimeout(`${BACKEND_URL}${path}`, {
-        ...options,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          ...options.headers,
-        },
-      });
-    } catch {
-      throw new BackendNotAvailableError();
-    }
-
-    if (!response.ok) {
-      let body = { error: undefined };
-
-      try {
-        body = await response.json();
-      } catch {
-        // response body is not valid JSON
-      }
-
-      throw new Error(body.error ?? `API error: ${response.status}`);
-    }
-
-    return response.json() as Promise<T>;
+    return httpJson<T>(`${BACKEND_URL}${path}`, options, {
+      headers: { Authorization: `Bearer ${token}` },
+      onNetworkError: () => new BackendNotAvailableError(),
+      onHttpError: (response, body) =>
+        (body as { error?: string })?.error ?? `API error: ${response.status}`,
+    });
   }
 }

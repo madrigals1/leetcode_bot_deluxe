@@ -1,6 +1,6 @@
 import { VIZAPI_URL } from "@/constants";
 import { VizApiNotAvailableError } from "@/errors";
-import { fetchWithTimeout } from "@/utils/http";
+import { httpJson } from "@/utils/http";
 
 export interface CompareField {
   name: string;
@@ -91,23 +91,9 @@ export class VizApiService {
     path: string,
     options: RequestInit = {},
   ): Promise<T> {
-    let response: Response;
-    try {
-      response = await fetchWithTimeout(`${VIZAPI_URL}${path}`, {
-        ...options,
-        headers: {
-          "Content-Type": "application/json",
-          ...options.headers,
-        },
-      });
-    } catch {
-      throw new VizApiNotAvailableError();
-    }
-
-    if (!response.ok) {
-      throw new Error(`VizAPI error: ${response.status}`);
-    }
-
-    return response.json() as Promise<T>;
+    return httpJson<T>(`${VIZAPI_URL}${path}`, options, {
+      onNetworkError: () => new VizApiNotAvailableError(),
+      onHttpError: (response) => `VizAPI error: ${response.status}`,
+    });
   }
 }
