@@ -8,7 +8,13 @@ export function humanizeTimestamp(timestamp: string | null): string {
   if (!timestamp) {
     return "-";
   }
-  return timeAgo(new Date(timestamp));
+
+  const date = new Date(timestamp);
+  if (Number.isNaN(date.getTime())) {
+    return "-";
+  }
+
+  return timeAgo(date);
 }
 
 export function stripEmojis(text: string): string {
@@ -22,8 +28,14 @@ export function formatUptime(seconds: number): string {
   const minutes = Math.floor((total % 3600) / 60);
   const secs = total % 60;
 
-  if (days > 0) return `${days}d ${hours}h ${minutes}m ${secs}s`;
-  if (hours > 0) return `${hours}h ${minutes}m ${secs}s`;
-  if (minutes > 0) return `${minutes}m ${secs}s`;
+  if (days > 0) {
+    return `${days}d ${hours}h ${minutes}m ${secs}s`;
+  }
+  if (hours > 0) {
+    return `${hours}h ${minutes}m ${secs}s`;
+  }
+  if (minutes > 0) {
+    return `${minutes}m ${secs}s`;
+  }
   return `${secs}s`;
 }
