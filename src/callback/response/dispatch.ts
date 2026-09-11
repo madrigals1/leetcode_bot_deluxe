@@ -1,4 +1,5 @@
 import { LbContext } from "@/utils/context";
+import { assertAuth } from "@/utils/chat";
 import type { CallbackResponse } from "@/callback/types";
 import type { TextResponse, PhotoResponse } from "@/command/types";
 import { CommandRegistry } from "@/command/registry";
@@ -40,6 +41,8 @@ export async function dispatchCallbackResponse(
       if (!cmd) {
         return;
       }
+
+      await assertAuth(lbCtx.ctx, cmd);
 
       const args = cmd.args
         ? parseArgs(response.command, cmd.args)

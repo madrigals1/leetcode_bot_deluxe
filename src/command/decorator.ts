@@ -1,7 +1,6 @@
 import { Context } from "grammy";
-import { UnauthorizedError } from "@/errors";
 import { LbContext } from "@/utils/context";
-import { isOwnerOrPrivate, isSuperAdmin } from "@/utils/chat";
+import { assertAuth } from "@/utils/chat";
 import { dispatchResponse } from "@/command/response/dispatch";
 import type { CommandOptions } from "./types";
 import { parseArgs, buildExample } from "./utils";
@@ -21,19 +20,7 @@ export function command(options: CommandOptions) {
       handler: async (ctx: Context) => {
         const lbCtx = new LbContext(ctx);
 
-        const superAdmin = isSuperAdmin(ctx);
-
-        if (options.requiresSuperAdmin && !superAdmin) {
-          throw new UnauthorizedError();
-        }
-
-        if (
-          options.requiresAdmin
-          && !superAdmin
-          && !(await isOwnerOrPrivate(ctx))
-        ) {
-          throw new UnauthorizedError();
-        }
+        await assertAuth(ctx, options);
 
         const parsedArgs = parseArgs(
           ctx.message?.text ?? "",
