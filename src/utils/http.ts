@@ -1,6 +1,10 @@
+import { apiErrorsTotal, apiRequestsTotal } from "@/metrics";
+
 export const REQUEST_TIMEOUT_MS = 15_000;
 
 export interface HttpJsonOptions {
+  service: string;
+  path?: string;
   headers?: Record<string, string>;
   onNetworkError?: () => Error;
   onHttpError?: (response: Response, body: unknown) => string;
@@ -26,8 +30,10 @@ export async function fetchWithTimeout(
 export async function httpJson<T>(
   url: string,
   requestOptions: RequestInit = {},
-  httpOptions: HttpJsonOptions = {},
+  httpOptions: HttpJsonOptions,
 ): Promise<T> {
+  const { service, path = url } = httpOptions;
+
   let response: Response;
   try {
     response = await fetchWithTimeout(url, {
@@ -39,8 +45,16 @@ export async function httpJson<T>(
       },
     });
   } catch {
+    apiErrorsTotal.inc({ service, kind: "network" });
     throw httpOptions.onNetworkError?.() ?? new Error("Network error.");
   }
+
+  apiRequestsTotal.inc({
+    service,
+    method: requestOptions.method ?? "GET",
+    path,
+    status: String(response.status),
+  });
 
   if (!response.ok) {
     let body: unknown;
@@ -49,6 +63,8 @@ export async function httpJson<T>(
     } catch {
       // response body is not valid JSON
     }
+
+    apiErrorsTotal.inc({ service, kind: "http" });
 
     const message =
       httpOptions.onHttpError?.(response, body)

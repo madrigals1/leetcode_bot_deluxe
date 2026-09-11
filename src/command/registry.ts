@@ -1,5 +1,6 @@
 import { Bot, Context } from "grammy";
 import { LeetCodeBotError } from "@/errors";
+import { commandsErrorsTotal, commandsTotal } from "@/metrics";
 import { RequireBot } from "@/utils/decorators";
 import type { CommandMetadata } from "./types";
 
@@ -38,9 +39,16 @@ export class CommandRegistry {
 
   private static registerWithBot(metadata: CommandMetadata) {
     CommandRegistry.bot!.command(metadata.name, async (ctx: Context) => {
+      commandsTotal.inc({ command: metadata.name });
+
       try {
         await metadata.handler(ctx);
       } catch (error) {
+        commandsErrorsTotal.inc({
+          command: metadata.name,
+          error: error instanceof Error ? error.name : "unknown",
+        });
+
         if (error instanceof LeetCodeBotError) {
           await ctx.reply(error.message);
           return;

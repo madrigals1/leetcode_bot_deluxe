@@ -19,6 +19,8 @@ export class ApiService {
         body: JSON.stringify({ refresh: BACKEND_JWT_REFRESH_TOKEN }),
       },
       {
+        service: "backend",
+        path: "/api/token/refresh/",
         onNetworkError: () => new BackendNotAvailableError(),
         onHttpError: () => "Failed to refresh access token.",
       },
@@ -59,6 +61,8 @@ export class ApiService {
     const token = await ApiService.getAccessToken();
 
     return httpJson<T>(`${BACKEND_URL}${path}`, options, {
+      service: "backend",
+      path,
       headers: { Authorization: `Bearer ${token}` },
       onNetworkError: () => new BackendNotAvailableError(),
       onHttpError: (response, body) =>

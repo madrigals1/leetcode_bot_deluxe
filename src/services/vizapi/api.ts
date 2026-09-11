@@ -92,6 +92,8 @@ export class VizApiService {
     options: RequestInit = {},
   ): Promise<T> {
     return httpJson<T>(`${VIZAPI_URL}${path}`, options, {
+      service: "vizapi",
+      path,
       onNetworkError: () => new VizApiNotAvailableError(),
       onHttpError: (response) => `VizAPI error: ${response.status}`,
     });
