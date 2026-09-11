@@ -4,15 +4,17 @@ import {
   TOKEN_MAX_AGE_MS,
 } from "@/constants";
 import { BackendNotAvailableError } from "@/errors";
+import { fetchWithTimeout } from "@/utils/http";
 
 export class ApiService {
   private static cachedAccessToken?: string;
   private static lastRefreshedAt = 0;
+  private static refreshPromise?: Promise<string>;
 
-  private static async refreshAccessToken(): Promise<string> {
+  private static async doRefreshAccessToken(): Promise<string> {
     let response: Response;
     try {
-      response = await fetch(`${BACKEND_URL}/api/token/refresh/`, {
+      response = await fetchWithTimeout(`${BACKEND_URL}/api/token/refresh/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refresh: BACKEND_JWT_REFRESH_TOKEN }),
@@ -29,6 +31,18 @@ export class ApiService {
     ApiService.cachedAccessToken = data.access as string;
     ApiService.lastRefreshedAt = Date.now();
     return ApiService.cachedAccessToken;
+  }
+
+  private static refreshAccessToken(): Promise<string> {
+    if (!ApiService.refreshPromise) {
+      ApiService.refreshPromise = ApiService.doRefreshAccessToken().finally(
+        () => {
+          ApiService.refreshPromise = undefined;
+        },
+      );
+    }
+
+    return ApiService.refreshPromise;
   }
 
   private static async getAccessToken(): Promise<string> {
@@ -50,7 +64,7 @@ export class ApiService {
 
     let response: Response;
     try {
-      response = await fetch(`${BACKEND_URL}${path}`, {
+      response = await fetchWithTimeout(`${BACKEND_URL}${path}`, {
         ...options,
         headers: {
           "Content-Type": "application/json",

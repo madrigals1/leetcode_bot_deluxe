@@ -1,5 +1,6 @@
 import { VIZAPI_URL } from "@/constants";
 import { VizApiNotAvailableError } from "@/errors";
+import { fetchWithTimeout } from "@/utils/http";
 
 export interface CompareField {
   name: string;
@@ -92,7 +93,7 @@ export class VizApiService {
   ): Promise<T> {
     let response: Response;
     try {
-      response = await fetch(`${VIZAPI_URL}${path}`, {
+      response = await fetchWithTimeout(`${VIZAPI_URL}${path}`, {
         ...options,
         headers: {
           "Content-Type": "application/json",
