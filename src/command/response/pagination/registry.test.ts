@@ -16,7 +16,17 @@ const PAGE_PATTERN = /^(\w+)_page:(\d+)$/;
 
 function registerHandler(name: string) {
   const fetchPage = vi.fn(async () => ({ count: 1, results: [{ id: 1 }] }));
-  const renderPage = vi.fn(async () => undefined);
+  const renderPage = vi.fn(
+    async (
+      _lbCtx: LbContext,
+      _data: unknown,
+      _page: number,
+      _size: number,
+      editReply: (text: string, options?: object) => Promise<unknown>,
+    ) => {
+      await editReply("page rendered");
+    },
+  );
 
   PaginationRegistry.registerHandler(name, {
     fetchPage,
@@ -79,6 +89,14 @@ describe("PaginationRegistry", () => {
 
     expect(fetchPage).toHaveBeenCalledWith(1, expect.any(LbContext));
     expect(renderPage).toHaveBeenCalledTimes(1);
+    expect(ctx.editMessageText).toHaveBeenCalledWith("page rendered", undefined);
+  });
+
+  it("ignores taps with an empty page name", async () => {
+    const { fetchPage } = registerHandler("leaderboard");
+    const ctx = makeFakeContext({ match: ["_page:1", "", "1"] });
+    await capture(ctx);
+    expect(fetchPage).not.toHaveBeenCalled();
   });
 
   it("reports no data to the user", async () => {

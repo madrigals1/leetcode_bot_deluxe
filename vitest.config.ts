@@ -15,13 +15,27 @@ export default defineConfig({
       },
     },
   },
+  oxc: false,
   test: {
     environment: "node",
     include: ["src/**/*.test.ts", "tests/**/*.test.ts"],
+    env: {
+      TELEGRAM_BOT_TOKEN: "test-token",
+      BACKEND_URL: "http://backend.test",
+      BACKEND_JWT_REFRESH_TOKEN: "test-refresh-token",
+      VIZAPI_URL: "http://vizapi.test",
+      METRICS_PORT: "19099",
+    },
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],
-      exclude: ["src/**/*.test.ts", "src/index.ts", "src/constants.ts"],
+      exclude: ["src/**/*.test.ts"],
+      thresholds: {
+        lines: 100,
+        functions: 100,
+        statements: 100,
+        branches: 100,
+      },
     },
   },
 });

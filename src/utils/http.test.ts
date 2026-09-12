@@ -182,4 +182,21 @@ describe("httpJson", () => {
       kind: "network",
     });
   });
+
+  it("falls back to a generic message on network errors", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new TypeError("fetch failed");
+      }),
+    );
+
+    const error = await httpJson(
+      "http://backend/api",
+      {},
+      { service: "backend" },
+    ).catch((err: Error) => err);
+
+    expect((error as Error).message).toBe("Network error.");
+  });
 });

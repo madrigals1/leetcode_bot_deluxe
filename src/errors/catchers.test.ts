@@ -68,6 +68,17 @@ describe("telegramUserHasNoTrack", () => {
     expect(error).toBeInstanceOf(TelegramUserHasNoTrackError);
     expect(error.name).toBe("LeetCodeBotError.TelegramUserHasNoTrackError");
   });
+
+  it("rethrows unrelated errors untouched", () => {
+    const unrelated = new Error("something else");
+    let caught: Error | undefined;
+    try {
+      telegramUserHasNoTrack()(unrelated);
+    } catch (error) {
+      caught = error as Error;
+    }
+    expect(caught).toBe(unrelated);
+  });
 });
 
 describe("userAlreadyInChannel", () => {
