@@ -4,7 +4,14 @@ import { UnauthorizedError } from "@/errors";
 
 export function isSuperAdmin(ctx: Context): boolean {
   const username = ctx.from?.username;
-  return username ? SUPER_ADMIN_TELEGRAM_USERNAMES.includes(username) : false;
+
+  if (!username) {
+    return false;
+  }
+
+  return SUPER_ADMIN_TELEGRAM_USERNAMES.some(
+    (admin) => admin.toLowerCase() === username.toLowerCase()
+  );
 }
 
 export async function isOwnerOrPrivate(ctx: Context): Promise<boolean> {

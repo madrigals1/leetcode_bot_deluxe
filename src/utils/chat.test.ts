@@ -35,6 +35,23 @@ describe("chat auth helpers", () => {
         .toBe(true);
     });
 
+    it("matches usernames case-insensitively", async () => {
+      const { isSuperAdmin } = await loadChat();
+      expect(
+        isSuperAdmin(makeFakeContext({ telegramUsername: "BOT_ADMIN" })),
+      ).toBe(true);
+      expect(
+        isSuperAdmin(makeFakeContext({ telegramUsername: "bot_admin" })),
+      ).toBe(true);
+    });
+
+    it("does not match against another username with a case difference", async () => {
+      const { isSuperAdmin } = await loadChat();
+      expect(
+        isSuperAdmin(makeFakeContext({ telegramUsername: "Bot_AdminX" })),
+      ).toBe(false);
+    });
+
     it("returns false for a regular username", async () => {
       const { isSuperAdmin } = await loadChat();
       expect(isSuperAdmin(makeFakeContext())).toBe(false);
