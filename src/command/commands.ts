@@ -25,7 +25,7 @@ import {
   paginatedButtons,
 } from "@/command/response/shortcuts";
 import { getDifficultyCount } from "@/utils/leetcode";
-import { boldUsername, humanizeTimestamp } from "@/utils/format";
+import { boldUsername, escapeHtml, humanizeTimestamp } from "@/utils/format";
 import { DataNotFoundError } from "@/errors";
 import { buildCompareData } from "./utils";
 
@@ -102,7 +102,7 @@ export default class Commands {
         `💬 Channel ID: <code>${ctx.chatId}</code>\n` +
         `👥 Users in channel: <b>${count}</b>\n\n` +
         `📊 <b>Statistics:</b>\n${stats}\n\n` +
-        `👤 Oldest updated: <b>${adminData.oldest_updated_user ?? "-"}</b>\n` +
+        `👤 Oldest updated: <b>${escapeHtml(adminData.oldest_updated_user ?? "-")}</b>\n` +
         `🕐 At: <code>${humanizeTimestamp(adminData.oldest_updated_at)}</code>\n\n` +
         `⏰ <b>Scheduled jobs:</b>\n${jobs}`,
       buttons: keyboard,
@@ -206,7 +206,7 @@ export default class Commands {
     const parts = [`Placement: <b>#${placement}</b> 🏆`];
 
     if (leetcode_username) {
-      parts.push(`Username: <b>${leetcode_username}</b>`);
+      parts.push(`Username: <b>${escapeHtml(leetcode_username)}</b>`);
     }
 
     if (solved !== undefined && solved_cml !== undefined) {
@@ -219,7 +219,7 @@ export default class Commands {
 
     if (nearest_above) {
       parts.push(
-        `\n⬆️ User ahead: <b>${nearest_above.username}</b> — ` +
+        `\n⬆️ User ahead: <b>${escapeHtml(nearest_above.username)}</b> — ` +
         `<b>${nearest_above.solved}</b> solved (${nearest_above.solved_cml} cumulative)`,
       );
     }
@@ -242,7 +242,8 @@ export default class Commands {
       name: "rating",
       header: "Rating  🏆",
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
-      formatItem: (item, i) => `${i + 1}. <b>${item.user.username}</b> ${item.user.solved}`,
+      formatItem: (item, i) =>
+        `${i + 1}. <b>${escapeHtml(item.user.username)}</b> ${item.user.solved}`,
       buttons: new InlineKeyboard().text("🔥 Cumulative rating", "command:rating_cml"),
     });
   }
@@ -260,7 +261,8 @@ export default class Commands {
         `🟡 Medium - ${CML_MEDIUM_POINTS} points\n` +
         `🔴 Hard - ${CML_HARD_POINTS} points`,
       fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page, "-user__solved_cml"),
-      formatItem: (item, i) => `${i + 1}. <b>${item.user.username}</b> ${item.user.solved_cml}`,
+      formatItem: (item, i) =>
+        `${i + 1}. <b>${escapeHtml(item.user.username)}</b> ${item.user.solved_cml}`,
       buttons: new InlineKeyboard().text("🏆 Regular rating", "command:rating"),
     });
   }
@@ -278,7 +280,7 @@ export default class Commands {
       const total = user.data?.submitStats?.totalSubmissionNum ?? [];
 
       const profileText =
-        `<b>${name}</b> - https://leetcode.com/${user.username}\n\n` +
+        `<b>${escapeHtml(name)}</b> - https://leetcode.com/${user.username}\n\n` +
         "Solved Problems:\n" +
         `🟢 Easy - <b>${getDifficultyCount(solved, "Easy")}</b>\n` +
         `🟡 Medium - <b>${getDifficultyCount(solved, "Medium")}</b>\n` +
@@ -350,7 +352,7 @@ export default class Commands {
         `👨‍💻 Problems solved by ${boldUsername(user.username)} in:\n\n` +
         stats
           .sort((a, b) => b.problemsSolved - a.problemsSolved)
-          .map((s) => `- <b>${s.languageName}</b> ${s.problemsSolved}`)
+          .map((s) => `- <b>${escapeHtml(s.languageName)}</b> ${s.problemsSolved}`)
           .join("\n");
 
       return text(langText);

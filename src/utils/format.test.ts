@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   boldUsername,
+  escapeHtml,
   formatUptime,
   humanizeTimestamp,
   stripEmojis,
@@ -55,8 +56,29 @@ describe("stripEmojis", () => {
   });
 });
 
+describe("escapeHtml", () => {
+  it("escapes HTML-special characters", () => {
+    expect(escapeHtml('<script>"hello"</script>')).toBe(
+      "&lt;script&gt;&quot;hello&quot;&lt;/script&gt;",
+    );
+  });
+
+  it("escapes ampersands before other entities", () => {
+    expect(escapeHtml("a&b")).toBe("a&amp;b");
+    expect(escapeHtml("&amp;")).toBe("&amp;amp;");
+  });
+
+  it("leaves plain text unchanged", () => {
+    expect(escapeHtml("alice")).toBe("alice");
+  });
+});
+
 describe("boldUsername", () => {
   it("wraps the username in bold HTML", () => {
     expect(boldUsername("alice")).toBe('<b>"alice"</b>');
+  });
+
+  it("escapes HTML characters inside the username", () => {
+    expect(boldUsername('<b>"x"')).toBe('<b>"&lt;b&gt;&quot;x&quot;"</b>');
   });
 });

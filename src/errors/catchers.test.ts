@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  BackendApiError,
   BackendUserNotFoundError,
   LeetCodeUserNotFoundError,
   TelegramUserHasNoTrackError,
@@ -23,13 +24,15 @@ function run(fn: () => unknown): Error {
   throw new Error("expected the catcher to throw");
 }
 
+function backendError(code: string): Error {
+  return new BackendApiError("request failed", code, 400);
+}
+
 describe("userNotFound", () => {
   it.each(["USER_NOT_FOUND_IN_DATABASE", "USER_NOT_FOUND_IN_CHANNEL"])(
     "maps %s to BackendUserNotFoundError",
     (code) => {
-      const error = run(() =>
-        userNotFound("alice")(new Error(`prefix ${code} suffix`))
-      );
+      const error = run(() => userNotFound("alice")(backendError(code)));
 
       expect(error).toBeInstanceOf(BackendUserNotFoundError);
       expect(error.message).toContain("alice");
@@ -47,12 +50,17 @@ describe("userNotFound", () => {
     }
     expect(caught).toBe(unrelated);
   });
+
+  it("rethrows a structured error with a different code", () => {
+    const unrelated = backendError("WHO_KNOWS");
+    expect(() => userNotFound("alice")(unrelated)).toThrowError(unrelated);
+  });
 });
 
 describe("leetcodeUserNotFound", () => {
   it("maps USER_NOT_FOUND_IN_LEETCODE", () => {
     const error = run(() =>
-      leetcodeUserNotFound("bob")(new Error("USER_NOT_FOUND_IN_LEETCODE"))
+      leetcodeUserNotFound("bob")(backendError("USER_NOT_FOUND_IN_LEETCODE"))
     );
     expect(error).toBeInstanceOf(LeetCodeUserNotFoundError);
     expect(error.message).toContain("bob");
@@ -63,7 +71,7 @@ describe("leetcodeUserNotFound", () => {
 describe("telegramUserHasNoTrack", () => {
   it("maps TELEGRAM_USER_HAS_NO_TRACK", () => {
     const error = run(() =>
-      telegramUserHasNoTrack()(new Error("TELEGRAM_USER_HAS_NO_TRACK"))
+      telegramUserHasNoTrack()(backendError("TELEGRAM_USER_HAS_NO_TRACK"))
     );
     expect(error).toBeInstanceOf(TelegramUserHasNoTrackError);
     expect(error.name).toBe("LeetCodeBotError.TelegramUserHasNoTrackError");
@@ -84,7 +92,7 @@ describe("telegramUserHasNoTrack", () => {
 describe("userAlreadyInChannel", () => {
   it("maps USER_ALREADY_IN_CHANNEL", () => {
     const error = run(() =>
-      userAlreadyInChannel("alice")(new Error("USER_ALREADY_IN_CHANNEL"))
+      userAlreadyInChannel("alice")(backendError("USER_ALREADY_IN_CHANNEL"))
     );
     expect(error).toBeInstanceOf(UserAlreadyInChannelError);
     expect(error.message).toContain("alice");
@@ -94,7 +102,7 @@ describe("userAlreadyInChannel", () => {
 describe("userAlreadyTracked", () => {
   it("maps USER_ALREADY_TRACKED", () => {
     const error = run(() =>
-      userAlreadyTracked("bob")(new Error("USER_ALREADY_TRACKED"))
+      userAlreadyTracked("bob")(backendError("USER_ALREADY_TRACKED"))
     );
     expect(error).toBeInstanceOf(UserAlreadyTrackedError);
     expect(error.message).toContain("bob");

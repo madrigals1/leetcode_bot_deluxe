@@ -130,48 +130,35 @@ Prioritized backlog (verified against the code). Old items now **done**: auth
 bypass on `command:` redirects (`assertAuth` added in `dispatchCallbackResponse`),
 100% test coverage, `humanizeTimestamp` guards, pagination page-number
 validation, pagination flows scoped per chat (`<chatId>:<name>` handlers),
-`isSuperAdmin` matching case-insensitively (`src/utils/chat.ts`). Work through
-the remaining items one at a time:
+`isSuperAdmin` matching case-insensitively (`src/utils/chat.ts`), structured
+backend errors (`BackendApiError` with `code`/`status`, catchers match codes not
+substrings, Django `{detail: ...}` payloads preserved), HTML escaping of
+user/backend-sourced strings (`escapeHtml` in `src/utils/format.ts`, applied in
+`boldUsername` and every direct `<b>` interpolation in `commands.ts`). Work
+through the remaining items one at a time:
 
-1. **Global pagination state → per-chat scope.** `PaginationRegistry.handlers`
-   is keyed only by pagination `name`. Concurrent `/compare` stage-2 flows in
-   *different* chats cross-contaminate: the second `/compare` overwrites the
-   first `compare` handler, so the first chat's nav buttons page through the
-   other chat's picker. Fix: register handlers under `<chatId>:<name>`.
-   (Sequential same-chat flows still overwrite each other — inherent to the
-   `<name>_page:<n>` callback format.)
-2. **HTML injection via unescaped user data.** All output is rendered in HTML
-   parse mode, but `boldUsername` (`src/utils/format.ts`) and `profile`'s
-   `realName` (`src/command/commands.ts:276`) inject raw backend values. A
-   display name containing `<`, `>`, or `</b>` corrupts messages. Add an
-   `escapeHtml` helper and apply to every user/backend-sourced string.
-3. **`parseArgs` lowercases every arg** (`src/command/utils.ts:32`), including
+1. **`parseArgs` lowercases every arg** (`src/command/utils.ts:32`), including
    usernames sent to the backend. Verify the backend treats `Username` and
    `username` the same; otherwise `/track Alice` then `/remove Alice` won't match.
-4. **Lossy error handling.** `onHttpError` returns a plain string so failures
-   surface as bare `Error`s (`api_service.ts:68`); catchers match sentinel
-   substrings (`errors/catchers.ts`), so a Django `{"detail": ...}` payload or a
-   failed token refresh degrades to a generic "❗ An error occurred." Prefer a
-   structured error (code + message) from the API client.
-5. **HTML parse-mode middleware mutates every API payload** (`src/index.ts:30`)
+2. **HTML parse-mode middleware mutates every API payload** (`src/index.ts:30`)
    — including methods that don't accept `parse_mode` (`answerCallbackQuery`,
    `getChatMember`, `deleteMessage`); relies on Telegram ignoring unknown params
    and throws if a payload is frozen. Scope to parse_mode-capable methods.
-6. **Callback error path double-handling.** `callback/decorator.ts:22` and
+3. **Callback error path double-handling.** `callback/decorator.ts:22` and
    `callback/registry.ts:46` both catch and call `ctx.editMessageText` — which
    itself fails on stale/media messages. Route the final fallback through
    `answerCallbackQuery` instead.
-7. **`langstats` lacks an empty guard** (`commands.ts:349`) unlike `submissions`
+4. **`langstats` lacks an empty guard** (`commands.ts:349`) unlike `submissions`
    (`:381`); empty data renders a bare header. Add `DataNotFoundError`.
-8. **Duplicate paginated pickers.** `remove`, `profile`, `avatar`, `langstats`,
+5. **Duplicate paginated pickers.** `remove`, `profile`, `avatar`, `langstats`,
    `submissions`, `problems`, `compare` repeat the same `paginatedButtons`
    boilerplate in `commands.ts`. Extract a `userPicker(name, text, argTransform)`.
-9. **Dead code & nits.** Remove `reply` from `PaginationHandlerData` (stored,
+6. **Dead code & nits.** Remove `reply` from `PaginationHandlerData` (stored,
    never read — `command/types.ts:117`); delete unused `AuthService`
    (`auth_service.ts`, exported but never called); drop `CommandRegistry.bot!`
    by passing the bot into `registerWithBot`; add exhaustive `default`
    branches to both response dispatchers; fix `import { LbContext }` →
    `import type` in `command/types.ts`.
-10. **`/commands` & `/botfather` leak admin commands.** Help filters only
-    `requiresSuperAdmin` (`commands.ts:41,54`); `/remove` and `/chatid` are
-    listed for users who can't run them. Filter `requiresAdmin` too.
+7. **`/commands` & `/botfather` leak admin commands.** Help filters only
+   `requiresSuperAdmin` (`commands.ts:41,54`); `/remove` and `/chatid` are
+   listed for users who can't run them. Filter `requiresAdmin` too.

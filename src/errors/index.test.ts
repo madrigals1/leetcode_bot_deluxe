@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  BackendApiError,
   BackendNotAvailableError,
   BackendUserNotFoundError,
   BotNotInitializedError,
@@ -78,6 +79,14 @@ describe("error classes", () => {
     expect(err.message).toBe("❗ VizAPI is not available.");
   });
 
+  it("BackendApiError carries code, status and message", () => {
+    const err = new BackendApiError("NOPE", "USER_NOT_FOUND_IN_LEETCODE", 404);
+    expect(err.message).toBe("❗ NOPE");
+    expect(err.code).toBe("USER_NOT_FOUND_IN_LEETCODE");
+    expect(err.status).toBe(404);
+    expect(err.name).toBe("LeetCodeBotError.BackendApiError");
+  });
+
   it("BackendUserNotFoundError formats the username", () => {
     const err = new BackendUserNotFoundError("alice");
     expect(err.message).toBe('❗ User <b>"alice"</b> was not found in this channel.');
@@ -115,6 +124,7 @@ describe("error classes", () => {
       new BackendNotAvailableError(),
       new BotNotInitializedError(),
       new VizApiNotAvailableError(),
+      new BackendApiError("x"),
       new BackendUserNotFoundError("x"),
       new TelegramUserHasNoTrackError(),
       new LeetCodeUserNotFoundError("x"),

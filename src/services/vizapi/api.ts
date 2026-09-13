@@ -83,7 +83,7 @@ export class VizApiService {
       service: "vizapi",
       path,
       onNetworkError: () => new VizApiNotAvailableError(),
-      onHttpError: (response) => `VizAPI error: ${response.status}`,
+      onHttpError: (response) => new Error(`VizAPI error: ${response.status}`),
     });
   }
 }

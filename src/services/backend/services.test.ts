@@ -82,6 +82,14 @@ describe("UsersService", () => {
       .rejects.toBeInstanceOf(LeetCodeUserNotFoundError);
   });
 
+  it("maps a sentinel embedded in a {detail} payload when adding", async () => {
+    mockBackendFetch(() =>
+      jsonResponse(400, { detail: "Rejected: USER_NOT_FOUND_IN_LEETCODE" })
+    );
+    await expect(UsersService.addToChannel("ghost", 5))
+      .rejects.toBeInstanceOf(LeetCodeUserNotFoundError);
+  });
+
   it("maps already-in-channel when adding", async () => {
     mockBackendFetch(() => jsonResponse(400, { error: "USER_ALREADY_IN_CHANNEL" }));
     await expect(UsersService.addToChannel("alice", 5))

@@ -3,8 +3,40 @@ import {
   BACKEND_JWT_REFRESH_TOKEN,
   TOKEN_MAX_AGE_MS,
 } from "@/constants";
-import { BackendNotAvailableError } from "@/errors";
+import { BackendApiError, BackendNotAvailableError } from "@/errors";
 import { httpJson } from "@/utils/http";
+
+const SENTINEL_CODE_PATTERN = /[A-Z][A-Z0-9_]+/;
+
+function extractBackendErrorCode(body: unknown): string | undefined {
+  if (typeof body !== "object" || body === null) {
+    return undefined;
+  }
+
+  const raw =
+    (body as { error?: unknown }).error
+    ?? (body as { detail?: unknown }).detail;
+
+  if (typeof raw !== "string") {
+    return undefined;
+  }
+
+  return raw.match(SENTINEL_CODE_PATTERN)?.[0];
+}
+
+function backendError(body: unknown, status: number): BackendApiError {
+  if (typeof body === "object" && body !== null) {
+    const raw =
+      (body as { error?: unknown }).error
+      ?? (body as { detail?: unknown }).detail;
+
+    if (typeof raw === "string") {
+      return new BackendApiError(raw, extractBackendErrorCode(body), status);
+    }
+  }
+
+  return new BackendApiError(`API error: ${status}`, undefined, status);
+}
 
 export class ApiService {
   private static cachedAccessToken?: string;
@@ -22,7 +54,12 @@ export class ApiService {
         service: "backend",
         path: "/api/token/refresh/",
         onNetworkError: () => new BackendNotAvailableError(),
-        onHttpError: () => "Failed to refresh access token.",
+        onHttpError: (response, body) =>
+          new BackendApiError(
+            "Failed to refresh access token.",
+            extractBackendErrorCode(body),
+            response.status,
+          ),
       },
     );
 
@@ -65,8 +102,7 @@ export class ApiService {
       path,
       headers: { Authorization: `Bearer ${token}` },
       onNetworkError: () => new BackendNotAvailableError(),
-      onHttpError: (response, body) =>
-        (body as { error?: string })?.error ?? `API error: ${response.status}`,
+      onHttpError: (response, body) => backendError(body, response.status),
     });
   }
 }

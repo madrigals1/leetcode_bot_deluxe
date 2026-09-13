@@ -106,7 +106,7 @@ describe("httpJson", () => {
     });
   });
 
-  it("surfaces onHttpError messages for HTTP failures", async () => {
+  it("surfaces onHttpError errors for HTTP failures", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(404, { error: "NOPE" })));
 
     const error = await httpJson(
@@ -114,7 +114,7 @@ describe("httpJson", () => {
       {},
       {
         service: "backend",
-        onHttpError: (response) => `failed with ${response.status}`,
+        onHttpError: (response) => new Error(`failed with ${response.status}`),
       },
     ).catch((err: Error) => err);
 
@@ -152,7 +152,7 @@ describe("httpJson", () => {
       {},
       {
         service: "backend",
-        onHttpError: (_response, body) => `body=${String(body)}`,
+        onHttpError: (_response, body) => new Error(`body=${String(body)}`),
       },
     ).catch((err: Error) => err);
 

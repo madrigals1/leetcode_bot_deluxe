@@ -7,7 +7,7 @@ export interface HttpJsonOptions {
   path?: string;
   headers?: Record<string, string>;
   onNetworkError?: () => Error;
-  onHttpError?: (response: Response, body: unknown) => string;
+  onHttpError?: (response: Response, body: unknown) => Error;
 }
 
 export async function fetchWithTimeout(
@@ -66,10 +66,8 @@ export async function httpJson<T>(
 
     apiErrorsTotal.inc({ service, kind: "http" });
 
-    const message =
-      httpOptions.onHttpError?.(response, body)
-      ?? `HTTP error: ${response.status}`;
-    throw new Error(message);
+    throw httpOptions.onHttpError?.(response, body)
+      ?? new Error(`HTTP error: ${response.status}`);
   }
 
   return response.json() as Promise<T>;

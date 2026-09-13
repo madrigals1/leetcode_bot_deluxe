@@ -1,7 +1,19 @@
 import { timeAgo } from "short-time-ago";
 
+const HTML_ESCAPES: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+};
+
+export function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (char) => HTML_ESCAPES[char]);
+}
+
 export function boldUsername(username: string): string {
-  return `<b>"${username}"</b>`;
+  return `<b>"${escapeHtml(username)}"</b>`;
 }
 
 export function humanizeTimestamp(timestamp: string | null): string {
