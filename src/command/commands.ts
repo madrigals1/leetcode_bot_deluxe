@@ -348,6 +348,10 @@ export default class Commands {
       const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
       const stats = user.data?.languageStats ?? [];
 
+      if (stats.length === 0) {
+        throw new DataNotFoundError();
+      }
+
       const langText =
         `👨‍💻 Problems solved by ${boldUsername(user.username)} in:\n\n` +
         stats

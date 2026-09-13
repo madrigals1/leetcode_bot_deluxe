@@ -135,7 +135,8 @@ backend errors (`BackendApiError` with `code`/`status`, catchers match codes not
 substrings, Django `{detail: ...}` payloads preserved), HTML escaping of
 user/backend-sourced strings (`escapeHtml` in `src/utils/format.ts`, applied in
 `boldUsername` and every direct `<b>` interpolation in `commands.ts`), VizAPI
-HTTP errors as `VizApiError` (`src/errors/index.ts`, carries `status`). Work
+HTTP errors as `VizApiError` (`src/errors/index.ts`, carries `status`),
+`langstats` empty guard (throws `DataNotFoundError` like `submissions`). Work
 through the remaining items one at a time:
 
 1. **`parseArgs` lowercases every arg** (`src/command/utils.ts:32`), including
@@ -149,17 +150,15 @@ through the remaining items one at a time:
    `callback/registry.ts:46` both catch and call `ctx.editMessageText` — which
    itself fails on stale/media messages. Route the final fallback through
    `answerCallbackQuery` instead.
-4. **`langstats` lacks an empty guard** (`commands.ts:349`) unlike `submissions`
-   (`:381`); empty data renders a bare header. Add `DataNotFoundError`.
-5. **Duplicate paginated pickers.** `remove`, `profile`, `avatar`, `langstats`,
+4. **Duplicate paginated pickers.** `remove`, `profile`, `avatar`, `langstats`,
    `submissions`, `problems`, `compare` repeat the same `paginatedButtons`
    boilerplate in `commands.ts`. Extract a `userPicker(name, text, argTransform)`.
-6. **Dead code & nits.** Remove `reply` from `PaginationHandlerData` (stored,
+5. **Dead code & nits.** Remove `reply` from `PaginationHandlerData` (stored,
    never read — `command/types.ts:117`); delete unused `AuthService`
    (`auth_service.ts`, exported but never called); drop `CommandRegistry.bot!`
    by passing the bot into `registerWithBot`; add exhaustive `default`
    branches to both response dispatchers; fix `import { LbContext }` →
    `import type` in `command/types.ts`.
-7. **`/commands` & `/botfather` leak admin commands.** Help filters only
+6. **`/commands` & `/botfather` leak admin commands.** Help filters only
    `requiresSuperAdmin` (`commands.ts:41,54`); `/remove` and `/chatid` are
    listed for users who can't run them. Filter `requiresAdmin` too.

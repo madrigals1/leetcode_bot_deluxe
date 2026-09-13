@@ -296,11 +296,11 @@ describe("Commands", () => {
     expect(res.text.indexOf("Python3")).toBeLessThan(res.text.indexOf("SQL"));
   });
 
-  it("langstats without stats", async () => {
+  it("langstats throws DataNotFoundError when there are no stats", async () => {
     services.ChannelUsersService.getUserInChannel.mockResolvedValue(bob);
 
-    const res = await Commands.langstats(lb(), { username: "bob" }) as TextResponse;
-    expect(res.text).toContain("Problems solved by");
+    await expect(Commands.langstats(lb(), { username: "bob" }))
+      .rejects.toBeInstanceOf(DataNotFoundError);
   });
 
   it("langstats without a username shows a picker", async () => {
