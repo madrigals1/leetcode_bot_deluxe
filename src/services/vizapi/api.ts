@@ -1,5 +1,5 @@
 import { VIZAPI_URL } from "@/constants";
-import { VizApiNotAvailableError } from "@/errors";
+import { VizApiError, VizApiNotAvailableError } from "@/errors";
 import { httpJson } from "@/utils/http";
 
 export interface CompareField {
@@ -83,7 +83,8 @@ export class VizApiService {
       service: "vizapi",
       path,
       onNetworkError: () => new VizApiNotAvailableError(),
-      onHttpError: (response) => new Error(`VizAPI error: ${response.status}`),
+      onHttpError: (response) =>
+        new VizApiError(`VizAPI error: ${response.status}`, response.status),
     });
   }
 }

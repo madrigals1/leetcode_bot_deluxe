@@ -134,7 +134,8 @@ validation, pagination flows scoped per chat (`<chatId>:<name>` handlers),
 backend errors (`BackendApiError` with `code`/`status`, catchers match codes not
 substrings, Django `{detail: ...}` payloads preserved), HTML escaping of
 user/backend-sourced strings (`escapeHtml` in `src/utils/format.ts`, applied in
-`boldUsername` and every direct `<b>` interpolation in `commands.ts`). Work
+`boldUsername` and every direct `<b>` interpolation in `commands.ts`), VizAPI
+HTTP errors as `VizApiError` (`src/errors/index.ts`, carries `status`). Work
 through the remaining items one at a time:
 
 1. **`parseArgs` lowercases every arg** (`src/command/utils.ts:32`), including

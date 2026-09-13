@@ -87,6 +87,13 @@ export class BackendApiError extends LeetCodeBotError {
   }
 }
 
+export class VizApiError extends LeetCodeBotError {
+  constructor(message: string, public readonly status?: number) {
+    super(`❗ ${message}`);
+    this.name = `${LeetCodeBotError.name}.VizApiError`;
+  }
+}
+
 export class BackendUserNotFoundError extends LeetCodeBotError {
   constructor(username: string) {
     super(`❗ User ${boldUsername(username)} was not found in this channel.`);

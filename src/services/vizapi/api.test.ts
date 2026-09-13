@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { VizApiService } from "@/services/vizapi";
-import { VizApiNotAvailableError } from "@/errors";
+import { VizApiError, VizApiNotAvailableError } from "@/errors";
 import { jsonResponse } from "../../../tests/helpers/fetch";
 
 afterEach(() => {
@@ -75,9 +75,14 @@ describe("VizApiService", () => {
     expect(requestBody).toEqual(pieData);
   });
 
-  it("maps HTTP errors to a friendly message", async () => {
+  it("maps HTTP errors to a VizApiError with the status", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(500, {})));
-    await expect(VizApiService.health()).rejects.toThrow("VizAPI error: 500");
+    await expect(VizApiService.health()).rejects.toBeInstanceOf(VizApiError);
+    await expect(VizApiService.health()).rejects.toMatchObject({
+      name: "LeetCodeBotError.VizApiError",
+      status: 500,
+      message: "❗ VizAPI error: 500",
+    });
   });
 
   it("maps network errors to VizApiNotAvailableError", async () => {

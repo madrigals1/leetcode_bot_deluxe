@@ -15,6 +15,7 @@ import {
   UnauthorizedError,
   UserAlreadyInChannelError,
   UserAlreadyTrackedError,
+  VizApiError,
   VizApiNotAvailableError,
 } from "./index";
 
@@ -87,6 +88,13 @@ describe("error classes", () => {
     expect(err.name).toBe("LeetCodeBotError.BackendApiError");
   });
 
+  it("VizApiError carries status and message", () => {
+    const err = new VizApiError("VizAPI error: 503", 503);
+    expect(err.message).toBe("❗ VizAPI error: 503");
+    expect(err.status).toBe(503);
+    expect(err.name).toBe("LeetCodeBotError.VizApiError");
+  });
+
   it("BackendUserNotFoundError formats the username", () => {
     const err = new BackendUserNotFoundError("alice");
     expect(err.message).toBe('❗ User <b>"alice"</b> was not found in this channel.');
@@ -125,6 +133,7 @@ describe("error classes", () => {
       new BotNotInitializedError(),
       new VizApiNotAvailableError(),
       new BackendApiError("x"),
+      new VizApiError("x"),
       new BackendUserNotFoundError("x"),
       new TelegramUserHasNoTrackError(),
       new LeetCodeUserNotFoundError("x"),
