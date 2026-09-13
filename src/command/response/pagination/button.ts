@@ -27,6 +27,7 @@ export async function renderFirstButtonsPage<T>({
 
   registerPaginationCallback({
     name: response.name,
+    chatId: lbCtx.chatId,
     fetchPage: response.fetchPage,
     renderPage: renderButtonsPageWithResponse,
     defaultPageSize: pageSize,

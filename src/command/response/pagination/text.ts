@@ -26,6 +26,7 @@ export async function renderFirstPage<T>({
 
   registerPaginationCallback({
     name: response.name,
+    chatId: lbCtx.chatId,
     fetchPage: response.fetchPage,
     renderPage: renderPageWithResponse,
     defaultPageSize: pageSize,

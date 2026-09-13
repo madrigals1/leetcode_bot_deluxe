@@ -70,6 +70,7 @@ describe("pagination utils", () => {
 
     registerPaginationCallback({
       name: "demo",
+      chatId: 123,
       fetchPage: vi.fn(),
       renderPage: vi.fn(),
       defaultPageSize: 5,
@@ -77,6 +78,7 @@ describe("pagination utils", () => {
     });
 
     expect(registerSpy).toHaveBeenCalledWith(
+      123,
       "demo",
       expect.objectContaining({ defaultPageSize: 5 }),
     );

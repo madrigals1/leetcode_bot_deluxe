@@ -14,7 +14,7 @@ vi.mock("@/metrics", () => ({
 
 const PAGE_PATTERN = /^(\w+)_page:(\d+)$/;
 
-function registerHandler(name: string) {
+function registerHandler(name: string, chatId = 123) {
   const fetchPage = vi.fn(async () => ({ count: 1, results: [{ id: 1 }] }));
   const renderPage = vi.fn(
     async (
@@ -28,7 +28,7 @@ function registerHandler(name: string) {
     },
   );
 
-  PaginationRegistry.registerHandler(name, {
+  PaginationRegistry.registerHandler(chatId, name, {
     fetchPage,
     renderPage,
     defaultPageSize: 10,
@@ -100,7 +100,7 @@ describe("PaginationRegistry", () => {
   });
 
   it("reports no data to the user", async () => {
-    PaginationRegistry.registerHandler("empty", {
+    PaginationRegistry.registerHandler(123, "empty", {
       fetchPage: vi.fn(async () => ({ count: 0, results: [] })),
       renderPage: vi.fn(),
       defaultPageSize: 10,
@@ -114,7 +114,7 @@ describe("PaginationRegistry", () => {
   });
 
   it("falls back to an error message for unexpected failures", async () => {
-    PaginationRegistry.registerHandler("broken", {
+    PaginationRegistry.registerHandler(123, "broken", {
       fetchPage: vi.fn(async () => ({ count: 1, results: [{ id: 1 }] })),
       renderPage: vi.fn(async () => {
         throw new Error("boom");
@@ -127,5 +127,43 @@ describe("PaginationRegistry", () => {
 
     expect(ctx.editMessageText).toHaveBeenCalledWith("❗ Failed to fetch data.");
     expect(mocks.paginationErrorsTotal.inc).toHaveBeenCalledWith({ name: "broken" });
+  });
+
+  it("keeps pagination flows isolated between chats", async () => {
+    const chatA = registerHandler("compare", 111);
+    const chatB = registerHandler("compare", 222);
+
+    await capture(
+      makeFakeContext({ chatId: 111, match: ["compare_page:2", "compare", "2"] }),
+    );
+    await capture(
+      makeFakeContext({ chatId: 222, match: ["compare_page:2", "compare", "2"] }),
+    );
+
+    expect(chatA.fetchPage).toHaveBeenCalledTimes(1);
+    expect(chatB.fetchPage).toHaveBeenCalledTimes(1);
+    expect(chatB.renderPage).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not run another chat's handler", async () => {
+    const { fetchPage } = registerHandler("compare", 111);
+
+    await capture(
+      makeFakeContext({ chatId: 999, match: ["compare_page:1", "compare", "1"] }),
+    );
+
+    expect(fetchPage).not.toHaveBeenCalled();
+  });
+
+  it("ignores taps without a chat", async () => {
+    const { fetchPage } = registerHandler("leaderboard");
+    const ctx = makeFakeContext({
+      match: ["leaderboard_page:1", "leaderboard", "1"],
+    }) as unknown as { chat?: unknown };
+
+    delete ctx.chat;
+    await capture(ctx);
+
+    expect(fetchPage).not.toHaveBeenCalled();
   });
 });

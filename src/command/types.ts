@@ -103,6 +103,7 @@ export interface RenderPageOptions<T, R extends PaginationBaseResponse<T>>
 
 export interface RegisterPaginationCallbackOptions<T> {
   name: string;
+  chatId: number;
   fetchPage: (page: number, ctx: LbContext) => Promise<PaginatedResponse<T>>;
   renderPage: (
     lbCtx: LbContext,
@@ -117,4 +118,7 @@ export interface RegisterPaginationCallbackOptions<T> {
   reply: ReplyMethod;
 }
 
-export type PaginationHandlerData = Omit<RegisterPaginationCallbackOptions<unknown>, "name">;
+export type PaginationHandlerData = Omit<
+  RegisterPaginationCallbackOptions<unknown>,
+  "name" | "chatId"
+>;

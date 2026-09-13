@@ -22,7 +22,14 @@ export class PaginationRegistry {
           return;
         }
 
-        const data = PaginationRegistry.handlers.get(name);
+        const chatId = ctx.chat?.id;
+        if (chatId === undefined) {
+          return;
+        }
+
+        const data = PaginationRegistry.handlers.get(
+          PaginationRegistry.key(chatId, name),
+        );
         if (!data) {
           return;
         }
@@ -65,7 +72,11 @@ export class PaginationRegistry {
     );
   }
 
-  static registerHandler(name: string, data: PaginationHandlerData) {
-    PaginationRegistry.handlers.set(name, data);
+  static registerHandler(chatId: number, name: string, data: PaginationHandlerData) {
+    PaginationRegistry.handlers.set(PaginationRegistry.key(chatId, name), data);
+  }
+
+  private static key(chatId: number, name: string) {
+    return `${chatId}:${name}`;
   }
 }

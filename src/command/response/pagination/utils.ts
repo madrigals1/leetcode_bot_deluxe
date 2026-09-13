@@ -48,6 +48,7 @@ export function buildNavRow(page: number, hasNext: boolean, name: string) {
 
 export function registerPaginationCallback<T>({
   name,
+  chatId,
   fetchPage,
   renderPage,
   defaultPageSize,
@@ -55,6 +56,7 @@ export function registerPaginationCallback<T>({
   reply,
 }: RegisterPaginationCallbackOptions<T>) {
   PaginationRegistry.registerHandler(
+    chatId,
     name,
     {
       fetchPage,
