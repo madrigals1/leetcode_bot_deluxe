@@ -89,7 +89,9 @@ describe("httpJson", () => {
   });
 
   it("merges custom headers with the JSON content type", async () => {
-    const fetchMock = vi.fn(async () => jsonResponse(200, {}));
+    const fetchMock = vi.fn(async (_url: string, _options: RequestInit) =>
+      jsonResponse(200, {})
+    );
     vi.stubGlobal("fetch", fetchMock);
 
     await httpJson(
@@ -98,7 +100,8 @@ describe("httpJson", () => {
       { service: "backend", headers: { "X-Custom": "yes" } },
     );
 
-    const sentHeaders = fetchMock.mock.calls[0][1].headers as Record<string, string>;
+    const sentHeaders =
+      fetchMock.mock.calls[0][1].headers as unknown as Record<string, string>;
     expect(sentHeaders).toEqual({
       "Content-Type": "application/json",
       Authorization: "Bearer abc",
@@ -144,7 +147,7 @@ describe("httpJson", () => {
         json: async () => {
           throw new Error("not json");
         },
-      }) as Response),
+      }) as unknown as Response),
     );
 
     const error = await httpJson(

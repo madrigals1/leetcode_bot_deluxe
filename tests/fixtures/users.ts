@@ -17,6 +17,7 @@ export const alice: User = {
         { difficulty: "Medium", count: 45 },
         { difficulty: "Hard", count: 15 },
       ],
+      totalSubmissionNum: [{ difficulty: "All", count: 150 }],
     },
   },
   created_at: "2024-01-01T00:00:00Z",

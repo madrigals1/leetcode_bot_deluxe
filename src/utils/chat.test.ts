@@ -9,7 +9,7 @@ function loadChat(): Promise<typeof import("./chat")> {
 }
 
 function groupCtx(memberStatus: string): Context {
-  const ctx = makeFakeContext() as ReturnType<typeof makeFakeContext> & {
+  const ctx = makeFakeContext() as unknown as {
     chat: { id: number; type: string };
     api: { getChatMember: ReturnType<typeof vi.fn> };
   };
@@ -92,11 +92,11 @@ describe("chat auth helpers", () => {
 
     it("returns true in a private chat", async () => {
       const { isOwnerOrPrivate } = await loadChat();
-      const ctx = makeFakeContext() as unknown as Context & {
+      const ctx = makeFakeContext() as unknown as {
         chat: { id: number; type: string };
       };
       ctx.chat = { id: 1, type: "private" };
-      expect(await isOwnerOrPrivate(ctx)).toBe(true);
+      expect(await isOwnerOrPrivate(ctx as unknown as Context)).toBe(true);
     });
 
     it("returns true for a creator", async () => {

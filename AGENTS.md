@@ -35,6 +35,11 @@ tables, solved-problems pie charts, and user comparisons.
   excludes them from the `tsgo` build so `dist/` stays clean. Integration-style
   tests live in `tests/` with reusable fakes in `tests/helpers/`
   (`makeFakeBot`, `makeFakeContext`) and payloads in `tests/fixtures/`.
+- Tests are typechecked **separately** via `tsconfig.test.json` (self-contained
+  strict project: `paths` for `@/*`, `types: ["node"]`, `noEmit`) —
+  `npx tsc --noEmit -p tsconfig.test.json`. Do not have it `extends` the main
+  `tsconfig.json`, whose `exclude` silently drops test files from the project
+  (VS Code then falls back to the inferred project and `@/`/`process` unresolve).
 - Modules that import `@/metrics` (counters) are `vi.mock`ed per test file to
   assert increments deterministically (prom-client `get()` is opaque in v15).
 

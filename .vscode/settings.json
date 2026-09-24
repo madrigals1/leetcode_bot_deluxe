@@ -3,5 +3,6 @@
   "editor.wordWrap": "off",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

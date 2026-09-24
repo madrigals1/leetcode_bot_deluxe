@@ -4,6 +4,7 @@ import { DataNotFoundError } from "@/errors";
 import { LbContext } from "@/utils/context";
 import { makeFakeContext } from "../../../../tests/helpers/makeFakeContext";
 import { renderFirstButtonsPage } from "./button";
+import type { PaginatedButtonsResponse } from "@/command/types";
 
 function makeLb() {
   return new LbContext(makeFakeContext() as unknown as Context);
@@ -22,12 +23,14 @@ function page(results: Row[], count?: number) {
   };
 }
 
-function response(overrides: Partial<Parameters<typeof response>[0]> = {}) {
+function response(
+  overrides: Partial<PaginatedButtonsResponse<Row>> = {},
+): PaginatedButtonsResponse<Row> {
   return {
-    type: "paginatedButtons" as const,
+    type: "paginatedButtons",
     name: "compare",
     text: "Select:",
-    fetchPage: vi.fn(),
+    fetchPage: vi.fn() as unknown as PaginatedButtonsResponse<Row>["fetchPage"],
     itemToButton: (item: Row) => ({
       text: item.username,
       callback_data: `command:compare ${item.username}`,

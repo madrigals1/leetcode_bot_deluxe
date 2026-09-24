@@ -59,7 +59,7 @@ describe("CallbackRegistry", () => {
     const ctx = makeFakeContext() as ReturnType<typeof makeFakeContext> & {
       editMessageText: ReturnType<typeof vi.fn>;
     };
-    await fake.registeredCallbacks.get("^test_success$")(ctx);
+    await fake.registeredCallbacks.get("^test_success$")!(ctx);
 
     expect(ctx.answerCallbackQuery).toHaveBeenCalledWith(undefined);
     expect(ctx.editMessageText).toHaveBeenCalledWith(
@@ -79,7 +79,7 @@ describe("CallbackRegistry", () => {
     const ctx = makeFakeContext() as ReturnType<typeof makeFakeContext> & {
       editMessageText: ReturnType<typeof vi.fn>;
     };
-    await fake.registeredCallbacks.get("^test_domain_error$")(ctx);
+    await fake.registeredCallbacks.get("^test_domain_error$")!(ctx);
 
     expect(ctx.editMessageText).toHaveBeenCalledWith("domain boom");
   });
@@ -92,7 +92,7 @@ describe("CallbackRegistry", () => {
     const ctx = makeFakeContext() as ReturnType<typeof makeFakeContext> & {
       editMessageText: ReturnType<typeof vi.fn>;
     };
-    await fake.registeredCallbacks.get("^test_generic_error$")(ctx);
+    await fake.registeredCallbacks.get("^test_generic_error$")!(ctx);
 
     expect(ctx.editMessageText).toHaveBeenCalledWith("An error occurred.");
   });
@@ -103,7 +103,7 @@ describe("CallbackRegistry", () => {
     CallbackRegistry.registerAllCallbacks();
 
     const ctx = makeFakeContext({ chatId: 999 });
-    await fake.registeredCallbacks.get("test_string_action")(ctx);
+    await fake.registeredCallbacks.get("test_string_action")!(ctx);
 
     expect(ctx.editMessageText).toHaveBeenCalledWith(
       "matched: 999",
@@ -119,7 +119,7 @@ describe("CallbackRegistry", () => {
     const ctx = makeFakeContext({
       match: ["command:wat", "wat"] as unknown as RegExpMatchArray,
     });
-    await fake.registeredCallbacks.get("^command:(.+)$")(ctx);
+    await fake.registeredCallbacks.get("^command:(.+)$")!(ctx);
 
     expect(ctx.editMessageText).not.toHaveBeenCalled();
   });
@@ -132,7 +132,7 @@ describe("CallbackRegistry", () => {
       originalFn: async () => {
         throw new LeetCodeBotError("decorator boom");
       },
-      handler: async () => undefined,
+      handler: async () => undefined as never,
     });
 
     const fake = makeFakeBot();
@@ -142,7 +142,7 @@ describe("CallbackRegistry", () => {
     const ctx = makeFakeContext({
       match: [`command:${name}`, name] as unknown as RegExpMatchArray,
     });
-    await fake.registeredCallbacks.get("^command:(.+)$")(ctx);
+    await fake.registeredCallbacks.get("^command:(.+)$")!(ctx);
 
     expect(ctx.editMessageText).toHaveBeenCalledWith("decorator boom");
   });
@@ -155,7 +155,7 @@ describe("CallbackRegistry", () => {
       originalFn: async () => {
         throw new Error("boom");
       },
-      handler: async () => undefined,
+      handler: async () => undefined as never,
     });
 
     const fake = makeFakeBot();
@@ -165,7 +165,7 @@ describe("CallbackRegistry", () => {
     const ctx = makeFakeContext({
       match: [`command:${name}`, name] as unknown as RegExpMatchArray,
     });
-    await fake.registeredCallbacks.get("^command:(.+)$")(ctx);
+    await fake.registeredCallbacks.get("^command:(.+)$")!(ctx);
 
     expect(ctx.editMessageText).toHaveBeenCalledWith("An error occurred.");
   });

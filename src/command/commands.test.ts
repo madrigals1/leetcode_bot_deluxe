@@ -6,6 +6,7 @@ import { makeFakeBot } from "../../tests/helpers/makeFakeBot";
 import { makeFakeContext } from "../../tests/helpers/makeFakeContext";
 import Commands from "./commands";
 import { CommandRegistry } from "./registry";
+import type { CommandMetadata } from "./types";
 import { LbContext } from "@/utils/context";
 import type {
   EditTextResponse,
@@ -70,12 +71,15 @@ function lb(ctx = makeFakeContext() as unknown as Context): LbContext {
 }
 
 function ctxWithText(text: string, chatId = 123) {
-  const ctx = makeFakeContext({ chatId }) as unknown as Context & {
-    message: { text: string };
+  const ctx = makeFakeContext({ chatId }) as unknown as {
+    message: unknown;
     reply: ReturnType<typeof vi.fn>;
   };
   ctx.message = { text };
-  return ctx;
+  return ctx as unknown as Context & {
+    message: { text: string };
+    reply: ReturnType<typeof vi.fn>;
+  };
 }
 
 beforeEach(() => {
@@ -417,7 +421,7 @@ describe("Commands", () => {
   it("fetches a page for every paginated command", async () => {
     services.ChannelsService.getUsersSimplified.mockResolvedValue(channelUsers);
 
-    const pickers: PaginatedButtonsResponse[] = [
+    const pickers = [
       await Commands.remove(lb(), { username: "" }),
       await Commands.profile(lb(), { username: "" }),
       await Commands.avatar(lb(), { username: "" }),
@@ -426,7 +430,7 @@ describe("Commands", () => {
       await Commands.problems(lb(), { username: "" }),
       await Commands.compare(lb(), { username1: "alice", username2: "" }),
       await Commands.compare(lb(), { username1: "", username2: "" }),
-    ];
+    ] as PaginatedButtonsResponse[];
 
     for (const picker of pickers) {
       await picker.fetchPage(1, lb());
@@ -445,25 +449,39 @@ describe("Commands", () => {
     });
 
     const profile = await Commands.profile(lb(), { username: "" }) as PaginatedButtonsResponse;
-    expect(profile.itemToButton({ user: bob }).callback_data).toBe("command:profile bob");
+    expect(profile.itemToButton({ user: bob })).toMatchObject({
+      callback_data: "command:profile bob",
+    });
 
     const avatar = await Commands.avatar(lb(), { username: "" }) as PaginatedButtonsResponse;
-    expect(avatar.itemToButton({ user: bob }).callback_data).toBe("command:avatar bob");
+    expect(avatar.itemToButton({ user: bob })).toMatchObject({
+      callback_data: "command:avatar bob",
+    });
 
     const langstats = await Commands.langstats(lb(), { username: "" }) as PaginatedButtonsResponse;
-    expect(langstats.itemToButton({ user: bob }).callback_data).toBe("command:langstats bob");
+    expect(langstats.itemToButton({ user: bob })).toMatchObject({
+      callback_data: "command:langstats bob",
+    });
 
     const submissions = await Commands.submissions(lb(), { username: "" }) as PaginatedButtonsResponse;
-    expect(submissions.itemToButton({ user: bob }).callback_data).toBe("command:submissions bob");
+    expect(submissions.itemToButton({ user: bob })).toMatchObject({
+      callback_data: "command:submissions bob",
+    });
 
     const problems = await Commands.problems(lb(), { username: "" }) as PaginatedButtonsResponse;
-    expect(problems.itemToButton({ user: bob }).callback_data).toBe("command:problems bob");
+    expect(problems.itemToButton({ user: bob })).toMatchObject({
+      callback_data: "command:problems bob",
+    });
 
     const compareOne = await Commands.compare(lb(), { username1: "alice", username2: "" }) as PaginatedButtonsResponse;
-    expect(compareOne.itemToButton({ user: bob }).callback_data).toBe("command:compare alice bob");
+    expect(compareOne.itemToButton({ user: bob })).toMatchObject({
+      callback_data: "command:compare alice bob",
+    });
 
     const compareNone = await Commands.compare(lb(), { username1: "", username2: "" }) as PaginatedButtonsResponse;
-    expect(compareNone.itemToButton({ user: alice }).callback_data).toBe("command:compare alice");
+    expect(compareNone.itemToButton({ user: alice })).toMatchObject({
+      callback_data: "command:compare alice",
+    });
 
     const rating = Commands.rating() as PaginatedTextResponse;
     expect(rating.formatItem?.(channelUsers.results[0], 0)).toBe("1. <b>alice</b> 120");
@@ -573,8 +591,8 @@ describe("Commands", () => {
     CommandRegistry.addCommand({
       name,
       description: "demo",
-      originalFn: impl,
-      handler: impl as () => Promise<unknown>,
+      originalFn: impl as unknown as CommandMetadata["originalFn"],
+      handler: impl as unknown as CommandMetadata["handler"],
     });
 
     CommandRegistry.registerAllCommands();

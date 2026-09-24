@@ -6,11 +6,11 @@ import { LbContext } from "@/utils/context";
 import { dispatchResponse } from "./dispatch";
 
 function makeLb() {
-  const ctx = makeFakeContext() as ReturnType<typeof makeFakeContext> & {
-    api: { editMessageText: ReturnType<typeof vi.fn> };
-  };
-  ctx.api = { editMessageText: vi.fn() };
-  return new LbContext(ctx as unknown as Context);
+  const ctx = makeFakeContext() as unknown as Context;
+  Object.assign(ctx, {
+    api: { editMessageText: vi.fn() } as unknown as Context["api"],
+  });
+  return new LbContext(ctx);
 }
 
 describe("dispatchResponse", () => {
@@ -74,8 +74,8 @@ describe("dispatchResponse", () => {
         name: "rating",
         header: "Rating",
         fetchPage,
-        formatItem: (item: { username: string }, index: number) =>
-          `${index + 1}. ${item.username}`,
+        formatItem: (item: unknown, index: number) =>
+          `${index + 1}. ${(item as { username: string }).username}`,
         itemsPerPage: 2,
       },
       reply,
@@ -138,10 +138,13 @@ describe("dispatchResponse", () => {
         name: "remove",
         text: "Pick:",
         fetchPage,
-        itemToButton: (item: { username: string }) => ({
-          text: item.username,
-          callback_data: `command:remove ${item.username}`,
-        }),
+        itemToButton: (item: unknown) => {
+          const user = item as { username: string };
+          return {
+            text: user.username,
+            callback_data: `command:remove ${user.username}`,
+          };
+        },
       },
       reply,
       vi.fn(),

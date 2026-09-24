@@ -3,6 +3,7 @@ import { BotNotInitializedError, LeetCodeBotError } from "@/errors";
 import { makeFakeBot } from "../../tests/helpers/makeFakeBot";
 import { makeFakeContext } from "../../tests/helpers/makeFakeContext";
 import { CommandRegistry } from "./registry";
+import type { CommandMetadata } from "./types";
 
 const metrics = vi.hoisted(() => ({
   commandsTotal: { inc: vi.fn() },
@@ -16,8 +17,13 @@ function setBotState(bot: unknown) {
   (CommandRegistry as unknown as { bot?: unknown }).bot = bot;
 }
 
-function addCommand(name: string, handler: () => unknown) {
-  CommandRegistry.addCommand({ name, description: name, handler, originalFn: handler });
+function addCommand(name: string, handler: (...args: unknown[]) => unknown) {
+  CommandRegistry.addCommand({
+    name,
+    description: name,
+    handler: handler as CommandMetadata["handler"],
+    originalFn: handler as CommandMetadata["originalFn"],
+  });
   return name;
 }
 
@@ -68,7 +74,7 @@ describe("CommandRegistry", () => {
     CommandRegistry.registerAllCommands();
 
     const ctx = makeFakeContext();
-    await fake.registeredCommands.get(name)(ctx);
+    await fake.registeredCommands.get(name)!(ctx);
 
     expect(metrics.commandsTotal.inc).toHaveBeenCalledWith({ command: name });
     const stopTimer = metrics.commandDurationSeconds.startTimer.mock.results[0]?.value;
@@ -88,7 +94,7 @@ describe("CommandRegistry", () => {
     CommandRegistry.registerAllCommands();
 
     const ctx = makeFakeContext();
-    await fake.registeredCommands.get(name)(ctx);
+    await fake.registeredCommands.get(name)!(ctx);
 
     expect(ctx.reply).toHaveBeenCalledWith("domain boom");
     expect(metrics.commandsErrorsTotal.inc).toHaveBeenCalledWith({
@@ -109,7 +115,7 @@ describe("CommandRegistry", () => {
     CommandRegistry.registerAllCommands();
 
     const ctx = makeFakeContext();
-    await fake.registeredCommands.get(name)(ctx);
+    await fake.registeredCommands.get(name)!(ctx);
 
     expect(ctx.reply).toHaveBeenCalledWith("❗ An error occurred.");
     expect(metrics.commandsErrorsTotal.inc).toHaveBeenCalledWith({

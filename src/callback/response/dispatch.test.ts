@@ -4,13 +4,14 @@ import { CommandRegistry } from "@/command/registry";
 import { makeFakeContext } from "../../../tests/helpers/makeFakeContext";
 import { LbContext } from "@/utils/context";
 import { dispatchCallbackResponse } from "./dispatch";
+import type { CommandMetadata } from "@/command/types";
 
 function makeLb() {
-  const ctx = makeFakeContext() as ReturnType<typeof makeFakeContext> & {
-    api: { editMessageText: ReturnType<typeof vi.fn> };
-  };
-  ctx.api = { editMessageText: vi.fn() };
-  return new LbContext(ctx as unknown as Context);
+  const ctx = makeFakeContext() as unknown as Context;
+  Object.assign(ctx, {
+    api: { editMessageText: vi.fn() } as unknown as Context["api"],
+  });
+  return new LbContext(ctx);
 }
 
 function registerDemo(options: {
@@ -24,8 +25,8 @@ function registerDemo(options: {
     description: "demo",
     args: options.args,
     requiresSuperAdmin: options.requiresSuperAdmin,
-    originalFn,
-    handler: originalFn,
+    originalFn: originalFn as unknown as CommandMetadata["originalFn"],
+    handler: originalFn as unknown as CommandMetadata["handler"],
   });
   return { name, originalFn };
 }
