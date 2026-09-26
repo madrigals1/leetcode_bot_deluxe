@@ -1,11 +1,10 @@
 import type { Bot, Context } from "grammy";
-import { LeetCodeBotError } from "@/errors";
+import { BotNotInitializedError, LeetCodeBotError } from "@/errors";
 import {
   commandDurationSeconds,
   commandsErrorsTotal,
   commandsTotal,
 } from "@/metrics";
-import { RequireBot } from "@/utils/decorators";
 import type { CommandMetadata } from "./types";
 
 export class CommandRegistry {
@@ -20,10 +19,10 @@ export class CommandRegistry {
     CommandRegistry.commands.push(metadata);
   }
 
-  @RequireBot
   static registerAllCommands() {
+    const bot = CommandRegistry.requireBot();
     for (const cmd of CommandRegistry.commands) {
-      CommandRegistry.registerWithBot(cmd);
+      CommandRegistry.registerWithBot(bot, cmd);
     }
   }
 
@@ -35,8 +34,16 @@ export class CommandRegistry {
     return CommandRegistry.commands;
   }
 
-  private static registerWithBot(metadata: CommandMetadata) {
-    CommandRegistry.bot!.command(metadata.name, async (ctx: Context) => {
+  private static requireBot(): Bot {
+    const bot = CommandRegistry.bot;
+    if (!bot) {
+      throw new BotNotInitializedError();
+    }
+    return bot;
+  }
+
+  private static registerWithBot(bot: Bot, metadata: CommandMetadata) {
+    bot.command(metadata.name, async (ctx: Context) => {
       commandsTotal.inc({ command: metadata.name });
       const stopTimer = commandDurationSeconds.startTimer({
         command: metadata.name,

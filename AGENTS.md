@@ -66,12 +66,13 @@ tables, solved-problems pie charts, and user comparisons.
   (flat config), `typescript-eslint`, `@eslint/js`, `@stylistic/eslint-plugin` and
   Prettier, taking devDependencies from 15 to 8. Formatting is 2-space indent,
   `lineWidth: 80`, matching the old `max-len: 80`.
-- Two recommended rules are off, deliberately:
+- One recommended rule is off, deliberately:
   - `complexity/noStaticOnlyClass` — this codebase is *built* on static-only
     classes (`CommandRegistry`, `CallbackRegistry`, every service class). The rule
     flags 13 of them and directly opposes the architecture. Keep it off.
-  - `style/noNonNullAssertion` — temporarily off while the 20 assertions in tests
-    are being removed. Re-enable it once that cleanup lands.
+- `style/noNonNullAssertion` is on and enforced. Do not reintroduce `!`; use the
+  `must` / `mustGet` / `mustFind` helpers in `tests/helpers/mustGet.ts` in tests,
+  and narrow explicitly in library code (see `CommandRegistry.requireBot`).
 - `assist.actions.source.organizeImports` is off: it alphabetises named import
   specifiers (`{ BACKEND_URL, BACKEND_JWT_REFRESH_TOKEN }` gets re-sorted), which
   is churn without catching bugs. Flip it on if you want whole-statement sorting.
@@ -167,7 +168,11 @@ substrings, Django `{detail: ...}` payloads preserved), HTML escaping of
 user/backend-sourced strings (`escapeHtml` in `src/utils/format.ts`, applied in
 `boldUsername` and every direct `<b>` interpolation in `commands.ts`), VizAPI
 HTTP errors as `VizApiError` (`src/errors/index.ts`, carries `status`),
-`langstats` empty guard (throws `DataNotFoundError` like `submissions`). Work
+`langstats` empty guard (throws `DataNotFoundError` like `submissions`),
+`CommandRegistry.bot!`/`CallbackRegistry.bot!` (the `@RequireBot` decorator is
+gone — each registry narrows via a private `requireBot()` and passes the bot
+down, so the type system can see the guard), and the
+`import { LbContext }` → `import type` nit in `command/types.ts`. Work
 through the remaining items one at a time:
 
 1. **`parseArgs` lowercases every arg** (`src/command/utils.ts:32`), including
@@ -186,10 +191,8 @@ through the remaining items one at a time:
    boilerplate in `commands.ts`. Extract a `userPicker(name, text, argTransform)`.
 5. **Dead code & nits.** Remove `reply` from `PaginationHandlerData` (stored,
    never read — `command/types.ts:117`); delete unused `AuthService`
-   (`auth_service.ts`, exported but never called); drop `CommandRegistry.bot!`
-   by passing the bot into `registerWithBot`; add exhaustive `default`
-   branches to both response dispatchers; fix `import { LbContext }` →
-   `import type` in `command/types.ts`.
+   (`auth_service.ts`, exported but never called); add exhaustive `default`
+   branches to both response dispatchers.
 6. **`/commands` & `/botfather` leak admin commands.** Help filters only
    `requiresSuperAdmin` (`commands.ts:41,54`); `/remove` and `/chatid` are
    listed for users who can't run them. Filter `requiresAdmin` too.

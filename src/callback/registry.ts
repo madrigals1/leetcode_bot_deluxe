@@ -1,7 +1,6 @@
 import type { Bot, Context } from "grammy";
-import { LeetCodeBotError } from "@/errors";
+import { BotNotInitializedError, LeetCodeBotError } from "@/errors";
 import { callbacksTotal } from "@/metrics";
-import { RequireBot } from "@/utils/decorators";
 
 export interface CallbackMetadata {
   action: string | RegExp;
@@ -20,10 +19,10 @@ export class CallbackRegistry {
     CallbackRegistry.callbacks.push(metadata);
   }
 
-  @RequireBot
   static registerAllCallbacks() {
+    const bot = CallbackRegistry.requireBot();
     for (const cb of CallbackRegistry.callbacks) {
-      CallbackRegistry.registerWithBot(cb);
+      CallbackRegistry.registerWithBot(bot, cb);
     }
   }
 
@@ -31,13 +30,21 @@ export class CallbackRegistry {
     return CallbackRegistry.callbacks;
   }
 
-  private static registerWithBot(metadata: CallbackMetadata) {
+  private static requireBot(): Bot {
+    const bot = CallbackRegistry.bot;
+    if (!bot) {
+      throw new BotNotInitializedError();
+    }
+    return bot;
+  }
+
+  private static registerWithBot(bot: Bot, metadata: CallbackMetadata) {
     const action =
       typeof metadata.action === "string"
         ? metadata.action
         : metadata.action.source;
 
-    CallbackRegistry.bot!.callbackQuery(metadata.action, async (ctx) => {
+    bot.callbackQuery(metadata.action, async (ctx) => {
       callbacksTotal.inc({ action });
 
       try {
