@@ -25,7 +25,7 @@
     "start:prod": "npm run build && node dist/index.js",
     "build": "tsgo -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "debug": "tsx --inspect-brk src/index.ts",
-    "lint": "eslint src/ tests/",
+    "lint": "eslint src/ tests/ --fix",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"

@@ -24,7 +24,7 @@ export default tseslint.config(
       "@stylistic/object-curly-spacing": ["error", "always"],
       "@stylistic/arrow-spacing": "error",
       "curly": ["error", "all"],
-      "max-len": ["warn", { code: 80, ignoreStrings: true, ignoreUrls: true }],
+      "max-len": ["error", { code: 80, ignoreStrings: true, ignoreUrls: true }],
     },
   },
   {
