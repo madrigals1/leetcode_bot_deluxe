@@ -21,7 +21,8 @@ tables, solved-problems pie charts, and user comparisons.
 - `npm run build` — compile to `dist/` via `tsconfig.build.json` and rewrite `@/*` aliases
 - `npm run start:prod` — build then run `node dist/index.js`, env from `.env`
 - `npm run debug` — `tsx --inspect-brk`
-- `npm run lint` — ESLint (flat config, `eslint.config.mjs`) over `src/` and `tests/`
+- `npm run lint` — Biome check-only (lint + format) over `src/` and `tests/`
+- `npm run lint:fix` — Biome with safe autofixes applied
 - `npm run test` — Vitest, one-off run
 - `npm run test:watch` — Vitest watch mode
 - `npm run test:coverage` — Vitest with v8 coverage
@@ -61,10 +62,25 @@ tables, solved-problems pie charts, and user comparisons.
   `@typescript/native-preview`, drop-in for `tsc`) emits to `dist/`, then
   `tsc-alias` rewrites `@/*` requires to relative paths so `node dist/index.js`
   runs with no runtime alias shim. Dev still uses `tsx` (it resolves aliases natively).
-- ESLint flat config with `typescript-eslint` + `@stylistic/eslint-plugin`.
-  Formatting is enforced by ESLint (2-space indent, `curly: all`, `max-len: 80`);
-  there is no Prettier.
-- Run `npm run lint` after making changes.
+- **Biome** (`biome.json`) is the only linter/formatter — it replaced ESLint
+  (flat config), `typescript-eslint`, `@eslint/js`, `@stylistic/eslint-plugin` and
+  Prettier, taking devDependencies from 15 to 8. Formatting is 2-space indent,
+  `lineWidth: 80`, matching the old `max-len: 80`.
+- Two recommended rules are off, deliberately:
+  - `complexity/noStaticOnlyClass` — this codebase is *built* on static-only
+    classes (`CommandRegistry`, `CallbackRegistry`, every service class). The rule
+    flags 13 of them and directly opposes the architecture. Keep it off.
+  - `style/noNonNullAssertion` — temporarily off while the 20 assertions in tests
+    are being removed. Re-enable it once that cleanup lands.
+- `assist.actions.source.organizeImports` is off: it alphabetises named import
+  specifiers (`{ BACKEND_URL, BACKEND_JWT_REFRESH_TOKEN }` gets re-sorted), which
+  is churn without catching bugs. Flip it on if you want whole-statement sorting.
+- Biome's `noMisleadingCharacterClass` is a **false positive** here, suppressed in
+  `src/utils/format.ts` with a rationale: the invisible `\uFE0F`/`\u200D` code points
+  in the emoji-stripping regex are intentional.
+- `max-len` no longer exists as a lint rule. `lineWidth` is a soft guideline and
+  Biome cannot break long string/template literals, so such lines are allowed.
+- Run `npm run lint` after making changes; `npm run lint:fix` to autofix.
 
 ## Architecture
 
