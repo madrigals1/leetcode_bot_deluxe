@@ -18,7 +18,7 @@ tables, solved-problems pie charts, and user comparisons.
 ## Commands
 
 - `npm run start` — dev mode, watch mode (`tsx`), env from `.env.local`
-- `npm run build` — compile to `dist/` and rewrite `@/*` aliases
+- `npm run build` — compile to `dist/` via `tsconfig.build.json` and rewrite `@/*` aliases
 - `npm run start:prod` — build then run `node dist/index.js`, env from `.env`
 - `npm run debug` — `tsx --inspect-brk`
 - `npm run lint` — ESLint (flat config, `eslint.config.mjs`) over `src/` and `tests/`
@@ -31,15 +31,25 @@ tables, solved-problems pie charts, and user comparisons.
 - **Vitest** (`vitest.config.ts`): aliases `@/*` → `src/*`, node environment,
   honours `experimentalDecorators` via esbuild. Globals are disabled — import
   `describe`/`it`/`expect`/`vi` from `vitest` explicitly.
-- Unit tests are **colocated** as `*.test.ts` next to the code; `tsconfig.json`
+- Unit tests are **colocated** as `*.test.ts` next to the code; `tsconfig.build.json`
   excludes them from the `tsgo` build so `dist/` stays clean. Integration-style
   tests live in `tests/` with reusable fakes in `tests/helpers/`
   (`makeFakeBot`, `makeFakeContext`) and payloads in `tests/fixtures/`.
 - Tests are typechecked **separately** via `tsconfig.test.json` (self-contained
   strict project: `paths` for `@/*`, `types: ["node"]`, `noEmit`) —
-  `npx tsc --noEmit -p tsconfig.test.json`. Do not have it `extends` the main
-  `tsconfig.json`, whose `exclude` silently drops test files from the project
-  (VS Code then falls back to the inferred project and `@/`/`process` unresolve).
+  `npx tsc --noEmit -p tsconfig.test.json`. Do not have it `extends`
+  `tsconfig.build.json`, whose `exclude` silently drops test files from the project.
+- Root `tsconfig.json` is a **solution config** (`files: []` + `references` to
+  `tsconfig.build.json` and `tsconfig.test.json`). It must stay that way: the
+  editor's TS server only auto-discovers configs literally named `tsconfig.json`
+  while walking up from the open file, and it has no notion of
+  `tsconfig.test.json`. Without the root `references`, every `*.test.ts` lands in
+  an *inferred* project with no `paths` mapping, and `@/…`/`process` fail to
+  resolve in VS Code even though `tsc -p tsconfig.test.json` passes.
+- `tsconfig.test.json` sets `composite: true` (with `tsBuildInfoFile` under
+  `node_modules/.cache/`) so `tsc -b` accepts it as a referenced project, which
+  requires its program to be closed over its imports — hence `include: ["src",
+  "tests"]` rather than just the test globs.
 - Modules that import `@/metrics` (counters) are `vi.mock`ed per test file to
   assert increments deterministically (prom-client `get()` is opaque in v15).
 
@@ -52,7 +62,7 @@ tables, solved-problems pie charts, and user comparisons.
   `tsc-alias` rewrites `@/*` requires to relative paths so `node dist/index.js`
   runs with no runtime alias shim. Dev still uses `tsx` (it resolves aliases natively).
 - ESLint flat config with `typescript-eslint` + `@stylistic/eslint-plugin`.
-  Formatting is enforced by ESLint (2-space indent, `curly: all`, `max-len: 100`);
+  Formatting is enforced by ESLint (2-space indent, `curly: all`, `max-len: 80`);
   there is no Prettier.
 - Run `npm run lint` after making changes.
 

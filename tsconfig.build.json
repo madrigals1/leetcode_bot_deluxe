@@ -7,13 +7,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "types": ["node"],
-    "noEmit": true,
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.test.tsbuildinfo",
-    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "dist",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "tests"]
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
 }
