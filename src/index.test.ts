@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { must } from "../tests/helpers/mustGet";
 
 interface FakeBotLike {
   api: { config: { use: ReturnType<typeof vi.fn> } };
@@ -122,7 +123,7 @@ describe("index bootstrap", () => {
     expect(bot.start).toHaveBeenCalledWith({ onStart: expect.any(Function) });
     expect(logSpy).toHaveBeenCalledWith("Bot @test_bot is running.");
 
-    const handler = bot.apiConfigUse!;
+    const handler = must(bot.apiConfigUse, "apiConfigUse to be defined");
     const prev = vi.fn((_method: string, payload: object) => payload);
     const payload = { chat_id: 1, text: "hi" };
     handler(prev, "sendMessage", payload);

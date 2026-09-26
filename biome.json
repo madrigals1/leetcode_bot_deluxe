@@ -17,7 +17,7 @@
         "noStaticOnlyClass": "off"
       },
       "style": {
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "on"
       }
     }
   },

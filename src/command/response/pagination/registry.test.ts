@@ -3,6 +3,7 @@ import { LbContext } from "@/utils/context";
 import { PaginationRegistry } from "./registry";
 import { makeFakeBot } from "../../../../tests/helpers/makeFakeBot";
 import { makeFakeContext } from "../../../../tests/helpers/makeFakeContext";
+import { mustGet } from "../../../../tests/helpers/mustGet";
 
 const mocks = vi.hoisted(() => ({
   paginationErrorsTotal: { inc: vi.fn() },
@@ -47,7 +48,7 @@ describe("PaginationRegistry", () => {
     PaginationRegistry.setBot(fake.bot);
     capture = (ctx) =>
       Promise.resolve(
-        fake.registeredCallbacks.get(PAGE_PATTERN.source)!(ctx as never),
+        mustGet(fake.registeredCallbacks, PAGE_PATTERN.source)(ctx as never),
       );
   });
 

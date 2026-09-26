@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { BotNotInitializedError, LeetCodeBotError } from "@/errors";
 import { makeFakeBot } from "../../tests/helpers/makeFakeBot";
 import { makeFakeContext } from "../../tests/helpers/makeFakeContext";
+import { mustGet } from "../../tests/helpers/mustGet";
 import { CommandRegistry } from "./registry";
 import type { CommandMetadata } from "./types";
 
@@ -81,7 +82,7 @@ describe("CommandRegistry", () => {
     CommandRegistry.registerAllCommands();
 
     const ctx = makeFakeContext();
-    await fake.registeredCommands.get(name)!(ctx);
+    await mustGet(fake.registeredCommands, name)(ctx);
 
     expect(metrics.commandsTotal.inc).toHaveBeenCalledWith({ command: name });
     const stopTimer =
@@ -99,7 +100,7 @@ describe("CommandRegistry", () => {
     CommandRegistry.registerAllCommands();
 
     const ctx = makeFakeContext();
-    await fake.registeredCommands.get(name)!(ctx);
+    await mustGet(fake.registeredCommands, name)(ctx);
 
     expect(ctx.reply).toHaveBeenCalledWith("domain boom");
     expect(metrics.commandsErrorsTotal.inc).toHaveBeenCalledWith({
@@ -117,7 +118,7 @@ describe("CommandRegistry", () => {
     CommandRegistry.registerAllCommands();
 
     const ctx = makeFakeContext();
-    await fake.registeredCommands.get(name)!(ctx);
+    await mustGet(fake.registeredCommands, name)(ctx);
 
     expect(ctx.reply).toHaveBeenCalledWith("❗ An error occurred.");
     expect(metrics.commandsErrorsTotal.inc).toHaveBeenCalledWith({

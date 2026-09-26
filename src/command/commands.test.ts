@@ -8,6 +8,7 @@ import {
 import { trackedAlice, alice, bob } from "../../tests/fixtures/users";
 import { makeFakeBot } from "../../tests/helpers/makeFakeBot";
 import { makeFakeContext } from "../../tests/helpers/makeFakeContext";
+import { mustFind, mustGet } from "../../tests/helpers/mustGet";
 import Commands from "./commands";
 import { CommandRegistry } from "./registry";
 import type { CommandMetadata } from "./types";
@@ -630,7 +631,7 @@ describe("Commands", () => {
     CommandRegistry.setBot(fake.bot);
     CommandRegistry.registerAllCommands();
 
-    const handler = fake.registeredCommands.get("track")!;
+    const handler = mustGet(fake.registeredCommands, "track");
     const ctx = ctxWithText("/track Bob");
     await handler(ctx);
 
@@ -646,11 +647,15 @@ describe("Commands", () => {
   });
 
   it("rejects missing required arguments through the wrapper", async () => {
-    const handler = (
-      CommandRegistry as unknown as {
-        commands: Array<{ name: string; handler: (ctx: Context) => unknown }>;
-      }
-    ).commands.find((c) => c.name === "track")!.handler;
+    const handler = mustFind(
+      (
+        CommandRegistry as unknown as {
+          commands: Array<{ name: string; handler: (ctx: Context) => unknown }>;
+        }
+      ).commands,
+      (c) => c.name === "track",
+      'command "track"',
+    ).handler;
 
     await expect(handler(ctxWithText("/track"))).rejects.toThrow(
       InvalidArgumentAmountError,
@@ -658,11 +663,15 @@ describe("Commands", () => {
   });
 
   it("enforces superadmin-only commands through the wrapper", async () => {
-    const handler = (
-      CommandRegistry as unknown as {
-        commands: Array<{ name: string; handler: (ctx: Context) => unknown }>;
-      }
-    ).commands.find((c) => c.name === "superadmin")!.handler;
+    const handler = mustFind(
+      (
+        CommandRegistry as unknown as {
+          commands: Array<{ name: string; handler: (ctx: Context) => unknown }>;
+        }
+      ).commands,
+      (c) => c.name === "superadmin",
+      'command "superadmin"',
+    ).handler;
 
     await expect(handler(ctxWithText("/superadmin"))).rejects.toThrow(
       "You don't have permission to use this command.",
@@ -674,11 +683,15 @@ describe("Commands", () => {
       trackedAlice,
     );
 
-    const handler = (
-      CommandRegistry as unknown as {
-        commands: Array<{ name: string; handler: (ctx: Context) => unknown }>;
-      }
-    ).commands.find((c) => c.name === "avatar")!.handler;
+    const handler = mustFind(
+      (
+        CommandRegistry as unknown as {
+          commands: Array<{ name: string; handler: (ctx: Context) => unknown }>;
+        }
+      ).commands,
+      (c) => c.name === "avatar",
+      'command "avatar"',
+    ).handler;
 
     const ctx = ctxWithText("/avatar Alice") as unknown as Context & {
       replyWithPhoto: ReturnType<typeof vi.fn>;
@@ -696,11 +709,15 @@ describe("Commands", () => {
   });
 
   it("treats a missing message text as empty args", async () => {
-    const handler = (
-      CommandRegistry as unknown as {
-        commands: Array<{ name: string; handler: (ctx: Context) => unknown }>;
-      }
-    ).commands.find((c) => c.name === "start")!.handler;
+    const handler = mustFind(
+      (
+        CommandRegistry as unknown as {
+          commands: Array<{ name: string; handler: (ctx: Context) => unknown }>;
+        }
+      ).commands,
+      (c) => c.name === "start",
+      'command "start"',
+    ).handler;
 
     const ctx = makeFakeContext() as unknown as Context & {
       reply: ReturnType<typeof vi.fn>;
@@ -749,7 +766,7 @@ describe("Commands", () => {
       });
 
       CommandRegistry.registerAllCommands();
-      const handler = fake.registeredCommands.get(name)!;
+      const handler = mustGet(fake.registeredCommands, name);
       const ctx = ctxWithText(`/${name}`);
       await handler(ctx);
 
