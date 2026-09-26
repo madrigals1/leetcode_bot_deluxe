@@ -52,7 +52,7 @@ import "./callback/callbacks";
     });
     console.error("Unhandled bot error:", err.error);
     const ctx = err.ctx;
-    if (ctx && ctx.callbackQuery) {
+    if (ctx?.callbackQuery) {
       ctx.answerCallbackQuery("An error occurred. Please try again.");
     }
   });

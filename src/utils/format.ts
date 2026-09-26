@@ -30,6 +30,7 @@ export function humanizeTimestamp(timestamp: string | null): string {
 }
 
 export function stripEmojis(text: string): string {
+  // biome-ignore lint/suspicious/noMisleadingCharacterClass: FE0F (variation selector) and 200D (ZWJ) are invisible by design — they hold multi-codepoint emoji sequences together and are stripped along with the pictographs
   return text.replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu, "").trim();
 }
 
