@@ -1,13 +1,16 @@
 import { InlineKeyboard } from "grammy";
-import {
-  command,
-} from "@/command/decorator";
+import { command } from "@/command/decorator";
 import type { ParsedArgs } from "@/command/types";
 import { CommandRegistry } from "@/command/registry";
-import { UsersService, ChannelsService, ChannelUsersService, AdminService } from "@/services/backend";
+import {
+  UsersService,
+  ChannelsService,
+  ChannelUsersService,
+  AdminService,
+} from "@/services/backend";
 import { VizApiService } from "@/services/vizapi";
 import type { PieData } from "@/services/vizapi";
-import { LbContext } from "@/utils/context";
+import type { LbContext } from "@/utils/context";
 import {
   CML_EASY_POINTS,
   CML_MEDIUM_POINTS,
@@ -32,7 +35,9 @@ import { buildCompareData } from "./utils";
 export default class Commands {
   @command({ name: "start", description: "🚀 Start the bot" })
   static start() {
-    return text("Welcome to the LeetCode BOT.\n\nUse <b>/commands</b> to see available commands.");
+    return text(
+      "Welcome to the LeetCode BOT.\n\nUse <b>/commands</b> to see available commands.",
+    );
   }
 
   @command({ name: "commands", description: "❓ Show this help message" })
@@ -55,8 +60,10 @@ export default class Commands {
       .map((cmd) => `${cmd.name} - ${cmd.description}`)
       .join("\n");
 
-    const keyboard = new InlineKeyboard()
-      .text("🛡️ Superadmin", "command:superadmin");
+    const keyboard = new InlineKeyboard().text(
+      "🛡️ Superadmin",
+      "command:superadmin",
+    );
 
     return buttons({ text: commands, buttons: keyboard });
   }
@@ -83,7 +90,9 @@ export default class Commands {
       ["Total subscriptions", adminData.total_subscriptions],
       ["Total contests", adminData.total_contests],
       ["Total contest notifications", adminData.total_contest_notifications],
-    ].map(([label, value]) => `- ${label}: <b>${value}</b>`).join("\n");
+    ]
+      .map(([label, value]) => `- ${label}: <b>${value}</b>`)
+      .join("\n");
 
     const jobs = adminData.scheduled_jobs
       .map(
@@ -125,7 +134,9 @@ export default class Commands {
   })
   static async add(ctx: LbContext, parsedArgs: ParsedArgs) {
     await UsersService.addToChannel(parsedArgs.username, ctx.chatId);
-    return successText(`User ${boldUsername(parsedArgs.username)} was successfully added.`);
+    return successText(
+      `User ${boldUsername(parsedArgs.username)} was successfully added.`,
+    );
   }
 
   @command({
@@ -137,13 +148,16 @@ export default class Commands {
   static async remove(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
       await UsersService.removeFromChannel(parsedArgs.username, ctx.chatId);
-      return successText(`User ${boldUsername(parsedArgs.username)} was successfully removed.`);
+      return successText(
+        `User ${boldUsername(parsedArgs.username)} was successfully removed.`,
+      );
     }
 
     return paginatedButtons({
       name: "remove",
       text: "Select a user to remove:",
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) =>
+        ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `command:remove ${item.user.username}`,
@@ -166,8 +180,8 @@ export default class Commands {
     const username = boldUsername(parsedArgs.leetcode_username);
 
     return successText(
-      `Now tracking ${username} on LeetCode. `
-      + `Use <b>/myrank</b> to see ranking for ${username}.`,
+      `Now tracking ${username} on LeetCode. ` +
+        `Use <b>/myrank</b> to see ranking for ${username}.`,
     );
   }
 
@@ -176,7 +190,9 @@ export default class Commands {
     description: "🔄 Refresh all users' LeetCode data",
   })
   static async refresh(lbctx: LbContext) {
-    const msg = await lbctx.ctx.reply("🔄 Fetching data from LeetCode to the database...");
+    const msg = await lbctx.ctx.reply(
+      "🔄 Fetching data from LeetCode to the database...",
+    );
     await ChannelsService.refresh(lbctx.chatId);
     return editText({
       text: "✅ LeetCode data has been refreshed for all users in this channel!",
@@ -198,8 +214,8 @@ export default class Commands {
 
     if (!placement) {
       return errorText(
-        'You are not tracking anyone in this channel.\n\n' +
-        `Use <b>/track leetcode_username</b> to track a LeetCode account.`
+        "You are not tracking anyone in this channel.\n\n" +
+          `Use <b>/track leetcode_username</b> to track a LeetCode account.`,
       );
     }
 
@@ -214,13 +230,15 @@ export default class Commands {
     }
 
     if (last_refreshed) {
-      parts.push(`🕐 Last refreshed: <b>${humanizeTimestamp(last_refreshed)}</b>`);
+      parts.push(
+        `🕐 Last refreshed: <b>${humanizeTimestamp(last_refreshed)}</b>`,
+      );
     }
 
     if (nearest_above) {
       parts.push(
         `\n⬆️ User ahead: <b>${escapeHtml(nearest_above.username)}</b> — ` +
-        `<b>${nearest_above.solved}</b> solved (${nearest_above.solved_cml} cumulative)`,
+          `<b>${nearest_above.solved}</b> solved (${nearest_above.solved_cml} cumulative)`,
       );
     }
 
@@ -229,8 +247,8 @@ export default class Commands {
     }
 
     parts.push(
-      `\n<blockquote>💡 You can change your tracked username with: `
-      + '<b>/track username</b>.</blockquote>',
+      `\n<blockquote>💡 You can change your tracked username with: ` +
+        "<b>/track username</b>.</blockquote>",
     );
 
     return text(parts.join("\n"));
@@ -241,10 +259,14 @@ export default class Commands {
     return paginatedText({
       name: "rating",
       header: "Rating  🏆",
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) =>
+        ChannelsService.getUsersSimplified(ctx.chatId, page),
       formatItem: (item, i) =>
         `${i + 1}. <b>${escapeHtml(item.user.username)}</b> ${item.user.solved}`,
-      buttons: new InlineKeyboard().text("🔥 Cumulative rating", "command:rating_cml"),
+      buttons: new InlineKeyboard().text(
+        "🔥 Cumulative rating",
+        "command:rating_cml",
+      ),
     });
   }
 
@@ -260,7 +282,12 @@ export default class Commands {
         `🟢 Easy - ${CML_EASY_POINTS} points\n` +
         `🟡 Medium - ${CML_MEDIUM_POINTS} points\n` +
         `🔴 Hard - ${CML_HARD_POINTS} points`,
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page, "-user__solved_cml"),
+      fetchPage: (page, ctx) =>
+        ChannelsService.getUsersSimplified(
+          ctx.chatId,
+          page,
+          "-user__solved_cml",
+        ),
       formatItem: (item, i) =>
         `${i + 1}. <b>${escapeHtml(item.user.username)}</b> ${item.user.solved_cml}`,
       buttons: new InlineKeyboard().text("🏆 Regular rating", "command:rating"),
@@ -274,7 +301,10 @@ export default class Commands {
   })
   static async profile(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
+      const user = await ChannelUsersService.getUserInChannel(
+        parsedArgs.username,
+        ctx.chatId,
+      );
       const name = user.data?.profile?.realName ?? user.username;
       const solved = user.data?.submitStats?.acSubmissionNum ?? [];
       const total = user.data?.submitStats?.totalSubmissionNum ?? [];
@@ -300,7 +330,8 @@ export default class Commands {
     return paginatedButtons({
       name: "profile",
       text: "Select a user to view their profile:",
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) =>
+        ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `command:profile ${item.user.username}`,
@@ -316,7 +347,10 @@ export default class Commands {
   })
   static async avatar(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
+      const user = await ChannelUsersService.getUserInChannel(
+        parsedArgs.username,
+        ctx.chatId,
+      );
       const avatarUrl = user.data?.profile?.userAvatar;
 
       if (avatarUrl) {
@@ -329,7 +363,8 @@ export default class Commands {
     return paginatedButtons({
       name: "avatar",
       text: "Select a user to view their avatar:",
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) =>
+        ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `command:avatar ${item.user.username}`,
@@ -345,7 +380,10 @@ export default class Commands {
   })
   static async langstats(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
+      const user = await ChannelUsersService.getUserInChannel(
+        parsedArgs.username,
+        ctx.chatId,
+      );
       const stats = user.data?.languageStats ?? [];
 
       if (stats.length === 0) {
@@ -356,7 +394,9 @@ export default class Commands {
         `👨‍💻 Problems solved by ${boldUsername(user.username)} in:\n\n` +
         stats
           .sort((a, b) => b.problemsSolved - a.problemsSolved)
-          .map((s) => `- <b>${escapeHtml(s.languageName)}</b> ${s.problemsSolved}`)
+          .map(
+            (s) => `- <b>${escapeHtml(s.languageName)}</b> ${s.problemsSolved}`,
+          )
           .join("\n");
 
       return text(langText);
@@ -365,7 +405,8 @@ export default class Commands {
     return paginatedButtons({
       name: "langstats",
       text: "Select a user to view their language statistics:",
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) =>
+        ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `command:langstats ${item.user.username}`,
@@ -381,7 +422,10 @@ export default class Commands {
   })
   static async submissions(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
+      const user = await ChannelUsersService.getUserInChannel(
+        parsedArgs.username,
+        ctx.chatId,
+      );
       const submissions = user.data?.computed?.submissions ?? [];
 
       if (submissions.length === 0) {
@@ -403,7 +447,8 @@ export default class Commands {
     return paginatedButtons({
       name: "submissions",
       text: "Select a user to view their submissions:",
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) =>
+        ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `command:submissions ${item.user.username}`,
@@ -419,7 +464,10 @@ export default class Commands {
   })
   static async problems(ctx: LbContext, parsedArgs: ParsedArgs) {
     if (parsedArgs.username) {
-      const user = await ChannelUsersService.getUserInChannel(parsedArgs.username, ctx.chatId);
+      const user = await ChannelUsersService.getUserInChannel(
+        parsedArgs.username,
+        ctx.chatId,
+      );
       const stats = user.data?.submitStats?.acSubmissionNum ?? [];
 
       const getCount = (difficulty: string) =>
@@ -430,9 +478,21 @@ export default class Commands {
         sliceName: "Difficulty",
         sliceValue: "Count",
         sliceData: [
-          { sliceName: "Easy", sliceValue: getCount("Easy"), sliceColor: "#22c55e" },
-          { sliceName: "Medium", sliceValue: getCount("Medium"), sliceColor: "#eab308" },
-          { sliceName: "Hard", sliceValue: getCount("Hard"), sliceColor: "#ef4444" },
+          {
+            sliceName: "Easy",
+            sliceValue: getCount("Easy"),
+            sliceColor: "#22c55e",
+          },
+          {
+            sliceName: "Medium",
+            sliceValue: getCount("Medium"),
+            sliceColor: "#eab308",
+          },
+          {
+            sliceName: "Hard",
+            sliceValue: getCount("Hard"),
+            sliceColor: "#ef4444",
+          },
         ],
         chartArea: {},
         width: 600,
@@ -446,7 +506,8 @@ export default class Commands {
     return paginatedButtons({
       name: "problems",
       text: "Select a user to view their problems:",
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) =>
+        ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `command:problems ${item.user.username}`,
@@ -478,7 +539,8 @@ export default class Commands {
       return paginatedButtons({
         name: "compare",
         text: `Select second user to compare with ${boldUsername(parsedArgs.username1)}:`,
-        fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+        fetchPage: (page, ctx) =>
+          ChannelsService.getUsersSimplified(ctx.chatId, page),
         itemToButton: (item) => ({
           text: item.user.username,
           callback_data: `command:compare ${parsedArgs.username1} ${item.user.username}`,
@@ -490,7 +552,8 @@ export default class Commands {
     return paginatedButtons({
       name: "compare",
       text: "Select first user to compare:",
-      fetchPage: (page, ctx) => ChannelsService.getUsersSimplified(ctx.chatId, page),
+      fetchPage: (page, ctx) =>
+        ChannelsService.getUsersSimplified(ctx.chatId, page),
       itemToButton: (item) => ({
         text: item.user.username,
         callback_data: `command:compare ${item.user.username}`,

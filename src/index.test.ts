@@ -6,7 +6,9 @@ interface FakeBotLike {
   callbackQuery: ReturnType<typeof vi.fn>;
   catch: ReturnType<typeof vi.fn>;
   start: ReturnType<typeof vi.fn>;
-  apiConfigUse: ((prev: unknown, method: string, payload: object) => unknown) | undefined;
+  apiConfigUse:
+    | ((prev: unknown, method: string, payload: object) => unknown)
+    | undefined;
 }
 
 const grammy = vi.hoisted(() => {
@@ -23,17 +25,27 @@ const grammy = vi.hoisted(() => {
     constructor() {
       this.api = {
         config: {
-          use: vi.fn((handler: (prev: unknown, method: string, payload: object) => unknown) => {
-            this.apiConfigUse = handler;
-          }),
+          use: vi.fn(
+            (
+              handler: (
+                prev: unknown,
+                method: string,
+                payload: object,
+              ) => unknown,
+            ) => {
+              this.apiConfigUse = handler;
+            },
+          ),
         },
       };
       this.command = vi.fn();
       this.callbackQuery = vi.fn();
       this.catch = vi.fn();
-      this.start = vi.fn(async (opts?: { onStart?: (info: { username: string }) => void }) => {
-        opts?.onStart?.({ username: "test_bot" });
-      });
+      this.start = vi.fn(
+        async (opts?: { onStart?: (info: { username: string }) => void }) => {
+          opts?.onStart?.({ username: "test_bot" });
+        },
+      );
       instances.push(this);
     }
   }
@@ -97,9 +109,7 @@ describe("index bootstrap", () => {
     expect(health.viz).toHaveBeenCalled();
     expect(health.backend).toHaveBeenCalled();
     expect(metricsMock.startMetricsServer).toHaveBeenCalled();
-    expect(logSpy).toHaveBeenCalledWith(
-      "VizAPI health: ok (uptime 2m 0s)",
-    );
+    expect(logSpy).toHaveBeenCalledWith("VizAPI health: ok (uptime 2m 0s)");
     expect(logSpy).toHaveBeenCalledWith(
       "Backend health: ok (db postgres, backend v1.0, uptime 1h 0m 0s)",
     );
@@ -135,7 +145,10 @@ describe("index bootstrap", () => {
     expect(metricsMock.uncaughtErrorsTotal.inc).toHaveBeenCalledWith({
       error: "Error",
     });
-    expect(errorSpy).toHaveBeenCalledWith("Unhandled bot error:", expect.any(Error));
+    expect(errorSpy).toHaveBeenCalledWith(
+      "Unhandled bot error:",
+      expect.any(Error),
+    );
 
     const ctx = { callbackQuery: { data: "x" }, answerCallbackQuery: vi.fn() };
     await catchHandler({ error: { name: "Weird" } as unknown as Error, ctx });

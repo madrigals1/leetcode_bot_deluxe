@@ -1,4 +1,4 @@
-import { Context } from "grammy";
+import type { Context } from "grammy";
 import { describe, expect, it, vi } from "vitest";
 import { CommandRegistry } from "@/command/registry";
 import { makeFakeContext } from "../../../tests/helpers/makeFakeContext";

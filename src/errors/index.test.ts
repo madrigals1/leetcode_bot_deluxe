@@ -41,7 +41,9 @@ describe("error classes", () => {
 
   it("UnauthorizedError", () => {
     const err = new UnauthorizedError();
-    expect(err.message).toBe("❗ You don't have permission to use this command.");
+    expect(err.message).toBe(
+      "❗ You don't have permission to use this command.",
+    );
     expect(err.name).toBe("LeetCodeBotError.UnauthorizedError");
   });
 
@@ -97,7 +99,9 @@ describe("error classes", () => {
 
   it("BackendUserNotFoundError formats the username", () => {
     const err = new BackendUserNotFoundError("alice");
-    expect(err.message).toBe('❗ User <b>"alice"</b> was not found in this channel.');
+    expect(err.message).toBe(
+      '❗ User <b>"alice"</b> was not found in this channel.',
+    );
     expect(err.name).toBe("LeetCodeBotError.BackendUserNotFoundError");
   });
 
@@ -108,12 +112,16 @@ describe("error classes", () => {
 
   it("LeetCodeUserNotFoundError formats the username", () => {
     const err = new LeetCodeUserNotFoundError("bob");
-    expect(err.message).toBe('❗ User <b>"bob"</b> does not exist in LeetCode.');
+    expect(err.message).toBe(
+      '❗ User <b>"bob"</b> does not exist in LeetCode.',
+    );
   });
 
   it("UserAlreadyInChannelError formats the username", () => {
     const err = new UserAlreadyInChannelError("alice");
-    expect(err.message).toBe('⚠️ User <b>"alice"</b> is already added to this channel.');
+    expect(err.message).toBe(
+      '⚠️ User <b>"alice"</b> is already added to this channel.',
+    );
   });
 
   it("UserAlreadyTrackedError formats the username", () => {

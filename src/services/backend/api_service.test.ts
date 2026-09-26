@@ -33,7 +33,9 @@ afterEach(() => {
 
 describe("ApiService", () => {
   it("refreshes the access token on first use and caches it", async () => {
-    const { calls } = mockBackendFetch(() => jsonResponse(200, { message: "ok" }));
+    const { calls } = mockBackendFetch(() =>
+      jsonResponse(200, { message: "ok" }),
+    );
 
     const data = await ApiService.fetch<{ message: string }>("/api/health");
     expect(data).toEqual({ message: "ok" });
@@ -74,7 +76,9 @@ describe("ApiService", () => {
   });
 
   it("surfaces a structured backend error with a sentinel code", async () => {
-    mockBackendFetch(() => jsonResponse(400, { error: "USER_ALREADY_IN_CHANNEL" }));
+    mockBackendFetch(() =>
+      jsonResponse(400, { error: "USER_ALREADY_IN_CHANNEL" }),
+    );
     await expect(ApiService.fetch("/x")).rejects.toMatchObject({
       name: "LeetCodeBotError.BackendApiError",
       code: "USER_ALREADY_IN_CHANNEL",
@@ -84,7 +88,7 @@ describe("ApiService", () => {
 
   it("extracts a sentinel code from a Django-style {detail} payload", async () => {
     mockBackendFetch(() =>
-      jsonResponse(404, { detail: "Access denied: USER_NOT_FOUND_IN_CHANNEL" })
+      jsonResponse(404, { detail: "Access denied: USER_NOT_FOUND_IN_CHANNEL" }),
     );
     await expect(ApiService.fetch("/x")).rejects.toMatchObject({
       code: "USER_NOT_FOUND_IN_CHANNEL",
@@ -126,14 +130,20 @@ describe("ApiService", () => {
   });
 
   it("maps refresh HTTP errors to a friendly message", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(403, {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse(403, {})),
+    );
     const request = ApiService.fetch("/x");
     await expect(request).rejects.toBeInstanceOf(BackendApiError);
     await expect(request).rejects.toThrow("Failed to refresh access token.");
   });
 
   it("does not extract a code from a non-object refresh error body", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(403, "oops")));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse(403, "oops")),
+    );
     await expect(ApiService.fetch("/x")).rejects.toMatchObject({
       code: undefined,
       message: "❗ Failed to refresh access token.",
@@ -141,7 +151,10 @@ describe("ApiService", () => {
   });
 
   it("does not extract a code from a null refresh error body", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(403, null)));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse(403, null)),
+    );
     await expect(ApiService.fetch("/x")).rejects.toMatchObject({
       code: undefined,
       message: "❗ Failed to refresh access token.",
@@ -158,9 +171,12 @@ describe("ApiService", () => {
   });
 
   it("maps refresh network errors to BackendNotAvailableError", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => {
-      throw new TypeError("fetch failed");
-    }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new TypeError("fetch failed");
+      }),
+    );
     await expect(ApiService.fetch("/x")).rejects.toBeInstanceOf(
       BackendNotAvailableError,
     );

@@ -1,7 +1,10 @@
 import { InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
 import { PaginationRegistry } from "./registry";
-import type { PaginationHandlerData, RegisterPaginationCallbackOptions } from "@/command/types";
+import type {
+  PaginationHandlerData,
+  RegisterPaginationCallbackOptions,
+} from "@/command/types";
 
 export function buildKeyboard(
   itemRows?: InlineKeyboardButton[][],
@@ -55,15 +58,11 @@ export function registerPaginationCallback<T>({
   defaultButtonsPerRow,
   reply,
 }: RegisterPaginationCallbackOptions<T>) {
-  PaginationRegistry.registerHandler(
-    chatId,
-    name,
-    {
-      fetchPage,
-      renderPage,
-      defaultPageSize,
-      defaultButtonsPerRow,
-      reply,
-    } as PaginationHandlerData,
-  );
+  PaginationRegistry.registerHandler(chatId, name, {
+    fetchPage,
+    renderPage,
+    defaultPageSize,
+    defaultButtonsPerRow,
+    reply,
+  } as PaginationHandlerData);
 }

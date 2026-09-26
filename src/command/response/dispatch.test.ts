@@ -1,4 +1,4 @@
-import { Context } from "grammy";
+import type { Context } from "grammy";
 import { describe, expect, it, vi } from "vitest";
 import { DataNotFoundError } from "@/errors";
 import { makeFakeContext } from "../../../tests/helpers/makeFakeContext";
@@ -53,8 +53,13 @@ describe("dispatchResponse", () => {
       vi.fn(),
     );
 
-    expect((lb.ctx as unknown as { api: { editMessageText: ReturnType<typeof vi.fn> } }).api.editMessageText)
-      .toHaveBeenCalledWith(123, 7, "updated", { reply_markup: undefined });
+    expect(
+      (
+        lb.ctx as unknown as {
+          api: { editMessageText: ReturnType<typeof vi.fn> };
+        }
+      ).api.editMessageText,
+    ).toHaveBeenCalledWith(123, 7, "updated", { reply_markup: undefined });
   });
 
   it("dispatches a paginatedText response", async () => {
@@ -83,7 +88,10 @@ describe("dispatchResponse", () => {
     );
 
     expect(reply).toHaveBeenCalledTimes(1);
-    const [sent, options] = reply.mock.calls[0] as [string, { reply_markup: unknown }];
+    const [sent, options] = reply.mock.calls[0] as [
+      string,
+      { reply_markup: unknown },
+    ];
     expect(sent).toContain("Rating");
     expect(sent).toContain("1. alice");
     expect(sent).toContain("Page 1 of 3");
@@ -124,11 +132,7 @@ describe("dispatchResponse", () => {
       count: 4,
       next: null,
       previous: null,
-      results: [
-        { username: "a" },
-        { username: "b" },
-        { username: "c" },
-      ],
+      results: [{ username: "a" }, { username: "b" }, { username: "c" }],
     }));
 
     await dispatchResponse(
@@ -151,7 +155,10 @@ describe("dispatchResponse", () => {
     );
 
     expect(reply).toHaveBeenCalledTimes(1);
-    const [sent, options] = reply.mock.calls[0] as [string, { reply_markup: unknown }];
+    const [sent, options] = reply.mock.calls[0] as [
+      string,
+      { reply_markup: unknown },
+    ];
     expect(sent).toBe("Pick:");
     expect(options.reply_markup).toBeDefined();
   });

@@ -31,8 +31,9 @@ describe("chat auth helpers", () => {
   describe("isSuperAdmin", () => {
     it("returns true for a listed superadmin", async () => {
       const { isSuperAdmin } = await loadChat();
-      expect(isSuperAdmin(makeFakeContext({ telegramUsername: SUPER_ADMIN })))
-        .toBe(true);
+      expect(
+        isSuperAdmin(makeFakeContext({ telegramUsername: SUPER_ADMIN })),
+      ).toBe(true);
     });
 
     it("matches usernames case-insensitively", async () => {
@@ -59,7 +60,9 @@ describe("chat auth helpers", () => {
 
     it("returns false when the sender has no username", async () => {
       const { isSuperAdmin } = await loadChat();
-      const ctx = makeFakeContext({ telegramUsername: "" }) as unknown as Context;
+      const ctx = makeFakeContext({
+        telegramUsername: "",
+      }) as unknown as Context;
       expect(isSuperAdmin(ctx)).toBe(false);
     });
 
@@ -139,8 +142,9 @@ describe("chat auth helpers", () => {
 
     it("rejects a non-superadmin non-owner for an admin command", async () => {
       const { assertAuth } = await loadChat();
-      await expect(assertAuth(groupCtx("member"), { requiresAdmin: true }))
-        .rejects.toThrow("You don't have permission to use this command.");
+      await expect(
+        assertAuth(groupCtx("member"), { requiresAdmin: true }),
+      ).rejects.toThrow("You don't have permission to use this command.");
     });
 
     it("passes a superadmin for an admin command", async () => {
@@ -154,8 +158,9 @@ describe("chat auth helpers", () => {
 
     it("passes an owner for an admin command", async () => {
       const { assertAuth } = await loadChat();
-      await expect(assertAuth(groupCtx("creator"), { requiresAdmin: true }))
-        .resolves.toBeUndefined();
+      await expect(
+        assertAuth(groupCtx("creator"), { requiresAdmin: true }),
+      ).resolves.toBeUndefined();
     });
   });
 });

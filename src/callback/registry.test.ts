@@ -26,8 +26,9 @@ describe("CallbackRegistry", () => {
     const previous = (CallbackRegistry as unknown as { bot?: unknown }).bot;
     setBotState(undefined);
     try {
-      expect(() => CallbackRegistry.registerAllCallbacks())
-        .toThrow(BotNotInitializedError);
+      expect(() => CallbackRegistry.registerAllCallbacks()).toThrow(
+        BotNotInitializedError,
+      );
     } finally {
       setBotState(previous);
     }
@@ -62,10 +63,9 @@ describe("CallbackRegistry", () => {
     await fake.registeredCallbacks.get("^test_success$")!(ctx);
 
     expect(ctx.answerCallbackQuery).toHaveBeenCalledWith(undefined);
-    expect(ctx.editMessageText).toHaveBeenCalledWith(
-      "done",
-      { reply_markup: undefined },
-    );
+    expect(ctx.editMessageText).toHaveBeenCalledWith("done", {
+      reply_markup: undefined,
+    });
     expect(metrics.callbacksTotal.inc).toHaveBeenCalledWith({
       action: "^test_success$",
     });
@@ -105,10 +105,9 @@ describe("CallbackRegistry", () => {
     const ctx = makeFakeContext({ chatId: 999 });
     await fake.registeredCallbacks.get("test_string_action")!(ctx);
 
-    expect(ctx.editMessageText).toHaveBeenCalledWith(
-      "matched: 999",
-      { reply_markup: undefined },
-    );
+    expect(ctx.editMessageText).toHaveBeenCalledWith("matched: 999", {
+      reply_markup: undefined,
+    });
   });
 
   it("hands the match to the real command-redirect callback", async () => {

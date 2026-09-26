@@ -39,8 +39,9 @@ describe("CommandRegistry", () => {
     const previous = (CommandRegistry as unknown as { bot?: unknown }).bot;
     setBotState(undefined);
     try {
-      expect(() => CommandRegistry.registerAllCommands())
-        .toThrow(BotNotInitializedError);
+      expect(() => CommandRegistry.registerAllCommands()).toThrow(
+        BotNotInitializedError,
+      );
     } finally {
       setBotState(previous);
     }
@@ -48,7 +49,10 @@ describe("CommandRegistry", () => {
 
   it("registers all commands on the bot", () => {
     const fake = makeFakeBot();
-    const name = addCommand("greet", async () => ({ type: "text", text: "hi" }));
+    const name = addCommand("greet", async () => ({
+      type: "text",
+      text: "hi",
+    }));
     setBotState(fake.bot);
 
     CommandRegistry.registerAllCommands();
@@ -58,7 +62,10 @@ describe("CommandRegistry", () => {
   });
 
   it("finds a command by name", () => {
-    const name = addCommand("findme", async () => ({ type: "text", text: "x" }));
+    const name = addCommand("findme", async () => ({
+      type: "text",
+      text: "x",
+    }));
     expect(CommandRegistry.findByName(name)?.name).toBe(name);
     expect(CommandRegistry.findByName("missing")).toBeUndefined();
   });
@@ -77,19 +84,17 @@ describe("CommandRegistry", () => {
     await fake.registeredCommands.get(name)!(ctx);
 
     expect(metrics.commandsTotal.inc).toHaveBeenCalledWith({ command: name });
-    const stopTimer = metrics.commandDurationSeconds.startTimer.mock.results[0]?.value;
+    const stopTimer =
+      metrics.commandDurationSeconds.startTimer.mock.results[0]?.value;
     expect(stopTimer).toHaveBeenCalled();
     expect(ctx.reply).not.toHaveBeenCalled();
   });
 
   it("replies with the error message for a LeetCodeBotError", async () => {
     const fake = makeFakeBot();
-    const name = addCommand(
-      "fails_domain",
-      async () => {
-        throw new LeetCodeBotError("domain boom");
-      },
-    );
+    const name = addCommand("fails_domain", async () => {
+      throw new LeetCodeBotError("domain boom");
+    });
     setBotState(fake.bot);
     CommandRegistry.registerAllCommands();
 
@@ -105,12 +110,9 @@ describe("CommandRegistry", () => {
 
   it("replies with a generic message and the error name for unknown errors", async () => {
     const fake = makeFakeBot();
-    const name = addCommand(
-      "fails_generic",
-      async () => {
-        throw new Error("boom");
-      },
-    );
+    const name = addCommand("fails_generic", async () => {
+      throw new Error("boom");
+    });
     setBotState(fake.bot);
     CommandRegistry.registerAllCommands();
 

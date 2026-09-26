@@ -8,8 +8,9 @@ describe("getDifficultyCount", () => {
   });
 
   it("returns 0 when the difficulty is absent", () => {
-    expect(getDifficultyCount([{ difficulty: "Easy", count: 3 }], "Hard"))
-      .toBe(0);
+    expect(getDifficultyCount([{ difficulty: "Easy", count: 3 }], "Hard")).toBe(
+      0,
+    );
   });
 
   it("returns 0 for an empty array", () => {

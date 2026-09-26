@@ -1,4 +1,4 @@
-import { Context } from "grammy";
+import type { Context } from "grammy";
 import { CallbackRegistry } from "@/callback/registry";
 import { dispatchCallbackResponse } from "@/callback/response/dispatch";
 import { editText } from "@/callback/response/shortcuts";
@@ -14,8 +14,7 @@ const wrap = (
       case "string-action": {
         const lb = new LbContext(ctx);
         await lb.answerCallbackQuery();
-        const text =
-          kind === "success" ? "done" : `matched: ${lb.chatId}`;
+        const text = kind === "success" ? "done" : `matched: ${lb.chatId}`;
         await dispatchCallbackResponse(lb, editText(text));
         return;
       }

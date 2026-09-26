@@ -1,4 +1,4 @@
-import { Context, InlineKeyboard } from "grammy";
+import type { Context, InlineKeyboard } from "grammy";
 import {
   ChatIdNotFoundError,
   MatchNotFoundError,
@@ -38,10 +38,13 @@ export class LbContext {
     return this.ctx.reply(text, options);
   }
 
-  replyWithPhoto(photo: string, options?: {
-    caption?: string;
-    reply_markup?: InlineKeyboard;
-  }) {
+  replyWithPhoto(
+    photo: string,
+    options?: {
+      caption?: string;
+      reply_markup?: InlineKeyboard;
+    },
+  ) {
     return this.ctx.replyWithPhoto(photo, options);
   }
 
@@ -53,10 +56,13 @@ export class LbContext {
     return this.ctx.editMessageText(text, options);
   }
 
-  editPhoto(photo: string, options?: {
-    caption?: string;
-    reply_markup?: InlineKeyboard;
-  }) {
+  editPhoto(
+    photo: string,
+    options?: {
+      caption?: string;
+      reply_markup?: InlineKeyboard;
+    },
+  ) {
     return this.ctx.editMessageMedia(
       { type: "photo", media: photo, caption: options?.caption },
       { reply_markup: options?.reply_markup },

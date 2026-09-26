@@ -71,7 +71,10 @@ describe("httpJson", () => {
   });
 
   it("returns the parsed body and records the request", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(200, { ok: true })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse(200, { ok: true })),
+    );
 
     const result = await httpJson(
       "http://backend/api/v1/channels/42/users/simplified/",
@@ -90,7 +93,7 @@ describe("httpJson", () => {
 
   it("merges custom headers with the JSON content type", async () => {
     const fetchMock = vi.fn(async (_url: string, _options: RequestInit) =>
-      jsonResponse(200, {})
+      jsonResponse(200, {}),
     );
     vi.stubGlobal("fetch", fetchMock);
 
@@ -100,8 +103,10 @@ describe("httpJson", () => {
       { service: "backend", headers: { "X-Custom": "yes" } },
     );
 
-    const sentHeaders =
-      fetchMock.mock.calls[0][1].headers as unknown as Record<string, string>;
+    const sentHeaders = fetchMock.mock.calls[0][1].headers as unknown as Record<
+      string,
+      string
+    >;
     expect(sentHeaders).toEqual({
       "Content-Type": "application/json",
       Authorization: "Bearer abc",
@@ -110,7 +115,10 @@ describe("httpJson", () => {
   });
 
   it("surfaces onHttpError errors for HTTP failures", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(404, { error: "NOPE" })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse(404, { error: "NOPE" })),
+    );
 
     const error = await httpJson(
       "http://backend/api",
@@ -130,10 +138,16 @@ describe("httpJson", () => {
   });
 
   it("falls back to a default message when no onHttpError given", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(500, {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse(500, {})),
+    );
 
-    const error = await httpJson("http://backend/api", {}, { service: "backend" })
-      .catch((err: Error) => err);
+    const error = await httpJson(
+      "http://backend/api",
+      {},
+      { service: "backend" },
+    ).catch((err: Error) => err);
 
     expect((error as Error).message).toBe("HTTP error: 500");
   });
@@ -141,13 +155,16 @@ describe("httpJson", () => {
   it("passes an undefined body when the error response is not JSON", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () => ({
-        ok: false,
-        status: 500,
-        json: async () => {
-          throw new Error("not json");
-        },
-      }) as unknown as Response),
+      vi.fn(
+        async () =>
+          ({
+            ok: false,
+            status: 500,
+            json: async () => {
+              throw new Error("not json");
+            },
+          }) as unknown as Response,
+      ),
     );
 
     const error = await httpJson(

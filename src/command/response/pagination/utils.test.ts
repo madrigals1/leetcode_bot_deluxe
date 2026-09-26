@@ -23,12 +23,19 @@ describe("pagination utils", () => {
 
   it("builds a keyboard from only item rows", () => {
     const keyboard = buildKeyboard([[{ text: "a", callback_data: "x" }]]);
-    expect(keyboard.inline_keyboard).toEqual([[{ text: "a", callback_data: "x" }]]);
+    expect(keyboard.inline_keyboard).toEqual([
+      [{ text: "a", callback_data: "x" }],
+    ]);
   });
 
   it("builds a keyboard from only an extra keyboard", () => {
-    const keyboard = buildKeyboard(undefined, new InlineKeyboard().text("b", "y"));
-    expect(keyboard.inline_keyboard).toEqual([[{ text: "b", callback_data: "y" }]]);
+    const keyboard = buildKeyboard(
+      undefined,
+      new InlineKeyboard().text("b", "y"),
+    );
+    expect(keyboard.inline_keyboard).toEqual([
+      [{ text: "b", callback_data: "y" }],
+    ]);
   });
 
   it("builds an empty keyboard", () => {
@@ -65,7 +72,8 @@ describe("pagination utils", () => {
   });
 
   it("registers a pagination handler", () => {
-    const registerSpy = vi.spyOn(PaginationRegistry, "registerHandler")
+    const registerSpy = vi
+      .spyOn(PaginationRegistry, "registerHandler")
       .mockImplementation(() => {});
 
     registerPaginationCallback({

@@ -1,5 +1,10 @@
 import { createServer } from "http";
-import { collectDefaultMetrics, Counter, Histogram, register } from "prom-client";
+import {
+  collectDefaultMetrics,
+  Counter,
+  Histogram,
+  register,
+} from "prom-client";
 import { METRICS_PORT } from "./constants";
 
 collectDefaultMetrics();

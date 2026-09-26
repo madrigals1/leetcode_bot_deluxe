@@ -28,7 +28,9 @@ describe("constants", () => {
     expect(c.TELEGRAM_BOT_TOKEN).toBe(REQUIRED.TELEGRAM_BOT_TOKEN);
     expect(c.BACKEND_URL).toBe(REQUIRED.BACKEND_URL);
     expect(c.VIZAPI_URL).toBe(REQUIRED.VIZAPI_URL);
-    expect(c.BACKEND_JWT_REFRESH_TOKEN).toBe(REQUIRED.BACKEND_JWT_REFRESH_TOKEN);
+    expect(c.BACKEND_JWT_REFRESH_TOKEN).toBe(
+      REQUIRED.BACKEND_JWT_REFRESH_TOKEN,
+    );
     expect(c.TOKEN_MAX_AGE_MS).toBe(20 * 60 * 60 * 1000);
     expect(c.METRICS_PORT).toBe(19099);
     expect(c.SUPER_ADMIN_TELEGRAM_USERNAMES).toEqual([]);
@@ -62,21 +64,24 @@ describe("constants", () => {
     expect(c.CML_EASY_POINTS).toBe("0.5");
   });
 
-  it.each(["TELEGRAM_BOT_TOKEN", "BACKEND_JWT_REFRESH_TOKEN", "BACKEND_URL", "VIZAPI_URL"])(
-    "exits when a required variable is missing: %s",
-    async (key) => {
-      vi.stubEnv(key, "");
-      const exitSpy = vi.spyOn(process, "exit")
-        .mockImplementation(((code?: string | number) => {
-          throw new Error(`exit called with ${code}`);
-        }) as never);
-      const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  it.each([
+    "TELEGRAM_BOT_TOKEN",
+    "BACKEND_JWT_REFRESH_TOKEN",
+    "BACKEND_URL",
+    "VIZAPI_URL",
+  ])("exits when a required variable is missing: %s", async (key) => {
+    vi.stubEnv(key, "");
+    const exitSpy = vi.spyOn(process, "exit").mockImplementation(((
+      code?: string | number,
+    ) => {
+      throw new Error(`exit called with ${code}`);
+    }) as never);
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-      await expect(import("./constants")).rejects.toThrow("exit called with 1");
-      expect(errorSpy).toHaveBeenCalledWith(`Error: ${key} is not set.`);
+    await expect(import("./constants")).rejects.toThrow("exit called with 1");
+    expect(errorSpy).toHaveBeenCalledWith(`Error: ${key} is not set.`);
 
-      exitSpy.mockRestore();
-      errorSpy.mockRestore();
-    },
-  );
+    exitSpy.mockRestore();
+    errorSpy.mockRestore();
+  });
 });

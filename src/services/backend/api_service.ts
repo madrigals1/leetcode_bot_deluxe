@@ -14,8 +14,8 @@ function extractBackendErrorCode(body: unknown): string | undefined {
   }
 
   const raw =
-    (body as { error?: unknown }).error
-    ?? (body as { detail?: unknown }).detail;
+    (body as { error?: unknown }).error ??
+    (body as { detail?: unknown }).detail;
 
   if (typeof raw !== "string") {
     return undefined;
@@ -27,8 +27,8 @@ function extractBackendErrorCode(body: unknown): string | undefined {
 function backendError(body: unknown, status: number): BackendApiError {
   if (typeof body === "object" && body !== null) {
     const raw =
-      (body as { error?: unknown }).error
-      ?? (body as { detail?: unknown }).detail;
+      (body as { error?: unknown }).error ??
+      (body as { detail?: unknown }).detail;
 
     if (typeof raw === "string") {
       return new BackendApiError(raw, extractBackendErrorCode(body), status);
@@ -91,10 +91,7 @@ export class ApiService {
     return ApiService.refreshAccessToken();
   }
 
-  static async fetch<T>(
-    path: string,
-    options: RequestInit = {},
-  ): Promise<T> {
+  static async fetch<T>(path: string, options: RequestInit = {}): Promise<T> {
     const token = await ApiService.getAccessToken();
 
     return httpJson<T>(`${BACKEND_URL}${path}`, options, {

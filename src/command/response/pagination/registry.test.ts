@@ -46,7 +46,9 @@ describe("PaginationRegistry", () => {
     const fake = makeFakeBot();
     PaginationRegistry.setBot(fake.bot);
     capture = (ctx) =>
-      Promise.resolve(fake.registeredCallbacks.get(PAGE_PATTERN.source)!(ctx as never));
+      Promise.resolve(
+        fake.registeredCallbacks.get(PAGE_PATTERN.source)!(ctx as never),
+      );
   });
 
   it("registers a pagination callback query handler", () => {
@@ -73,11 +75,15 @@ describe("PaginationRegistry", () => {
 
   it("answers an invalid page number without fetching", async () => {
     const { fetchPage } = registerHandler("leaderboard");
-    const ctx = makeFakeContext({ match: ["leaderboard_page:0", "leaderboard", "0"] });
+    const ctx = makeFakeContext({
+      match: ["leaderboard_page:0", "leaderboard", "0"],
+    });
     await capture(ctx);
 
     expect(fetchPage).not.toHaveBeenCalled();
-    expect(ctx.answerCallbackQuery).toHaveBeenCalledWith("Invalid page number.");
+    expect(ctx.answerCallbackQuery).toHaveBeenCalledWith(
+      "Invalid page number.",
+    );
   });
 
   it("fetches and renders the requested page", async () => {
@@ -89,7 +95,10 @@ describe("PaginationRegistry", () => {
 
     expect(fetchPage).toHaveBeenCalledWith(1, expect.any(LbContext));
     expect(renderPage).toHaveBeenCalledTimes(1);
-    expect(ctx.editMessageText).toHaveBeenCalledWith("page rendered", undefined);
+    expect(ctx.editMessageText).toHaveBeenCalledWith(
+      "page rendered",
+      undefined,
+    );
   });
 
   it("ignores taps with an empty page name", async () => {
@@ -110,7 +119,9 @@ describe("PaginationRegistry", () => {
     await capture(ctx);
 
     expect(ctx.answerCallbackQuery).toHaveBeenCalledWith("❗ No data found.");
-    expect(mocks.paginationErrorsTotal.inc).toHaveBeenCalledWith({ name: "empty" });
+    expect(mocks.paginationErrorsTotal.inc).toHaveBeenCalledWith({
+      name: "empty",
+    });
   });
 
   it("falls back to an error message for unexpected failures", async () => {
@@ -125,8 +136,12 @@ describe("PaginationRegistry", () => {
     const ctx = makeFakeContext({ match: ["broken_page:1", "broken", "1"] });
     await capture(ctx);
 
-    expect(ctx.editMessageText).toHaveBeenCalledWith("❗ Failed to fetch data.");
-    expect(mocks.paginationErrorsTotal.inc).toHaveBeenCalledWith({ name: "broken" });
+    expect(ctx.editMessageText).toHaveBeenCalledWith(
+      "❗ Failed to fetch data.",
+    );
+    expect(mocks.paginationErrorsTotal.inc).toHaveBeenCalledWith({
+      name: "broken",
+    });
   });
 
   it("keeps pagination flows isolated between chats", async () => {
@@ -134,10 +149,16 @@ describe("PaginationRegistry", () => {
     const chatB = registerHandler("compare", 222);
 
     await capture(
-      makeFakeContext({ chatId: 111, match: ["compare_page:2", "compare", "2"] }),
+      makeFakeContext({
+        chatId: 111,
+        match: ["compare_page:2", "compare", "2"],
+      }),
     );
     await capture(
-      makeFakeContext({ chatId: 222, match: ["compare_page:2", "compare", "2"] }),
+      makeFakeContext({
+        chatId: 222,
+        match: ["compare_page:2", "compare", "2"],
+      }),
     );
 
     expect(chatA.fetchPage).toHaveBeenCalledTimes(1);
@@ -149,7 +170,10 @@ describe("PaginationRegistry", () => {
     const { fetchPage } = registerHandler("compare", 111);
 
     await capture(
-      makeFakeContext({ chatId: 999, match: ["compare_page:1", "compare", "1"] }),
+      makeFakeContext({
+        chatId: 999,
+        match: ["compare_page:1", "compare", "1"],
+      }),
     );
 
     expect(fetchPage).not.toHaveBeenCalled();

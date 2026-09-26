@@ -8,7 +8,10 @@ afterEach(() => {
 });
 
 function stubJson(body: unknown) {
-  vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(200, body)));
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async () => jsonResponse(200, body)),
+  );
 }
 
 describe("VizApiService", () => {
@@ -22,10 +25,13 @@ describe("VizApiService", () => {
 
   it("generates a table", async () => {
     let requestBody: unknown;
-    vi.stubGlobal("fetch", vi.fn(async (_url, init) => {
-      requestBody = JSON.parse(String(init?.body));
-      return jsonResponse(200, { link: "https://img/table" });
-    }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (_url, init) => {
+        requestBody = JSON.parse(String(init?.body));
+        return jsonResponse(200, { link: "https://img/table" });
+      }),
+    );
 
     await VizApiService.generateTable([{ Name: "Two Sum" }]);
     expect(requestBody).toEqual({ table: [{ Name: "Two Sum" }] });
@@ -33,10 +39,13 @@ describe("VizApiService", () => {
 
   it("generates a compare chart", async () => {
     let requestBody: unknown;
-    vi.stubGlobal("fetch", vi.fn(async (_url, init) => {
-      requestBody = JSON.parse(String(init?.body));
-      return jsonResponse(200, { link: "https://img/compare" });
-    }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (_url, init) => {
+        requestBody = JSON.parse(String(init?.body));
+        return jsonResponse(200, { link: "https://img/compare" });
+      }),
+    );
 
     const data = {
       left: {
@@ -57,10 +66,13 @@ describe("VizApiService", () => {
 
   it("generates a pie chart", async () => {
     let requestBody: unknown;
-    vi.stubGlobal("fetch", vi.fn(async (_url, init) => {
-      requestBody = JSON.parse(String(init?.body));
-      return jsonResponse(200, { link: "https://img/pie" });
-    }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (_url, init) => {
+        requestBody = JSON.parse(String(init?.body));
+        return jsonResponse(200, { link: "https://img/pie" });
+      }),
+    );
 
     const pieData = {
       title: "Problems by alice",
@@ -76,7 +88,10 @@ describe("VizApiService", () => {
   });
 
   it("maps HTTP errors to a VizApiError with the status", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => jsonResponse(500, {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse(500, {})),
+    );
     await expect(VizApiService.health()).rejects.toBeInstanceOf(VizApiError);
     await expect(VizApiService.health()).rejects.toMatchObject({
       name: "LeetCodeBotError.VizApiError",
@@ -86,9 +101,12 @@ describe("VizApiService", () => {
   });
 
   it("maps network errors to VizApiNotAvailableError", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => {
-      throw new TypeError("fetch failed");
-    }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new TypeError("fetch failed");
+      }),
+    );
     await expect(VizApiService.health()).rejects.toBeInstanceOf(
       VizApiNotAvailableError,
     );

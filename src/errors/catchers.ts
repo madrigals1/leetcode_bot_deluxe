@@ -14,8 +14,8 @@ function isBackendError(error: Error, code: string): boolean {
 export function userNotFound(username: string) {
   return (err: Error) => {
     if (
-      isBackendError(err, "USER_NOT_FOUND_IN_DATABASE")
-      || isBackendError(err, "USER_NOT_FOUND_IN_CHANNEL")
+      isBackendError(err, "USER_NOT_FOUND_IN_DATABASE") ||
+      isBackendError(err, "USER_NOT_FOUND_IN_CHANNEL")
     ) {
       throw new BackendUserNotFoundError(username);
     }

@@ -16,7 +16,9 @@ import "./callback/callbacks";
     VizApiService.health(),
     HealthCheckService.health(),
   ]);
-  console.log(`VizAPI health: ${vizHealth.status} (uptime ${formatUptime(vizHealth.uptime)})`);
+  console.log(
+    `VizAPI health: ${vizHealth.status} (uptime ${formatUptime(vizHealth.uptime)})`,
+  );
   console.log(
     `Backend health: ${backendHealth.status} (db ${backendHealth.database}, ` +
       `${backendHealth.service} v${backendHealth.version}, uptime ${formatUptime(backendHealth.uptime)})`,
@@ -56,7 +58,6 @@ import "./callback/callbacks";
   });
 
   bot.start({
-    onStart: (botInfo) =>
-      console.log(`Bot @${botInfo.username} is running.`),
+    onStart: (botInfo) => console.log(`Bot @${botInfo.username} is running.`),
   });
 })();

@@ -35,7 +35,10 @@ function makeFakeRes(): FakeRes {
   };
 }
 
-let requestHandler: (req: { url?: string }, res: FakeRes) => void | Promise<void>;
+let requestHandler: (
+  req: { url?: string },
+  res: FakeRes,
+) => void | Promise<void>;
 let listenMock: ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
@@ -45,7 +48,9 @@ beforeEach(() => {
   });
   mocks.createServer.mockReset();
   mocks.createServer.mockImplementation(
-    (handler: (req: { url?: string }, res: FakeRes) => void | Promise<void>) => {
+    (
+      handler: (req: { url?: string }, res: FakeRes) => void | Promise<void>,
+    ) => {
       requestHandler = handler;
       return { listen: listenMock };
     },
@@ -65,7 +70,12 @@ describe("metrics server", () => {
   });
 
   it("serves the collected metrics at /metrics", async () => {
-    apiRequestsTotal.inc({ service: "backend", method: "GET", path: "/x", status: "200" });
+    apiRequestsTotal.inc({
+      service: "backend",
+      method: "GET",
+      path: "/x",
+      status: "200",
+    });
     apiErrorsTotal.inc({ service: "backend", kind: "network" });
     commandsTotal.inc({ command: "start" });
     commandsErrorsTotal.inc({ command: "start", error: "boom" });
@@ -87,11 +97,17 @@ describe("metrics server", () => {
 
     const text = String(res.end.mock.calls[0][0]);
     expect(text).toContain("leetcode_bot_api_requests_total");
-    expect(text).toContain("leetcode_bot_commands_total{command=\"start\"} 1");
+    expect(text).toContain('leetcode_bot_commands_total{command="start"} 1');
     expect(text).toContain("leetcode_bot_command_duration_seconds");
-    expect(text).toContain("leetcode_bot_callbacks_total{action=\"cmd:start\"} 1");
-    expect(text).toContain("leetcode_bot_uncaught_errors_total{error=\"boom\"} 1");
-    expect(text).toContain("leetcode_bot_pagination_errors_total{name=\"rating\"} 1");
+    expect(text).toContain(
+      'leetcode_bot_callbacks_total{action="cmd:start"} 1',
+    );
+    expect(text).toContain(
+      'leetcode_bot_uncaught_errors_total{error="boom"} 1',
+    );
+    expect(text).toContain(
+      'leetcode_bot_pagination_errors_total{name="rating"} 1',
+    );
   });
 
   it("returns 404 for other paths", async () => {
@@ -103,7 +119,8 @@ describe("metrics server", () => {
   });
 
   it("returns 500 when metric collection fails", async () => {
-    const metricsSpy = vi.spyOn(register, "metrics")
+    const metricsSpy = vi
+      .spyOn(register, "metrics")
       .mockRejectedValueOnce(new Error("collection failed"));
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 

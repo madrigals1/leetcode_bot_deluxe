@@ -1,4 +1,4 @@
-import { Context } from "grammy";
+import type { Context } from "grammy";
 import { LbContext } from "@/utils/context";
 import { assertAuth } from "@/utils/chat";
 import { dispatchResponse } from "@/command/response/dispatch";
@@ -7,11 +7,11 @@ import { parseArgs, buildExample } from "./utils";
 import { CommandRegistry } from "./registry";
 
 export function command(options: CommandOptions) {
-  return function (
+  return (
     _target: object,
     _propertyKey: string,
     descriptor: PropertyDescriptor,
-  ) {
+  ) => {
     const originalHandler = descriptor.value;
 
     CommandRegistry.addCommand({
@@ -29,7 +29,8 @@ export function command(options: CommandOptions) {
         );
 
         const response = await originalHandler(lbCtx, parsedArgs);
-        const reply = (text: string, options?: object) => lbCtx.reply(text, options);
+        const reply = (text: string, options?: object) =>
+          lbCtx.reply(text, options);
         const replyPhoto = (photo: string, options?: object) =>
           lbCtx.replyWithPhoto(photo, options);
         await dispatchResponse(lbCtx, response, reply, replyPhoto);

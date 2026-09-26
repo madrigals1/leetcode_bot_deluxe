@@ -1,4 +1,4 @@
-import { Context } from "grammy";
+import type { Context } from "grammy";
 import { describe, expect, it, vi } from "vitest";
 import { DataNotFoundError } from "@/errors";
 import { LbContext } from "@/utils/context";
@@ -43,10 +43,9 @@ describe("renderFirstButtonsPage", () => {
   it("chunks items into rows and appends the nav row", async () => {
     const lb = makeLb();
     const reply = vi.fn();
-    const fetchPage = vi.fn(async () => page(
-      [{ username: "a" }, { username: "b" }, { username: "c" }],
-      5,
-    ));
+    const fetchPage = vi.fn(async () =>
+      page([{ username: "a" }, { username: "b" }, { username: "c" }], 5),
+    );
 
     await renderFirstButtonsPage({
       lbCtx: lb,
@@ -56,8 +55,10 @@ describe("renderFirstButtonsPage", () => {
       reply,
     });
 
-    const [sent, options] = reply.mock.calls[0] as
-      [string, { reply_markup: { inline_keyboard: unknown[][] } }];
+    const [sent, options] = reply.mock.calls[0] as [
+      string,
+      { reply_markup: { inline_keyboard: unknown[][] } },
+    ];
     expect(sent).toBe("Select:");
     expect(options.reply_markup.inline_keyboard).toEqual([
       [
@@ -72,9 +73,14 @@ describe("renderFirstButtonsPage", () => {
   it("uses the default text, page size and buttons-per-row", async () => {
     const lb = makeLb();
     const reply = vi.fn();
-    const fetchPage = vi.fn(async () => page(
-      [{ username: "a" }, { username: "b" }, { username: "c" }, { username: "d" }],
-    ));
+    const fetchPage = vi.fn(async () =>
+      page([
+        { username: "a" },
+        { username: "b" },
+        { username: "c" },
+        { username: "d" },
+      ]),
+    );
 
     await renderFirstButtonsPage({
       lbCtx: lb,
@@ -83,8 +89,10 @@ describe("renderFirstButtonsPage", () => {
       reply,
     });
 
-    const [sent, options] = reply.mock.calls[0] as
-      [string, { reply_markup: { inline_keyboard: unknown[][] } }];
+    const [sent, options] = reply.mock.calls[0] as [
+      string,
+      { reply_markup: { inline_keyboard: unknown[][] } },
+    ];
     expect(sent).toBe("Select an item:");
     expect(options.reply_markup.inline_keyboard).toEqual([
       [

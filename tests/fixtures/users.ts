@@ -44,7 +44,10 @@ export const bob: User = {
 export const trackedAlice: User = {
   ...alice,
   data: {
-    profile: { realName: "Alice A", userAvatar: "https://avatar.example/alice.png" },
+    profile: {
+      realName: "Alice A",
+      userAvatar: "https://avatar.example/alice.png",
+    },
     submitStats: {
       acSubmissionNum: [
         { difficulty: "Easy", count: 60 },
@@ -52,9 +55,7 @@ export const trackedAlice: User = {
         { difficulty: "Hard", count: 15 },
         { difficulty: "All", count: 120 },
       ],
-      totalSubmissionNum: [
-        { difficulty: "All", count: 200 },
-      ],
+      totalSubmissionNum: [{ difficulty: "All", count: 200 }],
     },
     computed: {
       submissions: [

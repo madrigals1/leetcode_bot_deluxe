@@ -38,7 +38,9 @@ describe("command response shortcuts", () => {
   });
 
   it("editText", () => {
-    expect(editText({ text: "new", message_id: 3, buttons: undefined })).toEqual({
+    expect(
+      editText({ text: "new", message_id: 3, buttons: undefined }),
+    ).toEqual({
       type: "editText",
       text: "new",
       message_id: 3,

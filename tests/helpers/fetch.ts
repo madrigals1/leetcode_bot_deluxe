@@ -22,11 +22,12 @@ export function mockBackendFetch(handler: FetchHandler) {
 
   const fetchMock = vi.fn(
     async (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = typeof input === "string"
-        ? input
-        : input instanceof URL
-          ? input.href
-          : input.url;
+      const url =
+        typeof input === "string"
+          ? input
+          : input instanceof URL
+            ? input.href
+            : input.url;
       calls.push({ url, init });
 
       if (url.endsWith("/api/token/refresh/")) {

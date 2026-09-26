@@ -1,4 +1,4 @@
-import { LbContext } from "@/utils/context";
+import type { LbContext } from "@/utils/context";
 import type {
   PaginatedTextResponse,
   PaginatedButtonsResponse,
@@ -55,5 +55,11 @@ function handlePaginatedButtonsResponse<T>(
 ) {
   const pageSize = response.itemsPerPage ?? 10;
   const buttonsPerRow = response.buttonsPerRow ?? 2;
-  return renderFirstButtonsPage({ lbCtx, response, pageSize, buttonsPerRow, reply });
+  return renderFirstButtonsPage({
+    lbCtx,
+    response,
+    pageSize,
+    buttonsPerRow,
+    reply,
+  });
 }

@@ -1,8 +1,17 @@
 import type { PaginatedResponse } from "@/services/backend/types";
-import { LbContext } from "@/utils/context";
+import type { LbContext } from "@/utils/context";
 import { DataNotFoundError } from "@/errors";
-import { buildKeyboard, buildNavRow, totalPages, registerPaginationCallback } from "./utils";
-import type { RenderFirstPageOptions, RenderPageOptions, PaginatedButtonsResponse } from "@/command/types";
+import {
+  buildKeyboard,
+  buildNavRow,
+  totalPages,
+  registerPaginationCallback,
+} from "./utils";
+import type {
+  RenderFirstPageOptions,
+  RenderPageOptions,
+  PaginatedButtonsResponse,
+} from "@/command/types";
 
 export async function renderFirstButtonsPage<T>({
   lbCtx,
@@ -23,7 +32,16 @@ export async function renderFirstButtonsPage<T>({
     page: number,
     pageSize: number,
     reply: (text: string, options?: object) => Promise<unknown>,
-  ) => renderButtonsPage({ lbCtx, response, data, page, pageSize, buttonsPerRow, reply });
+  ) =>
+    renderButtonsPage({
+      lbCtx,
+      response,
+      data,
+      page,
+      pageSize,
+      buttonsPerRow,
+      reply,
+    });
 
   registerPaginationCallback({
     name: response.name,
@@ -58,10 +76,7 @@ function renderButtonsPage<T>({
   }
 
   const navRow = buildNavRow(page, hasNext, response.name);
-  const keyboard = buildKeyboard(
-    [...rows, navRow],
-    response.buttons,
-  );
+  const keyboard = buildKeyboard([...rows, navRow], response.buttons);
 
   return reply(response.text ?? "Select an item:", {
     reply_markup: keyboard,

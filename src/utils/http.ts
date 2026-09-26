@@ -66,8 +66,10 @@ export async function httpJson<T>(
 
     apiErrorsTotal.inc({ service, kind: "http" });
 
-    throw httpOptions.onHttpError?.(response, body)
-      ?? new Error(`HTTP error: ${response.status}`);
+    throw (
+      httpOptions.onHttpError?.(response, body) ??
+      new Error(`HTTP error: ${response.status}`)
+    );
   }
 
   return response.json() as Promise<T>;

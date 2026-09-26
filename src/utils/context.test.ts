@@ -32,7 +32,10 @@ describe("LbContext", () => {
   });
 
   it("exposes the match", () => {
-    const match = ["command:profile alice", "alice"] as unknown as RegExpMatchArray;
+    const match = [
+      "command:profile alice",
+      "alice",
+    ] as unknown as RegExpMatchArray;
     const lb = new LbContext(makeFakeContext({ match }));
     expect(lb.match).toEqual(["command:profile alice", "alice"]);
   });

@@ -1,8 +1,18 @@
 import type { PaginatedResponse } from "@/services/backend/types";
-import { LbContext } from "@/utils/context";
+import type { LbContext } from "@/utils/context";
 import { DataNotFoundError } from "@/errors";
-import { buildKeyboard, buildNavRow, totalPages, defaultFooter, registerPaginationCallback } from "./utils";
-import type { RenderFirstPageOptions, RenderPageOptions, PaginatedTextResponse } from "@/command/types";
+import {
+  buildKeyboard,
+  buildNavRow,
+  totalPages,
+  defaultFooter,
+  registerPaginationCallback,
+} from "./utils";
+import type {
+  RenderFirstPageOptions,
+  RenderPageOptions,
+  PaginatedTextResponse,
+} from "@/command/types";
 
 export async function renderFirstPage<T>({
   lbCtx,
@@ -51,13 +61,15 @@ function renderPage<T>({
     response.formatItem(item, (page - 1) * pageSize + index),
   );
 
-  const text = response.header + "\n\n" + items.join("\n") + "\n\n" + defaultFooter(page, data.count, pageSize);
+  const text =
+    response.header +
+    "\n\n" +
+    items.join("\n") +
+    "\n\n" +
+    defaultFooter(page, data.count, pageSize);
 
   const navRow = buildNavRow(page, hasNext, response.name);
-  const keyboard = buildKeyboard(
-    [navRow],
-    response.buttons,
-  );
+  const keyboard = buildKeyboard([navRow], response.buttons);
 
   return reply(text, {
     reply_markup: keyboard,

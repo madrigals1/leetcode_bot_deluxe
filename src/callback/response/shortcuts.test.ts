@@ -1,11 +1,6 @@
 import "@/callback";
 import { describe, expect, it } from "vitest";
-import {
-  commandRedirect,
-  editButtons,
-  editPhoto,
-  editText,
-} from "./shortcuts";
+import { commandRedirect, editButtons, editPhoto, editText } from "./shortcuts";
 
 describe("callback response shortcuts", () => {
   it("editText", () => {

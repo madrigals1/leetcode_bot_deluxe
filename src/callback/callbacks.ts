@@ -1,5 +1,5 @@
 import { callback } from "@/callback";
-import { LbContext } from "@/utils/context";
+import type { LbContext } from "@/utils/context";
 import { commandRedirect } from "@/callback/response/shortcuts";
 
 export class Callbacks {

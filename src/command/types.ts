@@ -1,7 +1,7 @@
 import type { InlineKeyboard } from "grammy";
 import type { InlineKeyboardButton } from "grammy/types";
 import type { Context } from "grammy";
-import { LbContext } from "@/utils/context";
+import type { LbContext } from "@/utils/context";
 import type { PaginatedResponse } from "@/services/backend/types";
 
 // ── Argument types ──
@@ -27,12 +27,19 @@ export interface CommandOptions {
 
 export interface CommandMetadata extends CommandOptions {
   handler: (ctx: Context) => CommandResponse | Promise<CommandResponse>;
-  originalFn: (...args: unknown[]) => CommandResponse | Promise<CommandResponse>;
+  originalFn: (
+    ...args: unknown[]
+  ) => CommandResponse | Promise<CommandResponse>;
 }
 
 // ── Response types ──
 
-type ResponseType = "text" | "photo" | "paginatedText" | "paginatedButtons" | "editText";
+type ResponseType =
+  | "text"
+  | "photo"
+  | "paginatedText"
+  | "paginatedButtons"
+  | "editText";
 
 export interface BaseResponse {
   type: ResponseType;
@@ -62,13 +69,15 @@ export interface PaginationBaseResponse<T = unknown> extends BaseResponse {
   itemsPerPage?: number;
 }
 
-export interface PaginatedTextResponse<T = unknown> extends PaginationBaseResponse<T> {
+export interface PaginatedTextResponse<T = unknown>
+  extends PaginationBaseResponse<T> {
   type: "paginatedText";
   header: string;
   formatItem: (item: T, index: number) => string;
 }
 
-export interface PaginatedButtonsResponse<T = unknown> extends PaginationBaseResponse<T> {
+export interface PaginatedButtonsResponse<T = unknown>
+  extends PaginationBaseResponse<T> {
   type: "paginatedButtons";
   text?: string;
   itemToButton: (item: T) => InlineKeyboardButton;
@@ -85,9 +94,15 @@ export type CommandResponse =
 // ── Pagination dispatch types ──
 
 export type ReplyMethod = (text: string, options?: object) => Promise<unknown>;
-export type ReplyPhotoMethod = (photo: string, options?: object) => Promise<unknown>;
+export type ReplyPhotoMethod = (
+  photo: string,
+  options?: object,
+) => Promise<unknown>;
 
-export interface RenderFirstPageOptions<T, R extends PaginationBaseResponse<T>> {
+export interface RenderFirstPageOptions<
+  T,
+  R extends PaginationBaseResponse<T>,
+> {
   lbCtx: LbContext;
   response: R;
   pageSize: number;

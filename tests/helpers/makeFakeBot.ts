@@ -12,11 +12,9 @@ export function makeFakeBot() {
   const registeredCommands = new Map<string, CommandHandler>();
   const registeredCallbacks = new Map<string, CallbackHandler>();
 
-  const command = vi.fn(
-    (name: string, handler: CommandHandler): void => {
-      registeredCommands.set(name, handler);
-    },
-  );
+  const command = vi.fn((name: string, handler: CommandHandler): void => {
+    registeredCommands.set(name, handler);
+  });
 
   const callbackQuery = vi.fn(
     (action: string | RegExp, handler: CallbackHandler): void => {

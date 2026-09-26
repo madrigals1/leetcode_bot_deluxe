@@ -1,4 +1,4 @@
-import { Context } from "grammy";
+import type { Context } from "grammy";
 import { describe, expect, it, vi } from "vitest";
 import { DataNotFoundError } from "@/errors";
 import { LbContext } from "@/utils/context";
@@ -26,10 +26,9 @@ describe("renderFirstPage", () => {
   it("renders the header, items, footer and a next nav button", async () => {
     const lb = makeLb();
     const reply = vi.fn();
-    const fetchPage = vi.fn(async () => page(
-      [{ username: "alice" }, { username: "bob" }],
-      5,
-    ));
+    const fetchPage = vi.fn(async () =>
+      page([{ username: "alice" }, { username: "bob" }], 5),
+    );
 
     await renderFirstPage({
       lbCtx: lb,
@@ -46,8 +45,10 @@ describe("renderFirstPage", () => {
     });
 
     expect(fetchPage).toHaveBeenCalledWith(1, lb);
-    const [sent, options] = reply.mock.calls[0] as
-      [string, { reply_markup: { inline_keyboard: unknown[][] } }];
+    const [sent, options] = reply.mock.calls[0] as [
+      string,
+      { reply_markup: { inline_keyboard: unknown[][] } },
+    ];
 
     expect(sent).toContain("Rating  🏆");
     expect(sent).toContain("1. <b>alice</b>");
@@ -69,14 +70,17 @@ describe("renderFirstPage", () => {
         name: "rating",
         header: "Rating",
         fetchPage,
-        formatItem: (item: Row, index: number) => `${index + 1}. ${item.username}`,
+        formatItem: (item: Row, index: number) =>
+          `${index + 1}. ${item.username}`,
       },
       pageSize: 10,
       reply,
     });
 
-    const [, options] = reply.mock.calls[0] as
-      [string, { reply_markup: { inline_keyboard: unknown[][] } }];
+    const [, options] = reply.mock.calls[0] as [
+      string,
+      { reply_markup: { inline_keyboard: unknown[][] } },
+    ];
     expect(options.reply_markup.inline_keyboard).toEqual([[]]);
   });
 

@@ -1,4 +1,4 @@
-import { Context } from "grammy";
+import type { Context } from "grammy";
 import { SUPER_ADMIN_TELEGRAM_USERNAMES } from "@/constants";
 import { UnauthorizedError } from "@/errors";
 
@@ -10,7 +10,7 @@ export function isSuperAdmin(ctx: Context): boolean {
   }
 
   return SUPER_ADMIN_TELEGRAM_USERNAMES.some(
-    (admin) => admin.toLowerCase() === username.toLowerCase()
+    (admin) => admin.toLowerCase() === username.toLowerCase(),
   );
 }
 
@@ -37,11 +37,7 @@ export async function assertAuth(
     throw new UnauthorizedError();
   }
 
-  if (
-    options.requiresAdmin
-    && !superAdmin
-    && !(await isOwnerOrPrivate(ctx))
-  ) {
+  if (options.requiresAdmin && !superAdmin && !(await isOwnerOrPrivate(ctx))) {
     throw new UnauthorizedError();
   }
 }

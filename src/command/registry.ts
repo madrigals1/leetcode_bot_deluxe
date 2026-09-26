@@ -1,4 +1,4 @@
-import { Bot, Context } from "grammy";
+import type { Bot, Context } from "grammy";
 import { LeetCodeBotError } from "@/errors";
 import {
   commandDurationSeconds,

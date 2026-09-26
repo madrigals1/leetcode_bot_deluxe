@@ -28,19 +28,22 @@ describe("parseArgs", () => {
   });
 
   it("throws when too few arguments are given", () => {
-    expect(() => parseArgs("/track", singleRequired))
-      .toThrowError(InvalidArgumentAmountError);
+    expect(() => parseArgs("/track", singleRequired)).toThrowError(
+      InvalidArgumentAmountError,
+    );
   });
 
   it("throws when too many arguments are given", () => {
-    expect(() => parseArgs("/track one two three", singleRequired))
-      .toThrowError(InvalidArgumentAmountError);
+    expect(() =>
+      parseArgs("/track one two three", singleRequired),
+    ).toThrowError(InvalidArgumentAmountError);
   });
 
   it("appends the example to the error message", () => {
     const example = "\n\nExample:\n<b>/track username</b> - Track a user";
-    expect(() => parseArgs("/track", singleRequired, example))
-      .toThrowError(expect.objectContaining({ message: expect.stringContaining(example) }));
+    expect(() => parseArgs("/track", singleRequired, example)).toThrowError(
+      expect.objectContaining({ message: expect.stringContaining(example) }),
+    );
   });
 
   it("raises a LeetCodeBotError", () => {

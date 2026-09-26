@@ -1,4 +1,4 @@
-import { Context } from "grammy";
+import type { Context } from "grammy";
 import { LbContext } from "@/utils/context";
 import { LeetCodeBotError } from "@/errors";
 import { CallbackRegistry } from "./registry";
@@ -6,11 +6,11 @@ import { dispatchCallbackResponse } from "./response/dispatch";
 import type { CallbackOptions, CallbackResponse } from "./types";
 
 export function callback(options: CallbackOptions) {
-  return function (
+  return (
     _target: object,
     _propertyKey: string,
     descriptor: PropertyDescriptor,
-  ) {
+  ) => {
     CallbackRegistry.addCallback({
       ...options,
       handler: async (ctx: Context) => {
