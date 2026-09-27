@@ -306,7 +306,7 @@ describe("HealthCheckService", () => {
     const { calls } = mockBackendFetch(() => jsonResponse(200, body));
     const res = await HealthCheckService.health();
     expect(res).toEqual(body);
-    const call = calls.find((c) => c.url.endsWith("/api/health"));
+    const call = calls.find((c) => c.url.endsWith("/api/health/"));
     expect(call).toBeDefined();
   });
 });

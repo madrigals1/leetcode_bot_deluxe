@@ -11,6 +11,6 @@ export interface HealthResponse {
 
 export class HealthCheckService {
   static async health(): Promise<HealthResponse> {
-    return ApiService.fetch<HealthResponse>("/api/health");
+    return ApiService.fetch<HealthResponse>("/api/health/");
   }
 }
