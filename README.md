@@ -56,7 +56,7 @@ All configuration is done via environment variables (loaded from `.env`).
 | `TELEGRAM_BOT_TOKEN` | 🤖 Telegram bot token from BotFather |
 | `BACKEND_URL` | 🔗 Base URL of the LeetCode Bot Backend API |
 | `BACKEND_JWT_REFRESH_TOKEN` | 🔑 JWT refresh token for backend authentication |
-| `VIZAPI_URL` | 🖼️ Base URL of the VizAPI chart generation service |
+| `VIZAPI_URL` | 🖼️ Base URL of the VizAPI chart generation service. Inside Docker this is the `leetcode_bot_network` address `http://vizapi:3122`; running the bot on the host, use `http://127.0.0.1:3122` |
 
 ### 🟡 Optional
 
