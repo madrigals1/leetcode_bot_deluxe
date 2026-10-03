@@ -9,10 +9,10 @@
     "types": ["node"],
     "noEmit": true,
     "composite": true,
-    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.test.tsbuildinfo",
+    "tsBuildInfoFile": "../node_modules/.cache/tsconfig.test.tsbuildinfo",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["../src/*"]
     }
   },
-  "include": ["src", "tests"]
+  "include": ["../src", "../tests"]
 }

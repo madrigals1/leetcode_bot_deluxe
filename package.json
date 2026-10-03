@@ -23,7 +23,7 @@
   "scripts": {
     "start": "DOTENV_CONFIG_PATH=.env.local tsx --watch src/index.ts",
     "start:prod": "npm run build && node dist/index.js",
-    "build": "tsgo -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build": "tsgo -p tsconfig/tsconfig.build.json && tsc-alias -p tsconfig/tsconfig.build.json",
     "debug": "tsx --inspect-brk src/index.ts",
     "lint": "biome check",
     "lint:fix": "biome check --write",
