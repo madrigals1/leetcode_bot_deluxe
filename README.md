@@ -4,7 +4,7 @@ A Telegram bot that tracks LeetCode statistics for users in Telegram groups and 
 
 <!-- TODO: Add a screenshot of the bot in action here -->
 
-## ✨ Features
+## Features
 
 - **Track LeetCode users** in any Telegram group or channel
 - **Rankings & leaderboards** with simple and cumulative (weighted) scoring
@@ -14,14 +14,14 @@ A Telegram bot that tracks LeetCode statistics for users in Telegram groups and 
 - **Role-based permissions** — regular users, admins, and super admins
 - **Prometheus metrics** endpoint for monitoring
 
-## 🧰 Prerequisites
+## Prerequisites
 
 - Node.js 22+
 - A Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
 - A running [LeetCode Bot Backend](https://github.com/adi-sbyrbayev/leetcode_bot) instance
 - A running [VizAPI](https://github.com/adi-sbyrbayev/vizapi) instance
 
-## 🛠️ Setup
+## Setup
 
 1. **Install dependencies**
 
@@ -37,7 +37,7 @@ A Telegram bot that tracks LeetCode statistics for users in Telegram groups and 
    cp .env.example .env
    ```
 
-   See [Configuration](#Configuration) for all available options.
+   See [Configuration](#configuration) for all available options.
 
 3. **Start the bot**
 
@@ -45,11 +45,11 @@ A Telegram bot that tracks LeetCode statistics for users in Telegram groups and 
    npm run start
    ```
 
-## ⚙️ Configuration
+## Configuration
 
 All configuration is done via environment variables (loaded from `.env`).
 
-### 🔴 Required
+### Required
 
 | Variable | Description |
 | ---------- | ------------- |
@@ -58,7 +58,7 @@ All configuration is done via environment variables (loaded from `.env`).
 | `BACKEND_JWT_REFRESH_TOKEN` | JWT refresh token for backend authentication |
 | `VIZAPI_URL` | Base URL of the VizAPI chart generation service. Inside Docker this is the `leetcode_bot_network` address `http://vizapi:3122`; running the bot on the host, use `http://127.0.0.1:3122` |
 
-### 🟡 Optional
+### Optional
 
 | Variable | Default | Description |
 | ---------- | --------- | ------------- |
@@ -69,7 +69,7 @@ All configuration is done via environment variables (loaded from `.env`).
 | `CML_MEDIUM_POINTS` | — | 🟡 Weight for medium problems in cumulative rating |
 | `CML_HARD_POINTS` | — | 🔴 Weight for hard problems in cumulative rating |
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 Build and run using Docker Compose:
 
@@ -81,7 +81,7 @@ The container exposes the metrics port (`9091` by default) and attaches to an ex
 
 <!-- TODO: Add a screenshot of the Docker setup or docker-compose output here -->
 
-## 📚 Commands
+## Commands
 
 <!-- TODO: Add screenshots for individual commands here -->
 
@@ -106,7 +106,7 @@ The container exposes the metrics port (`9091` by default) and attaches to an ex
 | `/botfather` | Get commands in BotFather format | 👑 Super Admin |
 | `/superadmin` | View system-wide admin dashboard | 👑 Super Admin |
 
-## 🧑‍💻 Development
+## Development
 
 ```bash
 npm run start        # Start in dev mode (watch, tsx)
