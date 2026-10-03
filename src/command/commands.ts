@@ -19,7 +19,6 @@ import {
 } from "@/constants";
 import {
   text,
-  errorText,
   successText,
   photo,
   buttons,
@@ -29,7 +28,7 @@ import {
 } from "@/command/response/shortcuts";
 import { getDifficultyCount } from "@/utils/leetcode";
 import { boldUsername, escapeHtml, humanizeTimestamp } from "@/utils/format";
-import { DataNotFoundError } from "@/errors";
+import { DataNotFoundError, UserNotTrackedInChannelError } from "@/errors";
 import { buildCompareData } from "./utils";
 
 export default class Commands {
@@ -213,10 +212,7 @@ export default class Commands {
     } = await ChannelUsersService.rank(ctx.chatId, ctx.telegramUsername);
 
     if (!placement) {
-      return errorText(
-        "You are not tracking anyone in this channel.\n\n" +
-          `Use <b>/track leetcode_username</b> to track a LeetCode account.`,
-      );
+      throw new UserNotTrackedInChannelError();
     }
 
     const parts = [`Placement: <b>#${placement}</b> 🏆`];
@@ -357,7 +353,7 @@ export default class Commands {
         return photo({ photo: avatarUrl });
       }
 
-      return errorText("No avatar found.");
+      throw new DataNotFoundError("No avatar found.");
     }
 
     return paginatedButtons({

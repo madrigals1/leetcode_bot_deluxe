@@ -2,6 +2,7 @@ import type { Context } from "grammy";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   DataNotFoundError,
+  UserNotTrackedInChannelError,
   InvalidArgumentAmountError,
   LeetCodeBotError,
 } from "@/errors";
@@ -246,8 +247,9 @@ describe("Commands", () => {
   it("myrank explains when the user has no tracking", async () => {
     services.ChannelUsersService.rank.mockResolvedValue({});
 
-    const res = (await Commands.myrank(lb())) as TextResponse;
-    expect(res.text).toContain("You are not tracking anyone in this channel.");
+    await expect(Commands.myrank(lb())).rejects.toBeInstanceOf(
+      UserNotTrackedInChannelError,
+    );
   });
 
   it("myrank renders a bare placement", async () => {
@@ -333,11 +335,9 @@ describe("Commands", () => {
   it("avatar without an avatar URL", async () => {
     services.ChannelUsersService.getUserInChannel.mockResolvedValue(bob);
 
-    const res = (await Commands.avatar(lb(), {
-      username: "bob",
-    })) as TextResponse;
-    expect(res.type).toBe("text");
-    expect(res.text).toBe("❗ No avatar found.");
+    await expect(Commands.avatar(lb(), { username: "bob" })).rejects.toThrow(
+      "❗ No avatar found.",
+    );
   });
 
   it("avatar without a username shows a picker", async () => {

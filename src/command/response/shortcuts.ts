@@ -10,10 +10,6 @@ export function text(text: string): TextResponse {
   return { text, type: "text" };
 }
 
-export function errorText(message: string): TextResponse {
-  return text(`❗ ${message}`);
-}
-
 export function successText(message: string): TextResponse {
   return text(`✅ ${message}`);
 }

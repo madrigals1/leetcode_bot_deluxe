@@ -4,7 +4,6 @@ import { describe, expect, it } from "vitest";
 import {
   buttons,
   editText,
-  errorText,
   paginatedButtons,
   paginatedText,
   photo,
@@ -19,10 +18,6 @@ const itemToButton = (() => ({ text: "" })) as never;
 describe("command response shortcuts", () => {
   it("text", () => {
     expect(text("hi")).toEqual({ type: "text", text: "hi" });
-  });
-
-  it("errorText", () => {
-    expect(errorText("oops")).toEqual({ type: "text", text: "❗ oops" });
   });
 
   it("successText", () => {
