@@ -121,16 +121,6 @@ export class LeetCodeUserNotFoundError extends LeetCodeBotError {
   }
 }
 
-export class UserNotTrackedInChannelError extends LeetCodeBotError {
-  constructor() {
-    super(
-      `⚠️ You are not tracking anyone in this channel.\n\n` +
-        `Use <b>/track leetcode_username</b> to track a LeetCode account.`,
-    );
-    this.name = `${LeetCodeBotError.name}.UserNotTrackedInChannelError`;
-  }
-}
-
 export class UserAlreadyInChannelError extends LeetCodeBotError {
   constructor(username: string) {
     super(`⚠️ User ${boldUsername(username)} is already added to this channel.`);

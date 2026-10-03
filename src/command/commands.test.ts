@@ -2,7 +2,6 @@ import type { Context } from "grammy";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   DataNotFoundError,
-  UserNotTrackedInChannelError,
   InvalidArgumentAmountError,
   LeetCodeBotError,
 } from "@/errors";
@@ -242,14 +241,6 @@ describe("Commands", () => {
     expect(res.text).toContain("User ahead: <b>carol</b>");
     expect(res.text).toContain("Problems needed to advance: <b>5</b>");
     expect(res.text).toContain("Last refreshed:");
-  });
-
-  it("myrank explains when the user has no tracking", async () => {
-    services.ChannelUsersService.rank.mockResolvedValue({});
-
-    await expect(Commands.myrank(lb())).rejects.toBeInstanceOf(
-      UserNotTrackedInChannelError,
-    );
   });
 
   it("myrank renders a bare placement", async () => {

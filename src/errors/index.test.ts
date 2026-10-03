@@ -15,7 +15,6 @@ import {
   UnauthorizedError,
   UserAlreadyInChannelError,
   UserAlreadyTrackedError,
-  UserNotTrackedInChannelError,
   VizApiError,
   VizApiNotAvailableError,
 } from "./index";
@@ -124,14 +123,6 @@ describe("error classes", () => {
     );
   });
 
-  it("UserNotTrackedInChannelError explains how to track", () => {
-    const err = new UserNotTrackedInChannelError();
-    expect(err.message).toBe(
-      "⚠️ You are not tracking anyone in this channel.\n\n" +
-        "Use <b>/track leetcode_username</b> to track a LeetCode account.",
-    );
-  });
-
   it("UserAlreadyInChannelError formats the username", () => {
     const err = new UserAlreadyInChannelError("alice");
     expect(err.message).toBe(
@@ -162,7 +153,6 @@ describe("error classes", () => {
       new LeetCodeUserNotFoundError("x"),
       new UserAlreadyInChannelError("x"),
       new UserAlreadyTrackedError("x"),
-      new UserNotTrackedInChannelError(),
     ];
     for (const err of errors) {
       expect(err).toBeInstanceOf(LeetCodeBotError);

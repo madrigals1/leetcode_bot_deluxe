@@ -28,7 +28,7 @@ import {
 } from "@/command/response/shortcuts";
 import { getDifficultyCount } from "@/utils/leetcode";
 import { boldUsername, escapeHtml, humanizeTimestamp } from "@/utils/format";
-import { DataNotFoundError, UserNotTrackedInChannelError } from "@/errors";
+import { DataNotFoundError } from "@/errors";
 import { buildCompareData } from "./utils";
 
 export default class Commands {
@@ -210,10 +210,6 @@ export default class Commands {
       solved_to_next,
       last_refreshed,
     } = await ChannelUsersService.rank(ctx.chatId, ctx.telegramUsername);
-
-    if (!placement) {
-      throw new UserNotTrackedInChannelError();
-    }
 
     const parts = [`Placement: <b>#${placement}</b> 🏆`];
 
