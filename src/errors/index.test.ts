@@ -67,6 +67,12 @@ describe("error classes", () => {
     expect(err.message).toBe("❗ No data found.");
   });
 
+  it("DataNotFoundError with a custom message", () => {
+    const err = new DataNotFoundError("No submissions in the last 12 months.");
+    expect(err.message).toBe("❗ No submissions in the last 12 months.");
+    expect(err.name).toBe("LeetCodeBotError.DataNotFoundError");
+  });
+
   it("BackendNotAvailableError", () => {
     const err = new BackendNotAvailableError();
     expect(err.message).toBe("❗ Backend is not available.");

@@ -429,7 +429,7 @@ export default class Commands {
       const submissions = user.data?.computed?.submissions ?? [];
 
       if (submissions.length === 0) {
-        throw new DataNotFoundError();
+        throw new DataNotFoundError("No submissions in the last 12 months.");
       }
 
       const table = submissions.slice(0, 10).map((s) => ({

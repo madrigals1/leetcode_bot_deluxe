@@ -403,12 +403,13 @@ describe("Commands", () => {
     ]);
   });
 
-  it("submissions without submissions raises DataNotFoundError", async () => {
+  it("submissions without submissions throws a descriptive DataNotFoundError", async () => {
     services.ChannelUsersService.getUserInChannel.mockResolvedValue(bob);
 
     await expect(
       Commands.submissions(lb(), { username: "bob" }),
-    ).rejects.toThrow(DataNotFoundError);
+    ).rejects.toThrow("❗ No submissions in the last 12 months.");
+    expect(services.VizApiService.generateTable).not.toHaveBeenCalled();
   });
 
   it("submissions without a username shows a picker", async () => {
