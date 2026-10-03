@@ -10,7 +10,6 @@
     "noEmit": true,
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.cache/tsconfig.test.tsbuildinfo",
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
